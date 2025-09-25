@@ -18,11 +18,11 @@ function parseNumberish(s){
   return null;
 }
 
-/* ---------- Base topics from before ---------- */
+/* ---------- Base topics ---------- */
 const arithmetic = {
   id:'arithmetic', label:'Arithmetic (±×÷)',
-  generateQuestion(){
-    const range = DIFF==='hard'? 200 : DIFF==='medium'? 60 : 30;
+  generateQuestion(d=DIFF){
+    const range = d==='hard'? 200 : d==='medium'? 60 : 30;
     const a=rnd(1,range), b=rnd(1,range), op=pick(['+','-','×','÷']);
     const prompt = `\\( ${a}\\;${op}\\;${b} =\\; ? \\)`;
     let correct; switch(op){ case '+':correct=a+b;break; case '-':correct=a-b;break; case '×':correct=a*b;break; case '÷':correct=Number((a/b).toFixed(2)); }
@@ -37,26 +37,25 @@ const arithmetic = {
 
 const trigBasics = {
   id:'trig_basics', label:'Trig (special angles)',
-  generateQuestion(){
-    const angles = DIFF==='hard' ? [0,15,30,45,60,75,90] : [0,30,45,60,90];
+  generateQuestion(d=DIFF){
+    const angles = d==='hard' ? [0,15,30,45,60,75,90] : [0,30,45,60,90];
     const fns=['\\sin','\\cos'], θ=pick(angles), fn=pick(fns);
     const val = fn==='\\sin' ? Math.sin((θ*Math.PI)/180) : Math.cos((θ*Math.PI)/180);
-    const dp = DIFF==='hard'? 4 : 3;
-    const correct=Number(val.toFixed(dp));
+    const dp = d==='hard'? 4 : 3; const correct=Number(val.toFixed(dp));
     return { prompt:`\\( ${fn}(${θ}^{\\circ}) \\approx ?\\;\\text{(${dp}dp)} \\)`, correct, answerFormat:'number' };
   },
-  checkAnswer(i,d){ const n=parseNumberish(i); if (n===null) return {correct:false,feedback:'Enter a number (e.g., 0.866 or 3/4).'}; return approxEq(n,d.correct, DIFF==='hard'?1e-4:1e-3); }
+  checkAnswer(i,d){ const n=parseNumberish(i); if (n===null) return {correct:false,feedback:'Enter a number (e.g., 0.866 or 3/4).'}; return approxEq(n,d.correct, d==='hard'?1e-4:1e-3); }
 };
 
 const rationalLimits = {
   id:'rational_limits', label:'Rational Limits',
-  generateQuestion(){
+  generateQuestion(d=DIFF){
     const mode=pick(['finite','infty']);
     if (mode==='finite'){
       const c=rnd(-6,6)||2, correct=2*c;
       return { prompt:`\\( \\displaystyle \\lim_{x\\to ${c}} \\frac{x^2 - ${c}^2}{x - ${c}} \\)`, meta:{mode,c,correct}, correct, answerFormat:'number' };
     } else {
-      const degNum=rnd(1,3)+(DIFF==='hard'?1:0), shift=pick([-1,0,1]), degDen=Math.max(1,degNum+shift), aLead=(rnd(-6,6)||2), bLead=(rnd(-6,6)||3);
+      const degNum=rnd(1,3)+(d==='hard'?1:0), shift=pick([-1,0,1]), degDen=Math.max(1,degNum+shift), aLead=(rnd(-6,6)||2), bLead=(rnd(-6,6)||3);
       let L; if (degNum<degDen) L=0; else if (degNum===degDen) L=aLead/bLead; else L=(aLead/bLead)>0?Infinity:-Infinity;
       return { prompt:`\\( \\displaystyle \\lim_{x\\to \\infty} \\frac{${aLead}x^{${degNum}} + \\cdots}{${bLead}x^{${degDen}} + \\cdots} \\)`, meta:{mode:'infty',L}, correct:L, answerFormat:'string' };
     }
@@ -73,13 +72,13 @@ const rationalLimits = {
 
 const derivativesEval = {
   id:'derivatives_eval', label:`Derivatives (evaluate f'(x₀))`,
-  generateQuestion(){
+  generateQuestion(d=DIFF){
     const mode=pick(['poly','prod']);
     if (mode==='poly'){
-      const range= DIFF==='hard'? 6 : 3;
-      const a=rnd(-range,range)||1, b=rnd(-4,4), c=rnd(-6,6), d=rnd(-8,8), x0=rnd(-3,3);
+      const range= d==='hard'? 6 : 3;
+      const a=rnd(-range,range)||1, b=rnd(-4,4), c=rnd(-6,6), x0=rnd(-3,3);
       const fp=(x)=>3*a*x*x + 2*b*x + c, correct=fp(x0);
-      return { prompt:`\\( f(x)= ${a}x^{3}+${b}x^{2}+${c}x+${d}.\\;\\; \\text{Find } f'(${x0}). \\)`, meta:{a,b,c,d,x0,correct}, correct, answerFormat:'number' };
+      return { prompt:`\\( f(x)= ${a}x^{3}+${b}x^{2}+${c}x.\\;\\; \\text{Find } f'(${x0}). \\)`, meta:{a,b,c,x0,correct}, correct, answerFormat:'number' };
     } else {
       const a=rnd(-5,5)||2, b=rnd(-5,5), c=rnd(-5,5)||-3, d=rnd(-5,5), x0=rnd(-3,3);
       const correct=2*a*c*x0 + (a*d + b*c);
@@ -89,21 +88,17 @@ const derivativesEval = {
   checkAnswer(i,d){ const n=parseNumberish(i); if (n===null) return {correct:false,feedback:'Enter a number (fractions ok).'}; return approxEq(n,d.meta.correct,1e-6); }
 };
 
-/* ---------- 10 NEW topics (Algebra + Calc I) ---------- */
+/* ---------- 10 NEW topics ---------- */
 function linearSolve(d){
   const m = (d==='hard')? rnd(-7,7)||2 : (d==='medium'? rnd(-5,5)||2 : rnd(2,7));
   const b = rnd(-12,12), c = rnd(-12,12);
   const x = (c - b)/m;
-  return {
-    prompt: `\\( ${m}x + ${b} = ${c} \\;\\; \\text{Solve for } x \\)`,
-    correct: Number(x.toFixed(3)), format:'number',
-    check:(ans)=>{ const n=parseNumberish(ans); return n!==null && approxEq(n,x,1e-3); }
-  };
+  return { prompt: `\\( ${m}x + ${b} = ${c} \\;\\; \\text{Solve for } x \\)`, x };
 }
 const topic_linear = {
   id:'linear_eq', label:'Solve Linear Eq.',
-  generateQuestion(d=DIFF){ const q=linearSolve(d); return { prompt:q.prompt, correct:q.correct, answerFormat:'number', meta:q }; },
-  checkAnswer(i,d){ return d.meta.check(i); }
+  generateQuestion(d=DIFF){ const q=linearSolve(d); return { prompt:q.prompt, meta:q, answerFormat:'number' }; },
+  checkAnswer(i,d){ const n=parseNumberish(i); if (n===null) return {correct:false,feedback:'Enter a number.'}; return approxEq(n,d.meta.x,1e-3); }
 };
 
 const topic_quadratic = {
@@ -137,7 +132,6 @@ const topic_comp = {
   id:'function_comp', label:'Function Composition',
   generateQuestion(d=DIFF){
     const a=rnd(1,4), b=rnd(-3,3), c=rnd(1,4), d0=rnd(-3,3), x0=rnd(-3,3);
-    // f(x)=ax+b, g(x)=cx+d
     const val = a*(c*x0+d0)+b;
     return { prompt:`\\( f(x)=${a}x+${b},\\; g(x)=${c}x+${d0}.\\; (f\\circ g)(${x0})= ? \\)`, correct: val, answerFormat:'number' };
   },
@@ -149,7 +143,6 @@ const topic_systems = {
   generateQuestion(d=DIFF){
     const a=rnd(1,6), b=rnd(1,6), c=rnd(-8,8);
     const d1=rnd(1,6), e=rnd(1,6), f=rnd(-8,8);
-    // Solve ax+by=c; d1x+ey=f (det ≠ 0)
     let det = a*e - b*d1; if(det===0) return topic_systems.generateQuestion(d);
     const x = (c*e - b*f)/det; const y = (a*f - c*d1)/det;
     return { prompt:`\\( \\begin{cases} ${a}x+${b}y=${c} \\\\ ${d1}x+${e}y=${f} \\end{cases} \\;\\; \\text{Find } x \\)`, meta:{x,y}, answerFormat:'number' };
@@ -192,7 +185,6 @@ const topic_product_rule = {
   id:'product_rule', label:'Derivatives: Product Rule',
   generateQuestion(d=DIFF){
     const a=rnd(1,4), b=rnd(1,4), x0=rnd(-3,3);
-    // f(x)=x^a * x^b => f'(x)=(a+b)x^{a+b-1}; we keep it simple but still product themed
     const correct = (a+b)*Math.pow(x0, a+b-1);
     return { prompt:`\\( f(x)=x^{${a}}\\cdot x^{${b}}.\\; f'(${x0})=? \\)`, correct, answerFormat:'number' };
   },
@@ -203,7 +195,6 @@ const topic_chain_rule = {
   id:'chain_rule', label:'Derivatives: Chain Rule',
   generateQuestion(d=DIFF){
     const a=rnd(1,3), b=rnd(1,3), x0=rnd(-2,2);
-    // f(x) = (ax+b)^3 => f' = 3(ax+b)^2 * a, evaluate at x0
     const correct = 3*Math.pow(a*x0+b,2)*a;
     return { prompt:`\\( f(x)=( ${a}x+${b} )^{3}.\\; f'(${x0})=? \\)`, correct, answerFormat:'number' };
   },
@@ -219,7 +210,6 @@ const topic_tangent_line = {
   },
   checkAnswer(i,d){
     const t=i.replace(/\s+/g,''); const m=d.meta.m, y0=d.meta.y0, x0=d.meta.x0;
-    // tangent equals the line itself (linear): y = m x + (y0 - m x0)
     const B = y0 - m*x0; const cand = t.toLowerCase();
     return cand===`y=${m}x${B>=0?'+':''}${B}`;
   }
@@ -235,12 +225,12 @@ const topic_continuity = {
     else { prompt = `\\( f(x)=x^2 \\) at \\( x=1 \\): type?`; answer='none'; }
     return { prompt, correct: answer, answerFormat:'string' };
   },
-  checkAnswer(i,d){ const t=i.trim().toLowerCase(); return ['removable','hole'].includes(t) && d.correct==='removable' || t===d.correct; }
+  checkAnswer(i,d){ const t=i.trim().toLowerCase(); return (['removable','hole'].includes(t) && d.correct==='removable') || t===d.correct; }
 };
 
 export const topicsRegistry = [
   arithmetic, trigBasics, rationalLimits, derivativesEval,
-  // new:
+  // 10 new topics:
   topic_linear, topic_quadratic, topic_exp_log, topic_comp, topic_systems,
   topic_limit_point, topic_diff_quotient, topic_power_rule, topic_product_rule,
   topic_chain_rule, topic_tangent_line, topic_continuity
