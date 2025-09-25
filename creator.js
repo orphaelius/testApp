@@ -3,8 +3,6 @@ const DEFAULT_PLAYER = { name:'Player', avatarId:0, shape:'rounded', color:'#6aa
 /* === Assets config (your three GIFs) === */
 const ASSET_FOLDER = './CharacterAssets/';
 const ASSET_LIST   = ['Model1.gif','Model2.gif','Model3.gif'];
-const USE_MANIFEST = false; // set true only if you add CharacterAssets/manifest.json
-const SHOW_UPLOAD  = true;  // set false to hide local upload UI
 
 /* ---- storage helpers ---- */
 function loadPlayer(){ try{ return JSON.parse(localStorage.getItem('mq_player')) || { ...DEFAULT_PLAYER }; }catch{ return { ...DEFAULT_PLAYER }; } }
@@ -15,7 +13,7 @@ function resolveURL(u){ try{ return new URL(u, document.baseURI).toString(); }ca
 function shapeClip(shape){
   return shape==='circle' ? 'circle(50% at 50% 50%)' :
          shape==='diamond'? 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' :
-         shape==='hex'    ? 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)' :
+         shape==='hex'    ? 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%)' :
          'inset(0 round 14%)';
 }
 function renderAvatarInto(el, p, size=220){
@@ -69,14 +67,6 @@ const avatarGrid = document.getElementById('avatarGrid');
 const assetGrid  = document.getElementById('assetGrid');
 const shapeSel = document.getElementById('shape');
 const nameInput = document.getElementById('name');
-const fileInput = document.getElementById('fileInput');
-const assetTypeSel = document.getElementById('assetType');
-const spriteOptions = document.getElementById('spriteOptions');
-const colsInput = document.getElementById('cols');
-const fpsInput = document.getElementById('fps');
-const scaleInput = document.getElementById('scale');
-const offxInput = document.getElementById('offx');
-const offyInput = document.getElementById('offy');
 
 let state = loadPlayer();
 
@@ -92,98 +82,27 @@ function buildAvatarGrid(){
   }
 }
 
-/* ---- assets folder grid ---- */
-async function loadManifestList(){
-  if (!USE_MANIFEST) return null;
-  try {
-    const url = ASSET_FOLDER.replace(/\/+$/,'/') + 'manifest.json';
-    const res = await fetch(url, { cache:'no-store' });
-    if (!res.ok) return null; const json = await res.json();
-    if (Array.isArray(json.gifs) && json.gifs.length) return json.gifs;
-    return null;
-  } catch { return null; }
-}
+/* ---- assets folder grid (your 3 GIFs) ---- */
 function buildAssetCard(file){
   const url = ASSET_FOLDER + file;
   const card=document.createElement('div'); card.className='avatar-card';
   const img=document.createElement('img'); img.src=url; img.alt=file; img.style.width='64px'; img.style.height='64px'; img.style.objectFit='contain'; img.style.imageRendering='pixelated';
   const btn=document.createElement('button'); btn.type='button'; btn.className='btn small'; btn.textContent='Select';
   btn.addEventListener('click', ()=>{
-    const scale=parseFloat(scaleInput.value)||1, offx=parseInt(offxInput.value||'0',10), offy=parseInt(offyInput.value||'0',10);
-    state.asset={ type:'gif', url, scale, offset:{x:offx,y:offy} };
+    state.asset={ type:'gif', url, scale:1, offset:{x:0,y:0} };
     refresh();
   });
   card.appendChild(img); card.appendChild(btn); assetGrid.appendChild(card);
 }
-async function buildAssetGrid(){
+function buildAssetGrid(){
   assetGrid.innerHTML='';
-  let list = await loadManifestList();
-  if (!Array.isArray(list) || list.length===0) list = ASSET_LIST;
-  if (!list.length){
-    const msg=document.createElement('div'); msg.className='note'; msg.textContent='No assets found. Check ASSET_LIST or add manifest.json.'; assetGrid.appendChild(msg);
-    return;
-  }
-  list.forEach(f=> buildAssetCard(f));
+  ASSET_LIST.forEach(f=> buildAssetCard(f));
 }
 
 /* ---- swatches ---- */
 function wireSwatches(){ document.querySelectorAll('.swatch').forEach(b=> b.addEventListener('click', ()=>{ state.color = b.getAttribute('data-color'); refresh(); })); }
 
-/* ---- optional file upload handling ---- */
-function detectTypeFromFile(file, override){ if (override && override!=='auto') return override; const ext=(file.name.split('.').pop()||'').toLowerCase(); return (file.type==='image/gif'||ext==='gif')?'gif':'image'; }
-function readFileAsDataURL(file){ return new Promise((res,rej)=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=rej; fr.readAsDataURL(file); }); }
-if (fileInput){
-  fileInput.addEventListener('change', async ()=>{
-    const file=fileInput.files?.[0]; if(!file) return;
-    const t=detectTypeFromFile(file, assetTypeSel.value);
-    const url=await readFileAsDataURL(file);
-    const scale=parseFloat(scaleInput.value)||1, offx=parseInt(offxInput.value||'0',10), offy=parseInt(offyInput.value||'0',10);
-    const asset={type:t,url,scale,offset:{x:offx,y:offy}};
-    if(t==='sprite'){ asset.cols=Math.max(1,parseInt(colsInput.value||'6',10)); asset.fps=Math.max(1,parseInt(fpsInput.value||'8',10)); }
-    state.asset=asset; refresh();
-  });
-}
-if (assetTypeSel){
-  assetTypeSel.addEventListener('change', ()=>{
-    spriteOptions.style.display = (assetTypeSel.value==='sprite') ? 'grid' : 'none';
-    if (state.asset && assetTypeSel.value!=='auto') state.asset.type = assetTypeSel.value;
-    refresh();
-  });
-}
-[scaleInput,offxInput,offyInput,colsInput,fpsInput].forEach(inp=> inp?.addEventListener('input', ()=>{
-  if(!state.asset) state.asset={type:'gif',url:'',scale:1,offset:{x:0,y:0}};
-  state.asset.scale=parseFloat(scaleInput.value)||1;
-  state.asset.offset={x:parseInt(offxInput.value||'0',10), y:parseInt(offyInput.value||'0',10)};
-  if(state.asset.type==='sprite'){
-    state.asset.cols=Math.max(1,parseInt(colsInput.value||'6',10));
-    state.asset.fps=Math.max(1,parseInt(fpsInput.value||'8',10));
-  }
-  refresh();
-}));
-
-/* ---- GIF → sprite conversion (speed control) ---- */
-async function fetchArrayBuffer(url){ const r=await fetch(url,{cache:'no-store'}); if(!r.ok) throw new Error('Fetch fail '+r.status); return await r.arrayBuffer(); }
-async function gifToSpriteStrip(gifUrl){
-  const { parseGIF, decompressFrames } = window.gifuctJs;
-  const ab=await fetchArrayBuffer(gifUrl); const gif=parseGIF(ab); const frames=decompressFrames(gif,true);
-  const w=gif.lsd.width, h=gif.lsd.height, cols=frames.length;
-  const canvas=document.createElement('canvas'); canvas.width=w*cols; canvas.height=h; const ctx=canvas.getContext('2d');
-  for(let i=0;i<cols;i++){ const f=frames[i]; const imgData=ctx.createImageData(w,h); imgData.data.set(f.patch); ctx.putImageData(imgData, i*w, 0); }
-  return { dataURL: canvas.toDataURL('image/png'), cols, frameW:w, frameH:h };
-}
-async function convertCurrentGifToSprite(){
-  if (!state.asset || state.asset.type!=='gif' || !state.asset.url){ alert('Select a GIF from assets first.'); return; }
-  try{
-    const { dataURL, cols } = await gifToSpriteStrip(resolveURL(state.asset.url));
-    const fps = Math.max(1, parseInt((document.getElementById('fps')?.value)||'6', 10));
-    state.asset = { type:'sprite', url:dataURL, cols, fps, scale: state.asset.scale??1, offset: state.asset.offset??{x:0,y:0} };
-    document.getElementById('spriteOptions').style.display='grid';
-    document.getElementById('cols').value=cols; document.getElementById('fps').value=fps;
-    refresh(); alert('Converted! Adjust FPS to control speed.');
-  } catch(e){ console.error('GIF→sprite failed', e); alert('Could not convert this GIF.'); }
-}
-
-/* ---- UI wiring ---- */
+/* ---- Preview + form ---- */
 function refresh(){
   document.getElementById('name').value = state.name || '';
   document.getElementById('shape').value = state.shape || 'rounded';
@@ -193,15 +112,9 @@ function goHome(){ const u=new URL('./index.html', window.location.href); window
 
 function init(){
   document.getElementById('year')?.textContent = new Date().getFullYear();
-
-  // optionally hide uploads
-  if (!SHOW_UPLOAD) document.getElementById('uploadRow')?.style && (document.getElementById('uploadRow').style.display='none');
-
   buildAvatarGrid(); buildAssetGrid(); wireSwatches(); refresh();
   shapeSel.addEventListener('change', e=>{ state.shape=e.target.value; refresh(); });
-  document.getElementById('convertBtn').addEventListener('click', convertCurrentGifToSprite);
   nameInput.addEventListener('input', e=>{ state.name = e.target.value; });
-
   form.addEventListener('submit', e=>{ e.preventDefault(); savePlayer(state); goHome(); });
 }
 if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
