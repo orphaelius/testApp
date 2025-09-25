@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <title>Asymptium — Loot</title>
+  <link rel="stylesheet" href="./style.css"/>
+</head>
+<body>
+  <header class="appbar">
+    <div class="appbar-inner">
+      <a class="brand" href="./index.html">Asymptium</a>
+      <nav class="nav">
+        <a class="nav-link" href="./index.html">Home</a>
+        <a class="nav-link" href="./creator.html">My Character</a>
+        <a class="nav-link" href="./settings.html">Settings</a>
+        <a class="nav-link" href="./about.html">About Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap layout-single">
+    <section class="card">
+      <h1>Loot Vault</h1>
+      <p class="muted">You’ve earned loot by leveling up. Opening soon…</p>
+
+      <div class="loot-grid">
+        <div class="loot-card">
+          <div class="loot-art lg"></div>
+          <div class="loot-info">
+            <h3>Mystery Module</h3>
+            <p class="muted">Contains rare STEM cosmetics and math power-ups (coming soon).</p>
+          </div>
+        </div>
+        <div class="loot-card">
+          <div class="loot-art lg science"></div>
+          <div class="loot-info">
+            <h3>Quantum Cache</h3>
+            <p class="muted">STEM-themed avatars, pets, trails, and UI skins.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a href="./index.html" class="btn btn-primary">Back to Training</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot"><small>© <span id="year"></span> Asymptium</small></footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
