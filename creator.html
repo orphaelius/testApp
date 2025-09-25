@@ -3,126 +3,86 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>MathQuest — Character Creator</title>
-
+  <title>Asymptium — My Character</title>
+  <link rel="stylesheet" href="./style.css"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap" rel="stylesheet"/>
-
-  <link rel="stylesheet" href="./style.css"/>
-  <style>
-    .creator-wrap{min-height:100svh;display:grid;place-items:center;padding:var(--space)}
-    .creator-card{max-width:980px;width:100%;background:var(--glass);border:1px solid #1c2540;border-radius:16px;padding:var(--space);box-shadow:0 10px 30px rgba(0,0,0,.25)}
-    .creator-grid{display:grid;gap:var(--space);grid-template-columns:1fr;align-items:start}
-    .preview{display:grid;place-items:center;background:rgba(255,255,255,.03);border:1px dashed #223055;border-radius:12px;padding:var(--space)}
-    .controls{display:grid;gap:var(--space)}
-    .row{display:grid;gap:8px}
-    .row input[type="text"], .row select, .swatch{
-      background:#0f1427;border:1px solid #223055;color:var(--text);padding:12px 14px;border-radius:10px;font-size:16px
-    }
-    .avatar-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(110px,1fr));gap:12px}
-    .avatar-card{border:1px solid #223055;border-radius:12px;padding:10px;background:#0f1528;display:grid;gap:8px;place-items:center}
-    .avatar-card button{width:100%}
-    .swatches{display:flex;gap:8px;flex-wrap:wrap}
-    .swatch{width:44px;height:36px;border-radius:10px;border:2px solid #223055;cursor:pointer}
-    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .note{color:var(--muted);font-size:.9em}
-    .creator-actions{display:flex;justify-content:space-between;gap:10px;margin-top:6px}
-    .btn{padding:12px 16px;border-radius:12px;border:1px solid #223055;background:linear-gradient(180deg,#0f1528,#0a0f1f);color:var(--text);font-weight:700;cursor:pointer}
-    .btn-primary{background:linear-gradient(180deg,var(--accent),var(--accent-2));color:#0b1020;border:none}
-    @media (min-width: 900px){ .creator-grid{grid-template-columns: 1fr 1fr} }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
 </head>
 <body>
-  <div class="creator-wrap">
-    <div class="creator-card">
-      <h1 style="margin:0 0 8px 0;">Character Creator</h1>
-      <p class="note" style="margin:0 0 var(--space) 0;">Pick a preset or choose a GIF from your assets. GIFs animate and keep transparency.</p>
+  <header class="appbar">
+    <div class="appbar-inner">
+      <a class="brand" href="./index.html">Asymptium</a>
+      <nav class="nav">
+        <a class="nav-link" href="./index.html">Home</a>
+        <a class="nav-link active" href="./creator.html">My Character</a>
+        <a class="nav-link" href="./settings.html">Settings</a>
+        <a class="nav-link" href="./about.html">About Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="creator-wrap">
+    <section class="creator-card card">
+      <h1>Customize Character</h1>
+      <p class="muted">Choose a preset or select from your asset folder (GIFs animate). Theme & pets live on the Settings page.</p>
 
       <div class="creator-grid">
         <div class="preview">
-          <div id="creatorPreview" style="width:200px;height:200px"></div>
+          <div id="creatorPreview" class="preview-window"></div>
+          <div class="char-name creator-name"><input id="name" type="text" maxlength="24" placeholder="Name e.g., Nova"/></div>
         </div>
 
         <form id="creatorForm" class="controls" autocomplete="off">
-          <div class="row">
-            <label for="name">Character name</label>
-            <input id="name" name="name" type="text" maxlength="24" placeholder="e.g., Nova" required />
-          </div>
-
           <div class="row">
             <span>Avatar presets (10)</span>
             <div id="avatarGrid" class="avatar-grid"></div>
           </div>
 
-          <!-- NEW: Assets folder picker -->
           <div class="row">
             <span>From assets folder</span>
-            <p class="note">
-              Choose one of your uploaded GIFs from
-              <code>./CharacterAssets/</code>. The list is configured in <code>creator.js</code>.
-            </p>
+            <p class="note">Folder: <code>./CharacterAssets/</code></p>
             <div id="assetGrid" class="avatar-grid"></div>
           </div>
 
-          <!-- Optional uploads (you can hide this block if you don’t want local uploads) -->
           <div id="uploadRow" class="row">
             <span>Upload custom sprite (optional)</span>
-            <div class="grid-2">
-              <label class="btn">
-                <input id="fileInput" type="file" accept="image/gif,image/png,image/webp,image/jpeg" hidden/>
-                Choose File
+            <label class="btn"><input id="fileInput" type="file" accept="image/gif,image/png,image/webp,image/jpeg" hidden/> Choose File</label>
+            <div class="grid-3">
+              <label>Type
+                <select id="assetType" class="select">
+                  <option value="auto">Auto</option>
+                  <option value="gif">GIF</option>
+                  <option value="image">Image</option>
+                  <option value="sprite">Sprite strip</option>
+                </select>
               </label>
-              <select id="assetType" class="select" title="How to render the sprite">
-                <option value="auto">Auto-detect</option>
-                <option value="image">Static image</option>
-                <option value="gif">Animated GIF</option>
-                <option value="sprite">Sprite sheet (strip)</option>
+              <label>Cols <input id="cols" type="number" min="1" max="24" value="6" class="select"/></label>
+              <label>FPS <input id="fps" type="number" min="1" max="60" value="8" class="select"/></label>
+            </div>
+            <div class="grid-3">
+              <label>Scale <input id="scale" type="number" step="0.1" value="1" class="select"/></label>
+              <label>Off X <input id="offx" type="number" step="1" value="0" class="select"/></label>
+              <label>Off Y <input id="offy" type="number" step="1" value="0" class="select"/></label>
+            </div>
+            <button id="convertBtn" class="btn" type="button">Make controllable (convert GIF)</button>
+          </div>
+
+          <div class="row">
+            <label>Shape
+              <select id="shape" class="select">
+                <option value="rounded">Rounded</option>
+                <option value="circle">Circle</option>
+                <option value="diamond">Diamond</option>
+                <option value="hex">Hexagon</option>
               </select>
-            </div>
-            <div id="spriteOptions" class="grid-2" style="display:none">
-              <label>Cols (strip)
-                <input id="cols" type="number" min="1" max="24" value="6" class="select" />
-              </label>
-              <label>FPS
-                <input id="fps" type="number" min="1" max="60" value="8" class="select" />
-              </label>
-            </div>
-            <div class="grid-2">
-              <label>Scale
-                <input id="scale" type="number" step="0.1" value="1" class="select"/>
-              </label>
-              <label>Offset X
-                <input id="offx" type="number" step="1" value="0" class="select"/>
-              </label>
-              <label>Offset Y
-                <input id="offy" type="number" step="1" value="0" class="select"/>
-              </label>
-            </div>
-            <p class="note">Tip: For 64×64 sprites, start with scale 1.0. Adjust offsets to center.</p>
-          </div>
-
-          <div class="row">
-            <label for="shape">Shape</label>
-            <select id="shape" name="shape" class="select">
-              <option value="rounded">Rounded</option>
-              <option value="circle">Circle</option>
-              <option value="diamond">Diamond</option>
-              <option value="hex">Hexagon</option>
-            </select>
-          </div>
-
-          <div class="row">
-            <span>Glow Color</span>
+            </label>
             <div class="swatches">
-              <button class="swatch" style="background:#6aa6ff" data-color="#6aa6ff" type="button"></button>
-              <button class="swatch" style="background:#ff78c4" data-color="#ff78c4" type="button"></button>
-              <button class="swatch" style="background:#a33a4a" data-color="#a33a4a" type="button"></button>
-              <button class="swatch" style="background:#4bdc84" data-color="#4bdc84" type="button"></button>
-              <button class="swatch" style="background:#ffd24d" data-color="#ffd24d" type="button"></button>
-              <button class="swatch" style="background:#9df2c0" data-color="#9df2c0" type="button"></button>
-              <button class="swatch" style="background:#cda2ff" data-color="#cda2ff" type="button"></button>
-              <button class="swatch" style="background:#8ad5ff" data-color="#8ad5ff" type="button"></button>
+              <button class="swatch" style="--c:#6aa6ff" data-color="#6aa6ff" type="button"></button>
+              <button class="swatch" style="--c:#ff78c4" data-color="#ff78c4" type="button"></button>
+              <button class="swatch" style="--c:#a33a4a" data-color="#a33a4a" type="button"></button>
+              <button class="swatch" style="--c:#4bdc84" data-color="#4bdc84" type="button"></button>
+              <button class="swatch" style="--c:#ffd24d" data-color="#ffd24d" type="button"></button>
             </div>
           </div>
 
@@ -132,10 +92,11 @@
           </div>
         </form>
       </div>
-    </div>
-  </div>
+    </section>
+  </main>
 
-  <!-- IMPORTANT: keep type="module" -->
+  <!-- gif decoder for conversion -->
+  <script src="https://unpkg.com/gifuct-js/dist/gifuct.min.js"></script>
   <script type="module" src="./creator.js"></script>
 </body>
 </html>
