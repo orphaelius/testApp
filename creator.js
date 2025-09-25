@@ -1,23 +1,17 @@
 const DEFAULT_PLAYER = { name:'Player', avatarId:0, shape:'rounded', color:'#6aa6ff', asset:null };
 
-/* ====== CONFIG: point to your folder and filenames here ====== */
-const ASSET_FOLDER = './CharacterAssets';          // <- adjust if needed
-const ASSET_LIST   = [                             // <- put your 3 filenames here
-  'Model1.gif',
-  'Model2.gif',
-  'Model3.gif',
-];
-/* Optional: If you prefer a manifest, add /assets/avatars/manifest.json:
-   { "gifs": ["char1.gif","char2.gif","char3.gif"] }
-   and set USE_MANIFEST = true.
-*/
-const USE_MANIFEST = false;
-/* ============================================================= */
+/* ====== CONFIG: your assets live here ====== */
+/* You said: testApp/CharacterAssets with files: Model1.gif, Model2.gif, Model3.gif */
+const ASSET_FOLDER = './testApp/CharacterAssets/';
+const ASSET_LIST   = ['Model1.gif','Model2.gif','Model3.gif'];
+const USE_MANIFEST = false;   // set true only if you add manifest.json in that folder
+const SHOW_UPLOAD  = true;    // set to false to hide the local upload UI entirely
+/* =========================================== */
 
 function loadPlayer(){ try{ return JSON.parse(localStorage.getItem('mq_player')) || { ...DEFAULT_PLAYER }; }catch{ return { ...DEFAULT_PLAYER }; } }
 function savePlayer(p){ localStorage.setItem('mq_player', JSON.stringify(p)); }
 
-/* Reusable avatar renderer (mirror of app.js but used for preview) */
+/* Render avatar preview (supports presets, image/gif, and sprite strip) */
 function renderAvatarInto(el, p, size=200){
   el.innerHTML = '';
   const shapeClip =
@@ -26,7 +20,6 @@ function renderAvatarInto(el, p, size=200){
     p.shape === 'hex' ? 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)' :
     'inset(0 round 14%)';
 
-  // Custom asset?
   if (p.asset && p.asset.url){
     const container = document.createElement('div');
     Object.assign(container.style, {
@@ -57,8 +50,7 @@ function renderAvatarInto(el, p, size=200){
       container.appendChild(el2);
     } else {
       const img = document.createElement('img');
-      img.src = p.asset.url;        // can be Data URL or repo path (e.g., ./assets/avatars/char1.gif)
-      img.alt = 'avatar';
+      img.src = p.asset.url; img.alt = 'avatar';
       img.style.width = Math.round(64*scale)+'px';
       img.style.height = Math.round(64*scale)+'px';
       img.style.objectFit = 'contain';
@@ -74,7 +66,7 @@ function renderAvatarInto(el, p, size=200){
     return;
   }
 
-  // Otherwise block avatar
+  // Block avatar (fallback/preset)
   const svgNS='http://www.w3.org/2000/svg';
   const svg=document.createElementNS(svgNS,'svg');
   svg.setAttribute('viewBox','0 0 64 64'); svg.setAttribute('width', size); svg.setAttribute('height', size);
@@ -128,24 +120,21 @@ const fpsInput = document.getElementById('fps');
 const scaleInput = document.getElementById('scale');
 const offxInput = document.getElementById('offx');
 const offyInput = document.getElementById('offy');
+const uploadRow  = document.getElementById('uploadRow');
 
 let state = loadPlayer();
 
-/* ---- build preset grid ---- */
+/* ---- presets grid ---- */
 function buildAvatarGrid(){
   for (let i=0;i<10;i++){
     const card = document.createElement('label');
     card.className = 'avatar-card';
     const thumb = document.createElement('div'); thumb.style.width='100px'; thumb.style.height='100px';
     renderAvatarInto(thumb, { ...state, asset:null, avatarId:i }, 100);
-    const radio = document.createElement('input'); radio.type='radio'; radio.name='avatarId'; radio.value=String(i);
-    card.appendChild(thumb); card.appendChild(radio);
-    if (i===state.avatarId && !state.asset) card.classList.add('active');
-    card.addEventListener('click', ()=>{
-      state.avatarId = i; // keep state.asset as-is unless user picks a folder asset or uploads
-      document.querySelectorAll('.avatar-card').forEach(c=>c.classList.remove('active'));
-      card.classList.add('active'); refresh();
-    });
+    card.appendChild(thumb);
+    const btn = document.createElement('button'); btn.type='button'; btn.className='btn small'; btn.textContent='Use preset';
+    btn.addEventListener('click', ()=>{ state.avatarId = i; state.asset = null; refresh(); });
+    card.appendChild(btn);
     avatarGrid.appendChild(card);
   }
 }
@@ -154,7 +143,8 @@ function buildAvatarGrid(){
 async function loadManifestList(){
   if (!USE_MANIFEST) return null;
   try {
-    const res = await fetch(ASSET_FOLDER + 'manifest.json', { cache:'no-store' });
+    const url = ASSET_FOLDER.replace(/\/+$/,'/') + 'manifest.json';
+    const res = await fetch(url, { cache:'no-store' });
     if (!res.ok) return null;
     const json = await res.json();
     if (Array.isArray(json.gifs) && json.gifs.length) return json.gifs;
@@ -163,37 +153,47 @@ async function loadManifestList(){
 }
 
 function buildAssetCard(filename){
-  const url = ASSET_FOLDER + filename;
+  const url = ASSET_FOLDER.replace(/\/+$/,'/') + filename;
+
   const card = document.createElement('div');
   card.className = 'avatar-card';
   card.title = filename;
 
   const thumb = document.createElement('div');
-  thumb.style.width='100px'; thumb.style.height='100px';
-  // quick preview using the same render pipeline (as image)
-  renderAvatarInto(thumb, { ...state, asset:{ type:'gif', url, scale:1, offset:{x:0,y:0} } }, 100);
+  thumb.style.width='100px'; thumb.style.height='100px'; thumb.style.display='grid'; thumb.style.placeItems='center';
+
+  const img = document.createElement('img');
+  img.src = url; img.alt = filename;
+  img.style.width='64px'; img.style.height='64px'; img.style.objectFit='contain'; img.style.imageRendering='pixelated';
+  thumb.appendChild(img);
 
   const btn = document.createElement('button');
-  btn.className = 'btn small';
-  btn.type = 'button';
-  btn.textContent = 'Select';
-
+  btn.className = 'btn small'; btn.type = 'button'; btn.textContent = 'Select';
   btn.addEventListener('click', ()=>{
-    state.asset = { type:'gif', url, scale: parseFloat(scaleInput.value)||1, offset:{ x:parseInt(offxInput.value||'0',10), y:parseInt(offyInput.value||'0',10) } };
-    // when choosing a folder asset, we keep avatarId (unused) but asset takes precedence
+    const scale = parseFloat(scaleInput.value)||1;
+    const offx = parseInt(offxInput.value||'0',10);
+    const offy = parseInt(offyInput.value||'0',10);
+    state.asset = { type:'gif', url, scale, offset:{x:offx,y:offy} };
     refresh();
   });
 
   card.appendChild(thumb);
   card.appendChild(btn);
-  return card;
+  assetGrid.appendChild(card);
 }
 
 async function buildAssetGrid(){
-  // Prefer manifest if enabled, else fall back to the static list
-  const list = await loadManifestList() || ASSET_LIST;
+  if (!assetGrid){ console.error('[creator] #assetGrid missing'); return; }
   assetGrid.innerHTML = '';
-  list.forEach(name => assetGrid.appendChild(buildAssetCard(name)));
+  let list = await loadManifestList();
+  if (!Array.isArray(list) || list.length === 0) list = ASSET_LIST;
+  if (!Array.isArray(list) || list.length === 0){
+    const msg = document.createElement('div'); msg.className = 'note';
+    msg.textContent = 'No assets found. Check ASSET_LIST or add manifest.json.';
+    assetGrid.appendChild(msg);
+    return;
+  }
+  list.forEach(name => { try{ buildAssetCard(name); } catch(e){ console.error('Asset card failed:', name, e); } });
 }
 
 /* ---- swatches ---- */
@@ -206,14 +206,13 @@ function wireSwatches(){
   });
 }
 
-/* ---- file handling ---- */
+/* ---- optional file upload handling ---- */
 function detectTypeFromFile(file, override){
   if (override && override !== 'auto') return override;
   const ext = (file.name.split('.').pop()||'').toLowerCase();
   if (file.type === 'image/gif' || ext === 'gif') return 'gif';
-  return 'image'; // default; user can switch to 'sprite' if it's a strip
+  return 'image';
 }
-
 function readFileAsDataURL(file){
   return new Promise((resolve,reject)=>{
     const fr = new FileReader();
@@ -222,38 +221,36 @@ function readFileAsDataURL(file){
     fr.readAsDataURL(file);
   });
 }
-
-fileInput.addEventListener('change', async ()=>{
-  const file = fileInput.files?.[0];
-  if (!file) return;
-  const chosen = assetTypeSel.value;
-  const type = detectTypeFromFile(file, chosen);
-  const url = await readFileAsDataURL(file); // Data URL for portability
-  const scale = parseFloat(scaleInput.value)||1;
-  const offx = parseInt(offxInput.value||'0',10);
-  const offy = parseInt(offyInput.value||'0',10);
-
-  const asset = { type, url, scale, offset:{x:offx,y:offy} };
-  if (type === 'sprite'){
-    asset.cols = Math.max(1, parseInt(colsInput.value||'6',10));
-    asset.fps  = Math.max(1, parseInt(fpsInput.value||'8',10));
-  }
-
-  state.asset = asset;
-  refresh();
-});
-
-assetTypeSel.addEventListener('change', ()=>{
-  const v = assetTypeSel.value;
-  spriteOptions.style.display = (v === 'sprite') ? 'grid' : 'none';
-  if (state.asset) state.asset.type = (v==='auto') ? state.asset.type : v;
-  refresh();
-});
-
+if (fileInput){
+  fileInput.addEventListener('change', async ()=>{
+    const file = fileInput.files?.[0]; if (!file) return;
+    const chosen = assetTypeSel.value;
+    const type = detectTypeFromFile(file, chosen);
+    const url = await readFileAsDataURL(file);
+    const scale = parseFloat(scaleInput.value)||1;
+    const offx = parseInt(offxInput.value||'0',10);
+    const offy = parseInt(offyInput.value||'0',10);
+    const asset = { type, url, scale, offset:{x:offx,y:offy} };
+    if (type === 'sprite'){
+      asset.cols = Math.max(1, parseInt(colsInput.value||'6',10));
+      asset.fps  = Math.max(1, parseInt(fpsInput.value||'8',10));
+    }
+    state.asset = asset; refresh();
+  });
+}
+if (assetTypeSel){
+  assetTypeSel.addEventListener('change', ()=>{
+    const v = assetTypeSel.value;
+    spriteOptions.style.display = (v === 'sprite') ? 'grid' : 'none';
+    if (state.asset) state.asset.type = (v==='auto') ? state.asset.type : v;
+    refresh();
+  });
+}
 [scaleInput, offxInput, offyInput, colsInput, fpsInput].forEach(inp=>{
+  if (!inp) return;
   inp.addEventListener('input', ()=>{
     const scale = parseFloat(scaleInput.value)||1, offx = parseInt(offxInput.value||'0',10), offy = parseInt(offyInput.value||'0',10);
-    if (!state.asset) state.asset = { type:'image', url:'', scale:1, offset:{x:0,y:0} };
+    if (!state.asset) state.asset = { type:'gif', url:'', scale:1, offset:{x:0,y:0} };
     state.asset.scale = scale; state.asset.offset = {x:offx,y:offy};
     if (state.asset.type === 'sprite'){
       state.asset.cols = Math.max(1, parseInt(colsInput.value||'6',10));
@@ -267,19 +264,28 @@ assetTypeSel.addEventListener('change', ()=>{
 function refresh(){
   nameInput.value = state.name || '';
   shapeSel.value = state.shape || 'rounded';
-  scaleInput.value = state.asset?.scale ?? 1;
-  offxInput.value = state.asset?.offset?.x ?? 0;
-  offyInput.value = state.asset?.offset?.y ?? 0;
-  assetTypeSel.value = state.asset?.type || 'auto';
-  spriteOptions.style.display = (state.asset?.type === 'sprite') ? 'grid' : 'none';
+  if (scaleInput) scaleInput.value = state.asset?.scale ?? 1;
+  if (offxInput) offxInput.value = state.asset?.offset?.x ?? 0;
+  if (offyInput) offyInput.value = state.asset?.offset?.y ?? 0;
+  if (assetTypeSel) assetTypeSel.value = state.asset?.type || 'auto';
+  if (spriteOptions) spriteOptions.style.display = (state.asset?.type === 'sprite') ? 'grid' : 'none';
   if (state.asset?.type === 'sprite'){
-    colsInput.value = state.asset.cols || 6;
-    fpsInput.value  = state.asset.fps || 8;
+    if (colsInput) colsInput.value = state.asset.cols || 6;
+    if (fpsInput)  fpsInput.value  = state.asset.fps || 8;
   }
   renderAvatarInto(preview, state, 200);
 }
 
+function goHome(){
+  // More robust than './index.html' — works under GitHub Pages subpaths
+  const homeURL = new URL('./index.html', window.location.href);
+  window.location.assign(homeURL.toString());
+}
+
 function init(){
+  // Optional: hide upload block
+  if (!SHOW_UPLOAD && uploadRow) uploadRow.style.display = 'none';
+
   nameInput.value = state.name || '';
   shapeSel.value = state.shape || 'rounded';
 
@@ -294,7 +300,7 @@ function init(){
     e.preventDefault();
     state.name = (nameInput.value || 'Player').trim();
     savePlayer(state);
-    window.location.href = './index.html';
+    goHome(); // ✅ fixed navigation
   });
 }
 
