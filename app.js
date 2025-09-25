@@ -6,24 +6,21 @@ const clear = n=>{ if(!n) return; while(n.firstChild) n.removeChild(n.firstChild
 async function typesetMath(el){ const mj = window.MathJax; if (mj?.typesetPromise) await mj.typesetPromise([el]); }
 
 const DEFAULT_PLAYER = { name:'Player', avatarId:0, shape:'rounded', color:'#6aa6ff', asset:null };
-const DEFAULT_SETTINGS = { theme:'blue', tintStrength:0.25, pet:null }; // pet = {url}
+const DEFAULT_SETTINGS = { theme:'blue', tintStrength:0.25, pet:null };
 
 function load(key, fallback){ try{ return JSON.parse(localStorage.getItem(key)) ?? fallback; }catch{ return fallback; } }
 function save(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
 
 function loadPlayer(){ return load('mq_player', DEFAULT_PLAYER); }
-function savePlayer(p){ save('mq_player', p); }
 function loadSettings(){ return load('asym_settings', DEFAULT_SETTINGS); }
-function saveSettings(s){ save('asym_settings', s); }
 function applyTheme(theme){ document.documentElement.setAttribute('data-theme', theme); }
-
 function resolveURL(urlLike){ try{ return new URL(urlLike, document.baseURI).toString(); }catch{ return urlLike; } }
 
 /* ---------- Avatar & Pet Rendering ---------- */
 function shapeClip(shape){
   return shape==='circle' ? 'circle(50% at 50% 50%)' :
          shape==='diamond'? 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' :
-         shape==='hex'    ? 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)' :
+         shape==='hex'    ? 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%)' :
          'inset(0 round 14%)';
 }
 function renderAvatarBG(){
@@ -42,7 +39,6 @@ function renderAvatar(){
   const container = document.createElement('div');
   Object.assign(container.style, { width:size+'px', height:size+'px', clipPath:shapeClip(p.shape), borderRadius:'14%', background:'transparent', position:'relative', display:'grid', placeItems:'center' });
 
-  // custom asset?
   if (p.asset?.url){
     const scale = (typeof p.asset.scale==='number')?p.asset.scale:1;
     const off = p.asset.offset || {x:0,y:0};
@@ -69,21 +65,15 @@ function renderAvatar(){
       img.style.width = Math.round(64*scale)+'px';
       img.style.height= Math.round(64*scale)+'px';
       img.style.objectFit='contain'; img.style.imageRendering='pixelated';
-      const t = `translate(${off.x||0}px, ${off.y||0}px)`;
-      img.style.transform = t;
+      img.style.transform = `translate(${off.x||0}px, ${off.y||0}px)`;
       img.addEventListener('error', ()=>console.error('[avatar] load fail', p.asset.url));
       container.appendChild(img);
     }
   } else {
-    // simple block avatar
     const svgNS='http://www.w3.org/2000/svg';
     const svg=document.createElementNS(svgNS,'svg');
     svg.setAttribute('viewBox','0 0 64 64'); svg.setAttribute('width', size); svg.setAttribute('height', size);
     svg.style.clipPath = shapeClip(p.shape); svg.style.background='transparent'; svg.style.borderRadius='14%';
-    const defs=document.createElementNS(svgNS,'defs');
-    const glow=document.createElementNS(svgNS,'filter'); glow.setAttribute('id','glow');
-    glow.innerHTML=`<feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>`;
-    defs.appendChild(glow); svg.appendChild(defs);
     const presets=[
       [[1,1],[2,1],[1,2],[2,2],[1,3],[2,3]], [[0,1],[1,1],[2,1],[1,2],[1,3]],
       [[0,0],[3,0],[1,1],[2,1],[1,2],[2,2],[0,3],[3,3]], [[1,0],[2,0],[0,1],[3,1],[1,2],[2,2],[1,3],[2,3]],
@@ -101,10 +91,15 @@ function renderAvatar(){
       r.setAttribute('fill', p.color); r.setAttribute('filter', 'url(#glow)');
       svg.appendChild(r);
     });
+    const defs=document.createElementNS(svgNS,'defs');
+    const glow=document.createElementNS(svgNS,'filter'); glow.setAttribute('id','glow');
+    glow.innerHTML=`<feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>`;
+    defs.appendChild(glow); svg.appendChild(defs);
+
     container.appendChild(svg);
   }
 
-  wrap.appendChild(container);
+  $('#pixelCharContainer').appendChild(container);
 
   // Pet
   const pet = loadSettings().pet;
@@ -120,7 +115,6 @@ function renderAvatar(){
     petStage.classList.remove('on');
   }
 
-  // Avatar BG tint
   renderAvatarBG();
 }
 
@@ -143,10 +137,9 @@ function pulseXP(){
   const rail = $('#xpRail'); rail.classList.remove('pulse'); void rail.offsetWidth; rail.classList.add('pulse');
 }
 function addLootForLevelUp(newLevel, oldLevel){
-  // +1 per level; +3 bonus at every 10th level
   const gained = newLevel - oldLevel;
-  let loot = gained; // 1 per level
-  for (let L=oldLevel+1; L<=newLevel; L++){ if (L%10===0) loot += 2; } // +2 extra so total 3 at each 10th
+  let loot = gained; // +1 each level
+  for (let L=oldLevel+1; L<=newLevel; L++){ if (L%10===0) loot += 2; } // +2 extra at multiples of 10 (total 3)
   xpState.loot += loot;
 }
 function awardXPAnimated(amountTotal=15){
@@ -158,7 +151,7 @@ function awardXPAnimated(amountTotal=15){
   let remaining = amountTotal;
   const tick = ()=>{
     if (remaining<=0) { saveXP(); syncHUD(); return; }
-    const step = Math.max(1, Math.round(amountTotal/20)); // ~20 ticks
+    const step = Math.max(1, Math.round(amountTotal/20));
     const need = xpState.xpNeeded - xpState.xp;
     const delta = Math.min(step, remaining, need);
     const beforeLevel = xpState.level;
@@ -172,7 +165,7 @@ function awardXPAnimated(amountTotal=15){
 
 /* ---------- Topics & Difficulty ---------- */
 let currentTopicId = null, currentQ = null;
-let difficulty = 'easy'; // easy | medium | hard
+let difficulty = 'easy';
 
 async function newQuestion(){
   const topic = findTopic(currentTopicId); if (!topic) return;
@@ -205,7 +198,6 @@ function populateTopics(){
 
 /* ---------- On-screen keyboard & mobile suppression ---------- */
 function insertAtCursor(input, text){
-  // make input writable (temporarily) to update value without mobile keyboard
   const wasReadOnly = input.readOnly; input.readOnly = false;
   const start = input.selectionStart ?? input.value.length, end = input.selectionEnd ?? input.value.length;
   input.value = input.value.slice(0,start) + text + input.value.slice(end);
@@ -222,9 +214,8 @@ function wireKeyboard(){
   $('#kbdToggle').addEventListener('click', ()=>{
     const k=$('#kbd'); const open = k.classList.toggle('open'); $('#kbdToggle').setAttribute('aria-expanded', open?'true':'false');
   });
-  // Prevent native keyboard on mobile by keeping input readonly; allow desktop typing via double-click to toggle
-  const inp = $('#answerInput');
-  inp.addEventListener('dblclick', ()=>{ inp.readOnly = !inp.readOnly; });
+  // Prevent native keyboard on mobile (input stays readonly; desktop can dbl-click to toggle)
+  const inp = $('#answerInput'); inp.addEventListener('dblclick', ()=>{ inp.readOnly = !inp.readOnly; });
 }
 
 /* ---------- Difficulty toggle ---------- */
@@ -240,20 +231,19 @@ function wireDifficulty(){
 
 /* ---------- Init ---------- */
 function init(){
-  // year
   const y=$('#year'); if (y) y.textContent = new Date().getFullYear();
 
-  // settings / theme
+  // theme & avatar BG tint
   const s = loadSettings(); applyTheme(s.theme); renderAvatarBG();
 
-  // player + avatar
+  // avatar & pet
   renderAvatar();
   window.addEventListener('resize', renderAvatar, { passive:true });
 
   // xp & loot
   loadXP(); syncHUD();
 
-  // topics & first question
+  // topics
   populateTopics(); renderDifficulty();
   $('#topicSelect').addEventListener('change', e=>{ currentTopicId = e.target.value; newQuestion(); });
   if (currentTopicId) newQuestion();
@@ -262,8 +252,7 @@ function init(){
   $('#checkBtn').addEventListener('click', checkAnswer);
   $('#nextBtn').addEventListener('click', ()=>{ xpState.streak=0; saveXP(); syncHUD(); newQuestion(); });
 
-  // keyboard
-  wireKeyboard();
+  // keyboard + difficulty
+  wireKeyboard(); wireDifficulty();
 }
-
 if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
