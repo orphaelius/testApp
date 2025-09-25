@@ -21,9 +21,8 @@
       background:#0f1427;border:1px solid #223055;color:var(--text);padding:12px 14px;border-radius:10px;font-size:16px
     }
     .avatar-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(110px,1fr));gap:12px}
-    .avatar-card{border:1px solid #223055;border-radius:12px;padding:10px;background:#0f1528;cursor:pointer;display:grid;gap:8px;place-items:center}
-    .avatar-card input{display:none}
-    .avatar-card.active{outline:2px solid var(--accent);box-shadow:var(--glow)}
+    .avatar-card{border:1px solid #223055;border-radius:12px;padding:10px;background:#0f1528;display:grid;gap:8px;place-items:center}
+    .avatar-card button{width:100%}
     .swatches{display:flex;gap:8px;flex-wrap:wrap}
     .swatch{width:44px;height:36px;border-radius:10px;border:2px solid #223055;cursor:pointer}
     .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -38,7 +37,7 @@
   <div class="creator-wrap">
     <div class="creator-card">
       <h1 style="margin:0 0 8px 0;">Character Creator</h1>
-      <p class="note" style="margin:0 0 var(--space) 0;">Pick a preset or upload a sprite (GIF/PNG/WebP). GIFs animate and keep transparency.</p>
+      <p class="note" style="margin:0 0 var(--space) 0;">Pick a preset or choose a GIF from your assets. GIFs animate and keep transparency.</p>
 
       <div class="creator-grid">
         <div class="preview">
@@ -49,60 +48,69 @@
           <div class="row">
             <label for="name">Character name</label>
             <input id="name" name="name" type="text" maxlength="24" placeholder="e.g., Nova" required />
-            <div id="assetGrid" class="avatar-grid"></div>
-
-            <script type="module" src="./creator.js"></script>
           </div>
 
           <div class="row">
-            <span>Avatar preset (10)</span>
+            <span>Avatar presets (10)</span>
             <div id="avatarGrid" class="avatar-grid"></div>
           </div>
 
-          <!-- (inside <form id="creatorForm" ...>) -->
+          <!-- NEW: Assets folder picker -->
+          <div class="row">
+            <span>From assets folder</span>
+            <p class="note">
+              Choose one of your uploaded GIFs from
+              <code>./testApp/CharacterAssets/</code>. The list is configured in <code>creator.js</code>.
+            </p>
+            <div id="assetGrid" class="avatar-grid"></div>
+          </div>
 
-<div class="row">
-  <span>From assets folder</span>
-  <p class="note">Choose one of your uploaded GIFs from <code>./CharacterAssets/</code>. You control the list in <code>creator.js</code>.</p>
-  <div id="assetGrid" class="avatar-grid"></div>
-</div>
+          <!-- Optional uploads (you can hide this block if you don’t want local uploads) -->
+          <div id="uploadRow" class="row">
+            <span>Upload custom sprite (optional)</span>
+            <div class="grid-2">
+              <label class="btn">
+                <input id="fileInput" type="file" accept="image/gif,image/png,image/webp,image/jpeg" hidden/>
+                Choose File
+              </label>
+              <select id="assetType" class="select" title="How to render the sprite">
+                <option value="auto">Auto-detect</option>
+                <option value="image">Static image</option>
+                <option value="gif">Animated GIF</option>
+                <option value="sprite">Sprite sheet (strip)</option>
+              </select>
+            </div>
+            <div id="spriteOptions" class="grid-2" style="display:none">
+              <label>Cols (strip)
+                <input id="cols" type="number" min="1" max="24" value="6" class="select" />
+              </label>
+              <label>FPS
+                <input id="fps" type="number" min="1" max="60" value="8" class="select" />
+              </label>
+            </div>
+            <div class="grid-2">
+              <label>Scale
+                <input id="scale" type="number" step="0.1" value="1" class="select"/>
+              </label>
+              <label>Offset X
+                <input id="offx" type="number" step="1" value="0" class="select"/>
+              </label>
+              <label>Offset Y
+                <input id="offy" type="number" step="1" value="0" class="select"/>
+              </label>
+            </div>
+            <p class="note">Tip: For 64×64 sprites, start with scale 1.0. Adjust offsets to center.</p>
+          </div>
 
-<div class="row">
-  <span>Upload custom sprite (optional)</span>
-  <div class="grid-2">
-    <label class="btn">
-      <input id="fileInput" type="file" accept="image/gif,image/png,image/webp,image/jpeg" hidden/>
-      Choose File
-    </label>
-    <select id="assetType" class="select" title="How to render the sprite">
-      <option value="auto">Auto-detect</option>
-      <option value="image">Static image</option>
-      <option value="gif">Animated GIF</option>
-      <option value="sprite">Sprite sheet (strip)</option>
-    </select>
-  </div>
-  <div id="spriteOptions" class="grid-2" style="display:none">
-    <label>Cols (strip)
-      <input id="cols" type="number" min="1" max="24" value="6" class="select" />
-    </label>
-    <label>FPS
-      <input id="fps" type="number" min="1" max="60" value="8" class="select" />
-    </label>
-  </div>
-  <div class="grid-2">
-    <label>Scale
-      <input id="scale" type="number" step="0.1" value="1" class="select"/>
-    </label>
-    <label>Offset X
-      <input id="offx" type="number" step="1" value="0" class="select"/>
-    </label>
-    <label>Offset Y
-      <input id="offy" type="number" step="1" value="0" class="select"/>
-    </label>
-  </div>
-  <p class="note">Tip: For 64×64 sprites, start with scale 1.0. Adjust offsets to center.</p>
-</div>
-
+          <div class="row">
+            <label for="shape">Shape</label>
+            <select id="shape" name="shape" class="select">
+              <option value="rounded">Rounded</option>
+              <option value="circle">Circle</option>
+              <option value="diamond">Diamond</option>
+              <option value="hex">Hexagon</option>
+            </select>
+          </div>
 
           <div class="row">
             <span>Glow Color</span>
@@ -120,13 +128,14 @@
 
           <div class="creator-actions">
             <a class="btn" href="./index.html">Cancel</a>
-            <button class="btn btn-primary" type="submit">Save & Return</button>
+            <button id="saveReturn" class="btn btn-primary" type="submit">Save & Return</button>
           </div>
         </form>
       </div>
     </div>
   </div>
 
+  <!-- IMPORTANT: keep type="module" -->
   <script type="module" src="./creator.js"></script>
 </body>
 </html>
