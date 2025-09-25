@@ -1,7 +1,6 @@
 // app.js
 import { topicsRegistry, findTopic } from './topics.js';
 
-/* ---------- helpers ---------- */
 const $ = (q)=> document.querySelector(q);
 const $all = (q)=> Array.from(document.querySelectorAll(q));
 const clear = (node)=> { if (!node) return; while(node.firstChild) node.removeChild(node.firstChild); };
@@ -13,19 +12,17 @@ function loadTheme(){ try { return localStorage.getItem('mq_theme') || DEFAULT_T
 function saveTheme(t){ localStorage.setItem('mq_theme', t); }
 function applyTheme(t){ document.documentElement.setAttribute('data-theme', t); const s=$('#themeSelect'); if (s) s.value = t; }
 
-/* ---------- Player & Avatar Rendering ---------- */
+/* ---------- Player & Avatar ---------- */
 const DEFAULT_PLAYER = { name:'Player', avatarId:0, shape:'rounded', color:'#6aa6ff', asset:null };
 function loadPlayer(){ try{ return JSON.parse(localStorage.getItem('mq_player')) || { ...DEFAULT_PLAYER }; }catch{ return { ...DEFAULT_PLAYER }; } }
 function savePlayer(p){ localStorage.setItem('mq_player', JSON.stringify(p)); }
 
-/**
- * Render avatar into #pixelCharContainer.
- * Supports:
- *  - Block presets (10 layouts)
- *  - asset.type === 'image' | 'gif' (img element; GIF animates natively)
- *  - asset.type === 'sprite' (sprite-sheet strip; cols+fps)
- * p.asset = { type:'gif'|'image'|'sprite', url:string, scale:number, offset:{x,y}, cols?:number, fps?:number }
- */
+// Resolve asset.url against the current page reliably (works on GitHub Pages subpaths)
+function resolveAssetURL(urlLike){
+  try { return new URL(urlLike, document.baseURI).toString(); }
+  catch { return urlLike; }
+}
+
 function renderAvatar(p){
   const wrap = $('#pixelCharContainer'); if (!wrap) return;
   clear(wrap);
@@ -39,65 +36,70 @@ function renderAvatar(p){
     p.shape === 'hex' ? 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)' :
     'inset(0 round 14%)';
 
-  // If custom asset provided
+  // If custom asset set (gif/image/sprite)
   if (p.asset && p.asset.url){
     const container = document.createElement('div');
-    container.style.width = size+'px'; container.style.height = size+'px';
-    container.style.clipPath = shapeClip; container.style.borderRadius = '14%';
-    container.style.background = '#101425'; container.style.position = 'relative';
-    container.style.display = 'grid'; container.style.placeItems = 'center';
+    Object.assign(container.style, {
+      width: size+'px', height: size+'px', clipPath: shapeClip, borderRadius:'14%',
+      background:'#101425', position:'relative', display:'grid', placeItems:'center'
+    });
     container.classList.add('block-glow');
 
     const scale = (typeof p.asset.scale === 'number' ? p.asset.scale : 1);
     const off = p.asset.offset || {x:0,y:0};
 
     if (p.asset.type === 'sprite'){
-      // CSS steps animation from a sprite strip
+      // sprite-strip (optional path)
       const cols = Math.max(1, p.asset.cols || 6);
       const fps = Math.max(1, p.asset.fps || 8);
-      const frameSize = 64; // logical frame size
+      const frameSize = 64;
       const el = document.createElement('div');
       el.style.width = Math.round(frameSize * scale) + 'px';
       el.style.height = Math.round(frameSize * scale) + 'px';
-      el.style.backgroundImage = `url(${p.asset.url})`;
+      el.style.backgroundImage = `url(${resolveAssetURL(p.asset.url)})`;
       el.style.backgroundRepeat = 'no-repeat';
       el.style.backgroundSize = `${cols*frameSize}px ${frameSize}px`;
       el.style.transform = `translate(${off.x||0}px, ${off.y||0}px)`;
       const animName = `sprite-${cols}-${fps}-${Math.random().toString(36).slice(2)}`;
       const style = document.createElement('style');
-      style.textContent = `
-        @keyframes ${animName} {
-          from { background-position-x: 0px; }
-          to   { background-position-x: -${cols*frameSize}px; }
-        }`;
+      style.textContent = `@keyframes ${animName}{from{background-position-x:0px}to{background-position-x:-${cols*frameSize}px}}`;
       document.head.appendChild(style);
       el.style.animation = `${animName} ${(cols/fps).toFixed(4)}s steps(${cols}) infinite`;
       container.appendChild(el);
     } else {
-      // gif/image: use <img> (GIF animates automatically; transparency preserved)
+      // gif/image (GIF animates natively; transparency preserved)
       const img = document.createElement('img');
-      img.src = p.asset.url;
+      const src = resolveAssetURL(p.asset.url);
+      img.src = src;
       img.alt = 'avatar';
       img.style.width = Math.round(64*scale)+'px';
       img.style.height = Math.round(64*scale)+'px';
       img.style.objectFit = 'contain';
       img.style.imageRendering = 'pixelated';
       img.style.transform = `translate(${off.x||0}px, ${off.y||0}px)`;
+
+      // Helpful diagnostics if it fails to load
+      img.addEventListener('error', ()=>{
+        console.error('[avatar] Failed to load asset:', src, 'from urlLike:', p.asset.url);
+        const warn = document.createElement('div');
+        warn.textContent = '⚠ avatar asset missing';
+        warn.style.color = '#ffb1c1';
+        warn.style.fontWeight = '700';
+        container.appendChild(warn);
+      });
+
       container.appendChild(img);
     }
 
-    // border
     const border = document.createElement('div');
-    Object.assign(border.style, {
-      position:'absolute', inset:'4px', border:'2px solid #223055', borderRadius:'12px', pointerEvents:'none'
-    });
+    Object.assign(border.style, { position:'absolute', inset:'4px', border:'2px solid #223055', borderRadius:'12px', pointerEvents:'none' });
     container.appendChild(border);
 
     wrap.appendChild(container);
     return;
   }
 
-  // Otherwise draw abstract block avatar (SVG)
+  // Fallback: abstract block avatar
   const svgNS='http://www.w3.org/2000/svg';
   const svg=document.createElementNS(svgNS,'svg');
   svg.setAttribute('viewBox','0 0 64 64');
@@ -139,15 +141,14 @@ function renderAvatar(p){
   wrap.appendChild(svg);
 }
 
-/* ---------- XP / Level / Streak ---------- */
+/* ---------- XP / Level / Streak (unchanged) ---------- */
 const xpState = { level:1, xp:0, streak:0, get xpNeeded(){ return 100*this.level; } };
 function loadXP(){ try{ Object.assign(xpState, JSON.parse(localStorage.getItem('mq_xp')||'{}')); }catch{} }
 function saveXP(){ localStorage.setItem('mq_xp', JSON.stringify({level:xpState.level, xp:xpState.xp, streak:xpState.streak})); }
 function renderHUD(){
   $('#hudLevel').textContent = xpState.level; $('#hudXP').textContent = xpState.xp; $('#streakVal').textContent = xpState.streak;
-  const pct = Math.max(0, Math.min(100, Math.round(xpState.x/xpState.xpNeeded*100)));
+  updateXPBar();
 }
-Object.defineProperty(xpState,'x',{ get(){return this.xp;}, set(v){ this.xp=v; } }); // helper for expression above
 function updateXPBar(){ const pct = Math.max(0, Math.min(100, Math.round(xpState.xp/xpState.xpNeeded*100))); $('#xpBar').style.width = pct + '%'; }
 function spawnXPFloat(amount){
   const tpl = $('#xpFloatTpl'); const node = tpl.content.firstElementChild.cloneNode(true);
@@ -165,10 +166,10 @@ function awardXP(base=15){
     xpState.xp += take; remaining -= take;
     if (xpState.xp >= xpState.xpNeeded){ xpState.level += 1; xpState.xp = 0; }
   }
-  saveXP(); renderHUD(); updateXPBar();
+  saveXP(); renderHUD();
 }
 
-/* ---------- Topics / Questions ---------- */
+/* ---------- Topics / Questions (unchanged) ---------- */
 let currentTopicId = null, currentQ = null;
 const els = {};
 function cacheEls(){
@@ -214,11 +215,11 @@ function checkAnswer(){
     setTimeout(()=> newQuestion(), 500);
   } else {
     els.feedback.className = 'feedback bad'; els.feedback.textContent = result.feedback || 'Try again.';
-    xpState.streak = 0; renderHUD(); updateXPBar(); saveXP();
+    xpState.streak = 0; renderHUD(); saveXP();
   }
 }
 
-/* ---------- Keyboard ---------- */
+/* ---------- Keyboard wiring (unchanged) ---------- */
 function insertAtCursor(input, text){
   const start = input.selectionStart ?? input.value.length;
   const end = input.selectionEnd ?? input.value.length;
@@ -248,17 +249,16 @@ function init(){
 
   // Theme
   applyTheme(loadTheme());
-  els.themeSelect.addEventListener('change', e=>{ applyTheme(e.target.value); saveTheme(e.target.value); });
+  els.themeSelect?.addEventListener('change', e=>{ applyTheme(e.target.value); saveTheme(e.target.value); });
 
-  // Player
+  // Player + Avatar
   const player = loadPlayer();
   $('#hudPlayerName').textContent = player.name || DEFAULT_PLAYER.name;
   renderAvatar(player);
-  // Re-render avatar on resize to maintain crisp centering/scaling
   window.addEventListener('resize', ()=> renderAvatar(loadPlayer()), { passive:true });
 
   // XP HUD
-  loadXP(); renderHUD(); updateXPBar();
+  loadXP(); renderHUD();
 
   // Topics
   populateTopics();
@@ -267,7 +267,7 @@ function init(){
 
   // Actions
   els.checkBtn.addEventListener('click', checkAnswer);
-  els.nextBtn.addEventListener('click', ()=>{ xpState.streak = 0; renderHUD(); updateXPBar(); newQuestion(); });
+  els.nextBtn.addEventListener('click', ()=>{ xpState.streak = 0; renderHUD(); newQuestion(); });
 
   // Keyboard
   wireKeyboard();
