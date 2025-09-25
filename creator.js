@@ -1,5 +1,19 @@
 const DEFAULT_PLAYER = { name:'Player', avatarId:0, shape:'rounded', color:'#6aa6ff', asset:null };
 
+/* ====== CONFIG: point to your folder and filenames here ====== */
+const ASSET_FOLDER = './CharacterAssets';          // <- adjust if needed
+const ASSET_LIST   = [                             // <- put your 3 filenames here
+  'Model1.gif',
+  'Model2.gif',
+  'Model3.gif',
+];
+/* Optional: If you prefer a manifest, add /assets/avatars/manifest.json:
+   { "gifs": ["char1.gif","char2.gif","char3.gif"] }
+   and set USE_MANIFEST = true.
+*/
+const USE_MANIFEST = false;
+/* ============================================================= */
+
 function loadPlayer(){ try{ return JSON.parse(localStorage.getItem('mq_player')) || { ...DEFAULT_PLAYER }; }catch{ return { ...DEFAULT_PLAYER }; } }
 function savePlayer(p){ localStorage.setItem('mq_player', JSON.stringify(p)); }
 
@@ -43,7 +57,7 @@ function renderAvatarInto(el, p, size=200){
       container.appendChild(el2);
     } else {
       const img = document.createElement('img');
-      img.src = p.asset.url;
+      img.src = p.asset.url;        // can be Data URL or repo path (e.g., ./assets/avatars/char1.gif)
       img.alt = 'avatar';
       img.style.width = Math.round(64*scale)+'px';
       img.style.height = Math.round(64*scale)+'px';
@@ -85,7 +99,7 @@ function renderAvatarInto(el, p, size=200){
     [[0,1],[3,1],[1,2],[2,2],[1,3],[2,3]], [[1,1],[2,1],[0,2],[1,2],[2,2],[3,2]],
     [[1,0],[2,0],[1,1],[2,1],[1,2],[2,2]], [[0,0],[3,0],[0,3],[3,3],[1,1],[2,2]],
   ];
-  const cells = presets[p.avatarId % presets.length];
+  const cells = presets[(p.avatarId||0) % presets.length];
   const cellSize = 14, pad = 6;
   cells.forEach(([cx,cy])=>{
     const r=document.createElementNS(svgNS,'rect');
@@ -103,6 +117,7 @@ function renderAvatarInto(el, p, size=200){
 const form = document.getElementById('creatorForm');
 const preview = document.getElementById('creatorPreview');
 const avatarGrid = document.getElementById('avatarGrid');
+const assetGrid  = document.getElementById('assetGrid');
 const shapeSel = document.getElementById('shape');
 const nameInput = document.getElementById('name');
 const fileInput = document.getElementById('fileInput');
@@ -127,12 +142,58 @@ function buildAvatarGrid(){
     card.appendChild(thumb); card.appendChild(radio);
     if (i===state.avatarId && !state.asset) card.classList.add('active');
     card.addEventListener('click', ()=>{
-      state.avatarId = i; state.asset = state.asset || null; // keep asset if set; selecting preset won't erase unless no asset yet
+      state.avatarId = i; // keep state.asset as-is unless user picks a folder asset or uploads
       document.querySelectorAll('.avatar-card').forEach(c=>c.classList.remove('active'));
       card.classList.add('active'); refresh();
     });
     avatarGrid.appendChild(card);
   }
+}
+
+/* ---- assets folder grid ---- */
+async function loadManifestList(){
+  if (!USE_MANIFEST) return null;
+  try {
+    const res = await fetch(ASSET_FOLDER + 'manifest.json', { cache:'no-store' });
+    if (!res.ok) return null;
+    const json = await res.json();
+    if (Array.isArray(json.gifs) && json.gifs.length) return json.gifs;
+    return null;
+  } catch { return null; }
+}
+
+function buildAssetCard(filename){
+  const url = ASSET_FOLDER + filename;
+  const card = document.createElement('div');
+  card.className = 'avatar-card';
+  card.title = filename;
+
+  const thumb = document.createElement('div');
+  thumb.style.width='100px'; thumb.style.height='100px';
+  // quick preview using the same render pipeline (as image)
+  renderAvatarInto(thumb, { ...state, asset:{ type:'gif', url, scale:1, offset:{x:0,y:0} } }, 100);
+
+  const btn = document.createElement('button');
+  btn.className = 'btn small';
+  btn.type = 'button';
+  btn.textContent = 'Select';
+
+  btn.addEventListener('click', ()=>{
+    state.asset = { type:'gif', url, scale: parseFloat(scaleInput.value)||1, offset:{ x:parseInt(offxInput.value||'0',10), y:parseInt(offyInput.value||'0',10) } };
+    // when choosing a folder asset, we keep avatarId (unused) but asset takes precedence
+    refresh();
+  });
+
+  card.appendChild(thumb);
+  card.appendChild(btn);
+  return card;
+}
+
+async function buildAssetGrid(){
+  // Prefer manifest if enabled, else fall back to the static list
+  const list = await loadManifestList() || ASSET_LIST;
+  assetGrid.innerHTML = '';
+  list.forEach(name => assetGrid.appendChild(buildAssetCard(name)));
 }
 
 /* ---- swatches ---- */
@@ -167,7 +228,7 @@ fileInput.addEventListener('change', async ()=>{
   if (!file) return;
   const chosen = assetTypeSel.value;
   const type = detectTypeFromFile(file, chosen);
-  const url = await readFileAsDataURL(file); // Data URL keeps it same-origin and persistent
+  const url = await readFileAsDataURL(file); // Data URL for portability
   const scale = parseFloat(scaleInput.value)||1;
   const offx = parseInt(offxInput.value||'0',10);
   const offy = parseInt(offyInput.value||'0',10);
@@ -185,7 +246,6 @@ fileInput.addEventListener('change', async ()=>{
 assetTypeSel.addEventListener('change', ()=>{
   const v = assetTypeSel.value;
   spriteOptions.style.display = (v === 'sprite') ? 'grid' : 'none';
-  // update existing asset type if present
   if (state.asset) state.asset.type = (v==='auto') ? state.asset.type : v;
   refresh();
 });
@@ -205,7 +265,6 @@ assetTypeSel.addEventListener('change', ()=>{
 
 /* ---- preview + form wiring ---- */
 function refresh(){
-  // reflect controls
   nameInput.value = state.name || '';
   shapeSel.value = state.shape || 'rounded';
   scaleInput.value = state.asset?.scale ?? 1;
@@ -221,12 +280,16 @@ function refresh(){
 }
 
 function init(){
-  // prefill
   nameInput.value = state.name || '';
   shapeSel.value = state.shape || 'rounded';
-  buildAvatarGrid(); wireSwatches(); refresh();
+
+  buildAvatarGrid();
+  buildAssetGrid();
+  wireSwatches();
+  refresh();
 
   shapeSel.addEventListener('change', e=>{ state.shape = e.target.value; refresh(); });
+
   form.addEventListener('submit', e=>{
     e.preventDefault();
     state.name = (nameInput.value || 'Player').trim();
