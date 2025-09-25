@@ -111,7 +111,8 @@ function refresh(){
 function goHome(){ const u=new URL('./index.html', window.location.href); window.location.assign(u.toString()); }
 
 function init(){
-  document.getElementById('year')?.textContent = new Date().getFullYear();
+  const y = document.getElementById('year');
+  if (y) y.textContent = new Date().getFullYear();
   buildAvatarGrid(); buildAssetGrid(); wireSwatches(); refresh();
   shapeSel.addEventListener('change', e=>{ state.shape=e.target.value; refresh(); });
   nameInput.addEventListener('input', e=>{ state.name = e.target.value; });
