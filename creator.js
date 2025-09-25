@@ -23,7 +23,7 @@ function renderAvatarInto(el, p, size=220){
   Object.assign(container.style,{width:size+'px',height:size+'px',clipPath:sclip,borderRadius:'14%',background:'transparent',display:'grid',placeItems:'center'});
 
   if (p.asset?.url){
-    const sc=p.asset.scale ?? 1; const off=p.asset.offset || {x:0,y:0};
+    const sc=p.asset.scale ?? 3; const off=p.asset.offset || {x:0,y:0};
     if (p.asset.type==='sprite'){
       const cols=p.asset.cols||6, fps=p.asset.fps||8, frame=64;
       const d=document.createElement('div');
@@ -89,9 +89,15 @@ function buildAssetCard(file){
   const img=document.createElement('img'); img.src=url; img.alt=file; img.style.width='64px'; img.style.height='64px'; img.style.objectFit='contain'; img.style.imageRendering='pixelated';
   const btn=document.createElement('button'); btn.type='button'; btn.className='btn small'; btn.textContent='Select';
   btn.addEventListener('click', ()=>{
-    state.asset={ type:'gif', url, scale:1, offset:{x:0,y:0} };
-    refresh();
-  });
+  state.asset = {
+    type: 'gif',
+    url,
+    scale: 3,                 // <-- default to 3×
+    offset: { x: 0, y: 0 }
+  };
+  refresh();
+});
+
   card.appendChild(img); card.appendChild(btn); assetGrid.appendChild(card);
 }
 function buildAssetGrid(){
