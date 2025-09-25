@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no"/>
   <title>Asymptium — My Character</title>
   <link rel="stylesheet" href="./style.css"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -25,7 +25,7 @@
   <main class="creator-wrap">
     <section class="creator-card card">
       <h1>Customize Character</h1>
-      <p class="muted">Choose a preset or select from your asset folder (GIFs animate). Theme & pets live on the Settings page.</p>
+      <p class="muted">Choose a preset or pick from your asset folder (GIFs animate). Theme & pets live on the Settings page.</p>
 
       <div class="creator-grid">
         <div class="preview">
@@ -39,34 +39,14 @@
             <div id="avatarGrid" class="avatar-grid"></div>
           </div>
 
+          <!-- From assets folder (renders your 3 GIF models) -->
           <div class="row">
             <span>From assets folder</span>
             <p class="note">Folder: <code>./CharacterAssets/</code></p>
             <div id="assetGrid" class="avatar-grid"></div>
           </div>
 
-          <div id="uploadRow" class="row">
-            <span>Upload custom sprite (optional)</span>
-            <label class="btn"><input id="fileInput" type="file" accept="image/gif,image/png,image/webp,image/jpeg" hidden/> Choose File</label>
-            <div class="grid-3">
-              <label>Type
-                <select id="assetType" class="select">
-                  <option value="auto">Auto</option>
-                  <option value="gif">GIF</option>
-                  <option value="image">Image</option>
-                  <option value="sprite">Sprite strip</option>
-                </select>
-              </label>
-              <label>Cols <input id="cols" type="number" min="1" max="24" value="6" class="select"/></label>
-              <label>FPS <input id="fps" type="number" min="1" max="60" value="8" class="select"/></label>
-            </div>
-            <div class="grid-3">
-              <label>Scale <input id="scale" type="number" step="0.1" value="1" class="select"/></label>
-              <label>Off X <input id="offx" type="number" step="1" value="0" class="select"/></label>
-              <label>Off Y <input id="offy" type="number" step="1" value="0" class="select"/></label>
-            </div>
-            <button id="convertBtn" class="btn" type="button">Make controllable (convert GIF)</button>
-          </div>
+          <!-- Upload option removed per request -->
 
           <div class="row">
             <label>Shape
@@ -95,8 +75,8 @@
     </section>
   </main>
 
-  <!-- gif decoder for conversion -->
-  <script src="https://unpkg.com/gifuct-js/dist/gifuct.min.js"></script>
+  <!-- Keep gifuct-js only if you later re-enable GIF→sprite conversion -->
+  <!-- <script src="https://unpkg.com/gifuct-js/dist/gifuct.min.js"></script> -->
   <script type="module" src="./creator.js"></script>
 </body>
 </html>
