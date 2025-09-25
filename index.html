@@ -2,18 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <!-- Mobile viewport hardened for device preview & safe-areas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no"/>
   <title>Asymptium — Home</title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <!-- App UI font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
-  <!-- “Nerdy” problem font -->
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
 
   <link rel="stylesheet" href="./style.css"/>
+
   <!-- MathJax for LaTeX -->
   <script>
     window.MathJax = { tex: { inlineMath: [['\\(','\\)'], ['$', '$']], displayMath: [['\\[','\\]']] } };
@@ -25,8 +24,8 @@
   <header class="appbar">
     <div class="appbar-inner">
       <a class="brand" href="./index.html">Asymptium</a>
-      <nav class="nav">
-        <a class="nav-link" href="./index.html">Home</a>
+      <nav class="nav" aria-label="Primary">
+        <a class="nav-link active" href="./index.html">Home</a>
         <a class="nav-link" href="./creator.html">My Character</a>
         <a class="nav-link" href="./settings.html">Settings</a>
         <a class="nav-link" href="./about.html">About Us</a>
@@ -54,7 +53,7 @@
           <div class="loot-count">x<span id="lootCount">0</span></div>
         </a>
 
-        <!-- Avatar Window (center, 30% smaller than before) -->
+        <!-- Avatar Window (center, 30% smaller) -->
         <div class="avatar-window">
           <div id="avatarBG" class="avatar-bg"></div>
           <div id="pixelCharContainer" class="avatar-stage" aria-label="User avatar"></div>
@@ -85,7 +84,7 @@
       <div id="questionPrompt" class="prompt pretty">Pick a topic to begin.</div>
 
       <div class="answer-row">
-        <!-- Prevent device keyboard on mobile -->
+        <!-- Device keyboard is suppressed; use on-screen keyboard -->
         <input id="answerInput" type="text" inputmode="none" readonly
                placeholder="Type your answer… e.g., 3/4, DNE, ∞, y=2x-3"/>
       </div>
