@@ -2,7 +2,7 @@ const DEFAULT_PLAYER = { name:'Player', avatarId:0, shape:'rounded', color:'#6aa
 
 /* ====== CONFIG: your assets live here ====== */
 /* You said: testApp/CharacterAssets with files: Model1.gif, Model2.gif, Model3.gif */
-const ASSET_FOLDER = './testApp/CharacterAssets/';
+const ASSET_FOLDER = './CharacterAssets/';
 const ASSET_LIST   = ['Model1.gif','Model2.gif','Model3.gif'];
 const USE_MANIFEST = false;   // set true only if you add manifest.json in that folder
 const SHOW_UPLOAD  = true;    // set to false to hide the local upload UI entirely
