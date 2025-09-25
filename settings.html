@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <title>Asymptium — Settings</title>
+  <link rel="stylesheet" href="./style.css"/>
+</head>
+<body>
+  <header class="appbar">
+    <div class="appbar-inner">
+      <a class="brand" href="./index.html">Asymptium</a>
+      <nav class="nav">
+        <a class="nav-link" href="./index.html">Home</a>
+        <a class="nav-link" href="./creator.html">My Character</a>
+        <a class="nav-link active" href="./settings.html">Settings</a>
+        <a class="nav-link" href="./about.html">About Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap layout-single">
+    <section class="card">
+      <h1>Settings</h1>
+      <p class="muted">Themes & companion pets. Theme color also tints the avatar window background subtly.</p>
+
+      <div class="settings-grid">
+        <div class="group">
+          <h2>Theme</h2>
+          <label class="stack">
+            <span class="label">Color theme</span>
+            <select id="themeSelect" class="select">
+              <option value="blue">Blue</option>
+              <option value="pink">Pink</option>
+              <option value="burgundy">Burgundy</option>
+              <option value="green">Green</option>
+              <option value="yellow">Yellow</option>
+            </select>
+          </label>
+          <label class="stack">
+            <span class="label">Avatar window tint strength</span>
+            <input id="tintStrength" type="range" min="0" max="1" step="0.05" value="0.25"/>
+          </label>
+        </div>
+
+        <div class="group">
+          <h2>Companion Pet</h2>
+          <p class="muted">Pick one of your pets (GIF). It renders to the right inside the avatar window.</p>
+          <div id="petGrid" class="pet-grid"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot"><small>© <span id="year"></span> Asymptium</small></footer>
+  <script type="module" src="./settings.js"></script>
+</body>
+</html>
