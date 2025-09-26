@@ -40,44 +40,63 @@ function renderAvatarBG(){
   bg.style.background = `color-mix(in srgb, var(--avatar-tint) ${(settings.tintStrength*100)|0}%, transparent)`;
 }
 function renderAvatar(){
-  function renderAvatar(){
-  const p = normalizePlayer(loadPlayer());  // <— migrate to 3× if needed
-  // ...
+  const p = normalizePlayer(loadPlayer());  // migrate to 3× if needed
 
-  $('#hudPlayerName').textContent = p.name || DEFAULT_PLAYER.name;
+  const nameNode = $('#hudPlayerName');
+  if (nameNode) nameNode.textContent = p.name || DEFAULT_PLAYER.name;
 
-  const wrap = $('#pixelCharContainer'); if (!wrap) return; clear(wrap);
-  const bbox = wrap.getBoundingClientRect(); const size = Math.min(bbox.width, bbox.height) || 180;
+  const wrap = $('#pixelCharContainer');
+  if (!wrap) return;
+  clear(wrap);
+
+  const bbox = wrap.getBoundingClientRect();
+  const size = Math.min(bbox.width || 0, bbox.height || 0) || 180;
 
   const container = document.createElement('div');
-  Object.assign(container.style, { width:size+'px', height:size+'px', clipPath:shapeClip(p.shape), borderRadius:'14%', background:'transparent', position:'relative', display:'grid', placeItems:'center' });
+  Object.assign(container.style, {
+    width: size+'px',
+    height: size+'px',
+    clipPath: shapeClip(p.shape),
+    borderRadius: '14%',
+    background: 'transparent',
+    position: 'relative',
+    display: 'grid',
+    placeItems: 'center'
+  });
 
   if (p.asset?.url){
-    const scale = (typeof p.asset.scale==='number')?p.asset.scale:3;
+    const scale = (typeof p.asset.scale === 'number') ? p.asset.scale : 3;
     const off = p.asset.offset || {x:0,y:0};
-    if (p.asset.type==='sprite'){
-      const cols = Math.max(1, p.asset.cols||6);
-      const fps  = Math.max(1, p.asset.fps||8);
+
+    if (p.asset.type === 'sprite'){
+      const cols = Math.max(1, p.asset.cols || 6);
+      const fps  = Math.max(1, p.asset.fps  || 8);
       const frameSize = 64;
+
       const el = document.createElement('div');
-      el.style.width = Math.round(frameSize*scale)+'px';
-      el.style.height= Math.round(frameSize*scale)+'px';
-      el.style.backgroundImage = `url(${resolveURL(p.asset.url)})`;
-      el.style.backgroundRepeat='no-repeat';
-      el.style.backgroundSize = `${cols*frameSize}px ${frameSize}px`;
-      el.style.transform = `translate(${off.x||0}px, ${off.y||0}px)`;
-      const anim=`sprite-${cols}-${fps}-${Math.random().toString(36).slice(2)}`;
-      const style=document.createElement('style');
+      el.style.width  = Math.round(frameSize*scale)+'px';
+      el.style.height = Math.round(frameSize*scale)+'px';
+      el.style.backgroundImage  = `url(${resolveURL(p.asset.url)})`;
+      el.style.backgroundRepeat = 'no-repeat';
+      el.style.backgroundSize   = `${cols*frameSize}px ${frameSize}px`;
+      el.style.transform        = `translate(${off.x||0}px, ${off.y||0}px)`;
+
+      const anim = `sprite-${cols}-${fps}-${Math.random().toString(36).slice(2)}`;
+      const style = document.createElement('style');
       style.textContent = `@keyframes ${anim}{from{background-position-x:0px}to{background-position-x:-${cols*frameSize}px}}`;
       document.head.appendChild(style);
+
       el.style.animation = `${anim} ${(cols/fps).toFixed(4)}s steps(${cols}) infinite`;
       container.appendChild(el);
+
     } else {
       const img = document.createElement('img');
-      img.src = resolveURL(p.asset.url); img.alt='avatar';
-      img.style.width = Math.round(64*scale)+'px';
-      img.style.height= Math.round(64*scale)+'px';
-      img.style.objectFit='contain'; img.style.imageRendering='pixelated';
+      img.src = resolveURL(p.asset.url);
+      img.alt = 'avatar';
+      img.style.width  = Math.round(64*scale)+'px';
+      img.style.height = Math.round(64*scale)+'px';
+      img.style.objectFit = 'contain';
+      img.style.imageRendering = 'pixelated';
       img.style.transform = `translate(${off.x||0}px, ${off.y||0}px)`;
       img.addEventListener('error', ()=>console.error('[avatar] load fail', p.asset.url));
       container.appendChild(img);
@@ -85,8 +104,13 @@ function renderAvatar(){
   } else {
     const svgNS='http://www.w3.org/2000/svg';
     const svg=document.createElementNS(svgNS,'svg');
-    svg.setAttribute('viewBox','0 0 64 64'); svg.setAttribute('width', size); svg.setAttribute('height', size);
-    svg.style.clipPath = shapeClip(p.shape); svg.style.background='transparent'; svg.style.borderRadius='14%';
+    svg.setAttribute('viewBox','0 0 64 64');
+    svg.setAttribute('width',  size);
+    svg.setAttribute('height', size);
+    svg.style.clipPath   = shapeClip(p.shape);
+    svg.style.background = 'transparent';
+    svg.style.borderRadius='14%';
+
     const presets=[
       [[1,1],[2,1],[1,2],[2,2],[1,3],[2,3]], [[0,1],[1,1],[2,1],[1,2],[1,3]],
       [[0,0],[3,0],[1,1],[2,1],[1,2],[2,2],[0,3],[3,3]], [[1,0],[2,0],[0,1],[3,1],[1,2],[2,2],[1,3],[2,3]],
@@ -96,40 +120,53 @@ function renderAvatar(){
     ];
     const cells = presets[(p.avatarId||0) % presets.length];
     const cellSize=14, pad=6;
+
+    const defs=document.createElementNS(svgNS,'defs');
+    const glow=document.createElementNS(svgNS,'filter'); glow.setAttribute('id','glow');
+    glow.innerHTML=`<feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>`;
+    defs.appendChild(glow);
+    svg.appendChild(defs);
+
     cells.forEach(([cx,cy])=>{
       const r=document.createElementNS(svgNS,'rect');
       r.setAttribute('x', pad + cx*cellSize);
       r.setAttribute('y', pad + cy*cellSize);
-      r.setAttribute('width', cellSize); r.setAttribute('height', cellSize); r.setAttribute('rx',3);
-      r.setAttribute('fill', p.color); r.setAttribute('filter', 'url(#glow)');
+      r.setAttribute('width', cellSize);
+      r.setAttribute('height', cellSize);
+      r.setAttribute('rx', 3);
+      r.setAttribute('fill', p.color);
+      r.setAttribute('filter', 'url(#glow)');
       svg.appendChild(r);
     });
-    const defs=document.createElementNS(svgNS,'defs');
-    const glow=document.createElementNS(svgNS,'filter'); glow.setAttribute('id','glow');
-    glow.innerHTML=`<feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>`;
-    defs.appendChild(glow); svg.appendChild(defs);
 
     container.appendChild(svg);
   }
 
-  $('#pixelCharContainer').appendChild(container);
+  wrap.appendChild(container);
 
-  // Pet
-  const pet = loadSettings().pet;
+  // Pet (null-safe)
   const petStage = $('#petStage');
-  clear(petStage);
-  if (pet?.url){
-    const img = document.createElement('img');
-    img.src = resolveURL(pet.url); img.alt='pet';
-    img.style.width='100%'; img.style.height='100%'; img.style.objectFit='contain'; img.style.imageRendering='pixelated';
-    petStage.appendChild(img);
-    petStage.classList.add('on');
-  } else {
-    petStage.classList.remove('on');
+  if (petStage){
+    clear(petStage);
+    const pet = loadSettings().pet;
+    if (pet?.url){
+      const img = document.createElement('img');
+      img.src = resolveURL(pet.url);
+      img.alt = 'pet';
+      img.style.width='100%';
+      img.style.height='100%';
+      img.style.objectFit='contain';
+      img.style.imageRendering='pixelated';
+      petStage.appendChild(img);
+      petStage.classList.add('on');
+    } else {
+      petStage.classList.remove('on');
+    }
   }
 
   renderAvatarBG();
 }
+
 
 /* ---------- XP / Level / Loot ---------- */
 const xpState = { level:1, xp:0, streak:0, loot:0, get xpNeeded(){ return 100*this.level; } };
