@@ -118,7 +118,7 @@ function renderChestTest(){
 
   // Because your PNG is in /testApp/Loot/
   // Use this if the page itself lives in /testApp/Loot/...
-  img.src = 'TreasureChestDefault.png';
+  img.src = 'Loot/TreasureChestDefault.png';
 
   // If your page is NOT in /testApp/Loot/, comment the line above and use:
   // img.src = 'Loot/TreasureChestDefault.png';
