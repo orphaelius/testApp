@@ -3,6 +3,15 @@ let DIFF = 'easy'; // easy | medium | hard
 export function setDifficulty(d){ DIFF = d; }
 export function cycleDifficulty(d){ return d==='easy'?'medium': d==='medium'?'hard':'easy'; }
 export function getDifficultyLabel(d){ return d[0].toUpperCase()+d.slice(1); }
+// topics.js (top)
+import { cisspPracticeTopic } from './cissp_topic.js';
+
+// ...existing exports...
+export const topicsRegistry = [
+  // your existing math topics…
+  cisspPracticeTopic,  // <-- add this
+];
+
 
 const rnd = (min,max)=> Math.floor(Math.random()*(max-min+1))+min;
 const pick = arr => arr[Math.floor(Math.random()*arr.length)];
