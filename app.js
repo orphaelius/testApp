@@ -176,61 +176,74 @@ function awardXPAnimated(amountTotal=15){
   tick();
 }
 
-/* ---------- Subject → Topic Picker (replaces populateTopics) ---------- */
+/* ---------- Robust Subject → Topic Picker (drop-in) ---------- */
+/* Requirements:
+   - globals available: topicsRegistry, currentTopicId, difficulty, newQuestion()
+   - an element with id="questionPrompt" exists for messages (optional)
+*/
 
-/** Best-effort subject inference:
- * - Prefer t.subject if present
- * - Else look for id prefix before ":" or "/"
- * - Else use a heuristic on label keywords
- * - Fallback to "General"
- */
-function deriveSubject(t){
-  if (t.subject) return String(t.subject);
-  if (t.category) return String(t.category);
-  if (t.id && typeof t.id === 'string'){
-    if (t.id.includes(':')) return t.id.split(':',1)[0];
-    if (t.id.includes('/')) return t.id.split('/',1)[0];
-    if (t.id.includes('-')) return t.id.split('-',1)[0];
+const SUBJECT_ORDER = ['Arithmetic','Algebra','Calculus','Trigonometry','Geometry','General'];
+
+function getSubject(t){
+  if (t?.subject && typeof t.subject === 'string'){
+    const map = {
+      arithmetic:'Arithmetic',
+      algebra:'Algebra',
+      calculus:'Calculus',
+      trigonometry:'Trigonometry',
+      trig:'Trigonometry',
+      geometry:'Geometry',
+      general:'General'
+    };
+    const key = t.subject.trim().toLowerCase();
+    return map[key] || t.subject.trim();
   }
-  const L = (t.label||'').toLowerCase();
-  if (/(arithmetic|arithmetic ops|basic)/.test(L)) return 'Arithmetic';
-  if (/(algebra|polynomial|factor|linear|quadratic|system)/.test(L)) return 'Algebra';
-  if (/(calc|derivative|integral|limit|series|differential)/.test(L)) return 'Calculus';
-  if (/(trig|sine|cosine|tangent|angle)/.test(L)) return 'Trigonometry';
-  if (/(geometry|triangle|circle|area|volume)/.test(L)) return 'Geometry';
   return 'General';
 }
 
-/** Build { subject -> [topics] } map, preserving registry order */
+function hasWorkingGenerator(t){
+  const gen = t?.generateQuestion ?? t?.generate ?? t?.next;
+  return typeof gen === 'function';
+}
+
 function buildSubjectsMap(){
   const map = new Map();
-  for (const t of topicsRegistry){
-    const subj = deriveSubject(t);
+  for (const t of (Array.isArray(topicsRegistry) ? topicsRegistry : [])){
+    if (!t) continue;
+    const subj = getSubject(t);
     if (!map.has(subj)) map.set(subj, []);
     map.get(subj).push(t);
   }
   return map;
 }
 
-/** Create a centered two-step picker in place of the old #topicSelect */
-function renderTopicPicker(){
-  // 1) Find existing select (we'll replace it)
-  const old = $('#topicSelect');
-  if (!old) {
-    console.warn('[topic-picker] #topicSelect not found; creating at .toolbar or .header');
-  }
+function sortSubjects(keys){
+  return keys.sort((a,b)=>{
+    const ia = SUBJECT_ORDER.indexOf(a), ib = SUBJECT_ORDER.indexOf(b);
+    if (ia !== -1 && ib !== -1) return ia - ib;
+    if (ia !== -1) return -1;
+    if (ib !== -1) return 1;
+    return a.localeCompare(b);
+  });
+}
 
-  // 2) Choose a host container
-  let host = old?.parentElement || $('.toolbar') || $('.header') || $('#toolbar') || document.body;
+export function renderTopicPicker(){
+  // remove any legacy "Choose a topic" label
+  document.querySelectorAll('label[for="topicSelect"], #topicLabel, .topic-label')
+    .forEach(n => { if (/choose a topic/i.test(n.textContent||'')) n.remove(); });
 
-  // 3) Remove "Choose a topic" label if present (any preceding label sibling)
-  if (old?.previousElementSibling && old.previousElementSibling.tagName === 'LABEL'){
-    old.previousElementSibling.remove(); // bye, "choose a topic"
-  }
+  // find old select to replace; choose a host
+  const old = document.getElementById('topicSelect');
+  let host = old?.parentElement
+          || document.querySelector('#toolbar, .toolbar, .header')
+          || document.body;
 
-  // 4) Build Subject → Topic DOM
+  // build centered row + picker container
+  const row  = document.createElement('div');
+  row.className = 'topic-picker-row';
   const wrap = document.createElement('div');
-  wrap.className = 'topic-picker'; // centered via CSS below
+  wrap.className = 'topic-picker';
+  row.appendChild(wrap);
 
   const subjectSel = document.createElement('select');
   subjectSel.id = 'subjectSelect';
@@ -241,91 +254,102 @@ function renderTopicPicker(){
   topicSel.id = 'topicSelect';
   topicSel.className = 'select';
   topicSel.setAttribute('aria-label','Topic');
-  topicSel.disabled = true;               // hidden/inactive until subject chosen
-  topicSel.style.display = 'none';        // show after subject pick
-
-  // Preferred order of subjects at the top (others will follow)
-  const preferredOrder = ['Arithmetic','Algebra','Calculus','Trigonometry','Geometry','General'];
-
-  // Build data
-  const map = buildSubjectsMap();
-  const subjects = [...map.keys()];
-  subjects.sort((a,b)=>{
-    const ia = preferredOrder.indexOf(a), ib = preferredOrder.indexOf(b);
-    if (ia !== -1 && ib !== -1) return ia-ib;
-    if (ia !== -1) return -1;
-    if (ib !== -1) return 1;
-    return a.localeCompare(b);
-  });
-
-  // Subject options
-  const subjPh = new Option('Select subject…','', true, false);
-  subjPh.disabled = true;
-  subjectSel.appendChild(subjPh);
-  for (const s of subjects){
-    subjectSel.appendChild(new Option(s, s));
-  }
-
-  // Topic options (populated on subject change)
-  function populateTopicsFor(subject){
-    const list = map.get(subject) || [];
-    topicSel.innerHTML = '';
-    const ph = new Option('Select topic…','', true, false);
-    ph.disabled = true;
-    topicSel.appendChild(ph);
-    for (const t of list){
-      topicSel.appendChild(new Option(t.label || t.id, t.id));
-    }
-    topicSel.disabled = false;
-    topicSel.style.display = '';
-  }
-
-  // Events
-  subjectSel.addEventListener('change', (e)=>{
-    const subj = e.target.value;
-    populateTopicsFor(subj);
-    // Clear current topic selection and question
-    currentTopicId = null;
-    $('#questionPrompt') && ( $('#questionPrompt').textContent = '' );
-  });
-
-  topicSel.addEventListener('change', (e)=>{
-    currentTopicId = e.target.value;
-    if (currentTopicId) newQuestion();
-  });
-
-  // Mount: replace the old select if found, else append to host
-  if (old){
-    // Insert before old, then remove old
-    host.insertBefore(wrap, old);
-    old.remove();
-  } else {
-    host.appendChild(wrap);
-  }
+  topicSel.disabled = true;
+  topicSel.style.display = 'none';
 
   wrap.appendChild(subjectSel);
   wrap.appendChild(topicSel);
 
-  // Restore last chosen subject/topic if saved
-  const last = load('mq_topic_picker', { subject:'', topic:'' });
-  if (last.subject && map.has(last.subject)){
-    subjectSel.value = last.subject;
-    populateTopicsFor(last.subject);
-    if (last.topic && map.get(last.subject)?.some(t=>t.id===last.topic)){
-      topicSel.value = last.topic;
-      currentTopicId = last.topic;
-      newQuestion();
+  // mount the new UI
+  if (old){ host.insertBefore(row, old); old.remove(); } else { host.appendChild(row); }
+
+  // data model
+  const map = buildSubjectsMap();
+  const subjects = sortSubjects([...map.keys()]);
+
+  // build subjects list
+  subjectSel.innerHTML = '';
+  const subjPh = new Option('Select subject…','', true, false);
+  subjPh.disabled = true;
+  subjectSel.appendChild(subjPh);
+  for (const s of subjects) subjectSel.appendChild(new Option(s, s));
+
+  // helper to populate topics for a subject
+  function populateTopicsFor(subject){
+    const all = map.get(subject) || [];
+    const list = all.filter(hasWorkingGenerator);
+
+    topicSel.innerHTML = '';
+    const ph = new Option('Select topic…','', true, false);
+    ph.disabled = true;
+    topicSel.appendChild(ph);
+
+    for (const t of list){
+      topicSel.appendChild(new Option(t.label || t.id, t.id));
+    }
+
+    if (list.length){
+      topicSel.disabled = false;
+      topicSel.style.display = '';
+    } else {
+      topicSel.disabled = true;
+      topicSel.style.display = 'none';
+      const pEl = document.getElementById('questionPrompt');
+      if (pEl) pEl.textContent = `No available topics in “${subject}” yet.`;
     }
   }
 
-  // Persist choices
-  subjectSel.addEventListener('change', ()=>{
-    save('mq_topic_picker', { subject: subjectSel.value || '', topic: '' });
+  // events
+  subjectSel.addEventListener('change', e=>{
+    const subj = e.target.value;
+    populateTopicsFor(subj);
+    if (typeof currentTopicId !== 'undefined') currentTopicId = null;
+    const pEl = document.getElementById('questionPrompt');
+    if (pEl) pEl.textContent = '';
+    try { localStorage.setItem('mq_topic_picker', JSON.stringify({subject: subj, topic:''})); } catch {}
   });
-  topicSel.addEventListener('change', ()=>{
-    save('mq_topic_picker', { subject: subjectSel.value || '', topic: topicSel.value || '' });
+
+  topicSel.addEventListener('change', e=>{
+    const topicId = e.target.value;
+    if (typeof currentTopicId !== 'undefined') currentTopicId = topicId;
+    try {
+      const subj = subjectSel.value || '';
+      localStorage.setItem('mq_topic_picker', JSON.stringify({subject: subj, topic: topicId}));
+    } catch {}
+    if (topicId && typeof newQuestion === 'function') newQuestion();
   });
+
+  // restore last selection if valid
+  let last = null;
+  try { last = JSON.parse(localStorage.getItem('mq_topic_picker') || 'null'); } catch {}
+  if (last?.subject && map.has(last.subject)){
+    subjectSel.value = last.subject;
+    populateTopicsFor(last.subject);
+    const list = (map.get(last.subject) || []).filter(hasWorkingGenerator);
+    if (last.topic && list.some(t=>t.id===last.topic)){
+      topicSel.value = last.topic;
+      if (typeof currentTopicId !== 'undefined') currentTopicId = last.topic;
+      if (typeof newQuestion === 'function') newQuestion();
+    } else {
+      // stale topic → clear it
+      try { localStorage.setItem('mq_topic_picker', JSON.stringify({subject:last.subject, topic:''})); } catch {}
+    }
+  }
 }
+
+/* (Optional) one-time console audit to spot issues quickly */
+export function auditTopicsOnce(){
+  const rows = [];
+  for (const t of topicsRegistry){
+    const gen = t?.generateQuestion ?? t?.generate ?? t?.next;
+    rows.push({
+      id: t.id, label: t.label, subject: getSubject(t),
+      hasGenerator: typeof gen === 'function'
+    });
+  }
+  console.table(rows);
+}
+
 
 
 /* ---------- Topics & Difficulty ---------- */
