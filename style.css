@@ -33,6 +33,8 @@
   --xp-sheen-speed: 3.5s;
 }
 
+
+
 /* Themes */
 html[data-theme="blue"]{ --accent:#6aa6ff; --accent-2:#9bc2ff; --avatar-tint: rgba(106,166,255,.18); }
 html[data-theme="pink"]{ --accent:#ff78c4; --accent-2:#ffc2e3; --avatar-tint: rgba(255,120,196,.16); }
@@ -68,6 +70,11 @@ img{max-width:100%;display:block}
 .layout-single{ max-width:min(900px, 100%); margin:var(--space) auto; padding:0 var(--space) }
 .card{ background:var(--glass); border:1px solid #1c2540; border-radius:var(--radius); padding:var(--space); box-shadow:0 10px 30px rgba(0,0,0,.25) }
 .muted{ color:var(--muted) }
+
+/* Remove streak/solving badges/rows entirely */
+#solving, #streak, #streakRow, #streakWrap, .solving, .streak {
+  display: none !important;
+}
 
 /* Stage (avatar + HUD) */
 .stage{ display:grid; gap:var(--space); align-items:center; justify-items:center }
