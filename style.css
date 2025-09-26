@@ -19,10 +19,18 @@
   --glow-color: hsl(var(--glow-hue) 100% 65% / calc(0.55 + var(--glow-intensity)*0.45));
   --glow-color-soft: hsl(var(--glow-hue) 90% 70% / calc(0.25 + var(--glow-intensity)*0.3));
 
-  /* XP bar gradient */
-  --xp1: #f6d365;
-  --xp2: #fda085;
-  --xp3: #ffec99;
+  /* Gold palette */
+  --gold-1:#fdf6d8;
+  --gold-2:#ffe49a;
+  --gold-3:#ffcf59;
+  --gold-4:#d6a63b;
+  --gold-5:#8f6b26;
+
+  /* Glow + specular settings */
+  --xp-gold-outer: 0 0 22px rgba(255, 206, 106, .35), 0 0 44px rgba(255, 220, 140, .20);
+  --xp-gold-inner: inset 0 1px 0 rgba(255,255,255,.55), inset 0 -2px 6px rgba(0,0,0,.35);
+  --xp-gold-bevel: inset 0 10px 20px rgba(255,255,255,.08), inset 0 -10px 24px rgba(0,0,0,.28);
+  --xp-sheen-speed: 3.5s;
 }
 
 /* Themes */
@@ -66,10 +74,72 @@ img{max-width:100%;display:block}
 .hud-top{ width:100%; display:grid; place-items:center }
 .xp-hud{ width:min(560px, 92%); display:grid; gap:8px; }
 .xp-title{ text-align:center; font-weight:800; letter-spacing:.3px }
-.xp-rail{ position:relative; height:14px; background:#0d1324; border:1px solid #233056; border-radius:999px; overflow:hidden; }
-.xp-bar{ position:absolute; inset:0 auto 0 0; width:0; background:linear-gradient(90deg,var(--accent),var(--accent-2)); box-shadow:var(--glow); transition:width .6s cubic-bezier(.2,.8,.2,1) }
+/*.xp-rail{ position:relative; height:14px; background:#0d1324; border:1px solid #233056; border-radius:999px; overflow:hidden; }*/
+/* XP rail: darker, subtle metallic frame */
+.xp-rail{
+  position:relative;
+  height:16px;
+  border-radius:999px;
+  background:
+    linear-gradient(180deg, #0a0e19, #0c1222 55%, #0a0e19),
+    radial-gradient(120% 100% at 50% 0%, rgba(255,255,255,.06), transparent 60%);
+  border:1px solid #2a355a;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,.55), 0 8px 18px rgba(0,0,0,.25);
+  overflow:hidden;
+}
+
+/*.xp-bar{ position:absolute; inset:0 auto 0 0; width:0; background:linear-gradient(90deg,var(--accent),var(--accent-2)); box-shadow:var(--glow); transition:width .6s cubic-bezier(.2,.8,.2,1) }*/
+
+/* XP bar: gold “ingot” with depth, glow, and sheen */
+.xp-bar{
+  position:absolute;
+  inset:0 auto 0 0;
+  width:0;
+  border-radius:999px;
+  /* Layered backgrounds build the metallic look */
+  background:
+    /* specular rim (top) */
+    linear-gradient(180deg, rgba(255,255,255,.35), rgba(255,255,255,0) 45%) top/100% 55% no-repeat,
+    /* warm body gradient */
+    linear-gradient(180deg, var(--gold-2), var(--gold-3) 50%, var(--gold-4) 85%),
+    /* subtle banding for metal */
+    repeating-linear-gradient(90deg, rgba(255,255,255,.04) 0 8px, rgba(0,0,0,.04) 8px 16px);
+  box-shadow: var(--xp-gold-outer), var(--xp-gold-inner), var(--xp-gold-bevel);
+  transition:width .6s cubic-bezier(.2,.8,.2,1), filter .25s ease;
+}
+
+/* Add a moving diagonal sheen (3D highlight) */
+.xp-bar::before{
+  content:"";
+  position:absolute; inset:-30% -10% -30% auto;
+  width:28%;
+  transform:skewX(-18deg);
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0) 0%,
+                           rgba(255,255,255,.55) 45%,
+                           rgba(255,255,255,0) 100%);
+  mix-blend-mode:screen;
+  animation: xpSheen var(--xp-sheen-speed) linear infinite;
+  opacity:.7;
+  pointer-events:none;
+}
+
+/* Inner shadow at the bottom for curvature */
+.xp-bar::after{
+  content:"";
+  position:absolute; inset:auto 0 0 0; height:45%;
+  border-bottom-left-radius:999px; border-bottom-right-radius:999px;
+  background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.22));
+  pointer-events:none;
+}
 .xp-pulse{ position:absolute; inset:0; pointer-events:none; opacity:0 }
-.xp-rail.pulse .xp-pulse{ animation:xpPulse 1200ms ease; }
+/*.xp-rail.pulse .xp-pulse{ animation:xpPulse 1200ms ease; } */
+
+/* Gentle “charge” pulse when the rail has .pulse (you already toggle this) */
+.xp-rail.pulse .xp-bar{
+  filter: drop-shadow(0 0 10px rgba(255, 226, 140, .45))
+          drop-shadow(0 0 22px rgba(255, 226, 140, .25));
+}
 @keyframes xpPulse{ 0%{opacity:.0} 15%{opacity:.8; box-shadow:inset 0 0 0 999px rgba(255,255,255,.0)} 100%{opacity:0} }
 
 .avatar-area{
