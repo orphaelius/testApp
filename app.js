@@ -256,19 +256,20 @@ function wireKeyboard(){
 // REBINDING KEYBOARD TOGGLE 
 function bindKbdToggle(){
   const toggle = document.querySelector('#kbdToggle');
-  const kbd    = document.querySelector('#kbd');
+  const kbd = document.querySelector('#kbd');
   if (!toggle || !kbd) return;
-
-  // prevent duplicate listeners
   if (toggle.dataset.wired === '1') return;
   toggle.dataset.wired = '1';
-
+  // ensure it doesn't submit a form
+  try { toggle.type = 'button'; } catch {}
   toggle.addEventListener('click', ()=>{
-    const open = kbd.classList.toggle('open');
-    if (open) kbd.removeAttribute('hidden'); else kbd.setAttribute('hidden','');
-    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    const willOpen = kbd.hasAttribute('hidden') || !kbd.classList.contains('open');
+    if (willOpen){ kbd.removeAttribute('hidden'); kbd.classList.add('open'); }
+    else { kbd.classList.remove('open'); kbd.setAttribute('hidden',''); }
+    toggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
   });
 }
+
 
 function watchForKeyboardToggle(){
   // Re-attempt binding whenever DOM changes (e.g., toolbar injected later)
@@ -317,7 +318,9 @@ function init(){
 
   // keyboard + difficulty
   wireKeyboard(); wireDifficulty();
-  bindKbdToggle();       
+  bindKbdToggle();
+  new MutationObserver(bindKbdToggle).observe(document.body, {childList:true, subtree:true});
+      
   watchForKeyboardToggle(); 
 }
 if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
