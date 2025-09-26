@@ -175,6 +175,158 @@ function awardXPAnimated(amountTotal=15){
   tick();
 }
 
+/* ---------- Subject → Topic Picker (replaces populateTopics) ---------- */
+
+/** Best-effort subject inference:
+ * - Prefer t.subject if present
+ * - Else look for id prefix before ":" or "/"
+ * - Else use a heuristic on label keywords
+ * - Fallback to "General"
+ */
+function deriveSubject(t){
+  if (t.subject) return String(t.subject);
+  if (t.category) return String(t.category);
+  if (t.id && typeof t.id === 'string'){
+    if (t.id.includes(':')) return t.id.split(':',1)[0];
+    if (t.id.includes('/')) return t.id.split('/',1)[0];
+    if (t.id.includes('-')) return t.id.split('-',1)[0];
+  }
+  const L = (t.label||'').toLowerCase();
+  if (/(arithmetic|arithmetic ops|basic)/.test(L)) return 'Arithmetic';
+  if (/(algebra|polynomial|factor|linear|quadratic|system)/.test(L)) return 'Algebra';
+  if (/(calc|derivative|integral|limit|series|differential)/.test(L)) return 'Calculus';
+  if (/(trig|sine|cosine|tangent|angle)/.test(L)) return 'Trigonometry';
+  if (/(geometry|triangle|circle|area|volume)/.test(L)) return 'Geometry';
+  return 'General';
+}
+
+/** Build { subject -> [topics] } map, preserving registry order */
+function buildSubjectsMap(){
+  const map = new Map();
+  for (const t of topicsRegistry){
+    const subj = deriveSubject(t);
+    if (!map.has(subj)) map.set(subj, []);
+    map.get(subj).push(t);
+  }
+  return map;
+}
+
+/** Create a centered two-step picker in place of the old #topicSelect */
+function renderTopicPicker(){
+  // 1) Find existing select (we'll replace it)
+  const old = $('#topicSelect');
+  if (!old) {
+    console.warn('[topic-picker] #topicSelect not found; creating at .toolbar or .header');
+  }
+
+  // 2) Choose a host container
+  let host = old?.parentElement || $('.toolbar') || $('.header') || $('#toolbar') || document.body;
+
+  // 3) Remove "Choose a topic" label if present (any preceding label sibling)
+  if (old?.previousElementSibling && old.previousElementSibling.tagName === 'LABEL'){
+    old.previousElementSibling.remove(); // bye, "choose a topic"
+  }
+
+  // 4) Build Subject → Topic DOM
+  const wrap = document.createElement('div');
+  wrap.className = 'topic-picker'; // centered via CSS below
+
+  const subjectSel = document.createElement('select');
+  subjectSel.id = 'subjectSelect';
+  subjectSel.className = 'select';
+  subjectSel.setAttribute('aria-label','Subject');
+
+  const topicSel = document.createElement('select');
+  topicSel.id = 'topicSelect';
+  topicSel.className = 'select';
+  topicSel.setAttribute('aria-label','Topic');
+  topicSel.disabled = true;               // hidden/inactive until subject chosen
+  topicSel.style.display = 'none';        // show after subject pick
+
+  // Preferred order of subjects at the top (others will follow)
+  const preferredOrder = ['Arithmetic','Algebra','Calculus','Trigonometry','Geometry','General'];
+
+  // Build data
+  const map = buildSubjectsMap();
+  const subjects = [...map.keys()];
+  subjects.sort((a,b)=>{
+    const ia = preferredOrder.indexOf(a), ib = preferredOrder.indexOf(b);
+    if (ia !== -1 && ib !== -1) return ia-ib;
+    if (ia !== -1) return -1;
+    if (ib !== -1) return 1;
+    return a.localeCompare(b);
+  });
+
+  // Subject options
+  const subjPh = new Option('Select subject…','', true, false);
+  subjPh.disabled = true;
+  subjectSel.appendChild(subjPh);
+  for (const s of subjects){
+    subjectSel.appendChild(new Option(s, s));
+  }
+
+  // Topic options (populated on subject change)
+  function populateTopicsFor(subject){
+    const list = map.get(subject) || [];
+    topicSel.innerHTML = '';
+    const ph = new Option('Select topic…','', true, false);
+    ph.disabled = true;
+    topicSel.appendChild(ph);
+    for (const t of list){
+      topicSel.appendChild(new Option(t.label || t.id, t.id));
+    }
+    topicSel.disabled = false;
+    topicSel.style.display = '';
+  }
+
+  // Events
+  subjectSel.addEventListener('change', (e)=>{
+    const subj = e.target.value;
+    populateTopicsFor(subj);
+    // Clear current topic selection and question
+    currentTopicId = null;
+    $('#questionPrompt') && ( $('#questionPrompt').textContent = '' );
+  });
+
+  topicSel.addEventListener('change', (e)=>{
+    currentTopicId = e.target.value;
+    if (currentTopicId) newQuestion();
+  });
+
+  // Mount: replace the old select if found, else append to host
+  if (old){
+    // Insert before old, then remove old
+    host.insertBefore(wrap, old);
+    old.remove();
+  } else {
+    host.appendChild(wrap);
+  }
+
+  wrap.appendChild(subjectSel);
+  wrap.appendChild(topicSel);
+
+  // Restore last chosen subject/topic if saved
+  const last = load('mq_topic_picker', { subject:'', topic:'' });
+  if (last.subject && map.has(last.subject)){
+    subjectSel.value = last.subject;
+    populateTopicsFor(last.subject);
+    if (last.topic && map.get(last.subject)?.some(t=>t.id===last.topic)){
+      topicSel.value = last.topic;
+      currentTopicId = last.topic;
+      newQuestion();
+    }
+  }
+
+  // Persist choices
+  subjectSel.addEventListener('change', ()=>{
+    save('mq_topic_picker', { subject: subjectSel.value || '', topic: '' });
+  });
+  topicSel.addEventListener('change', ()=>{
+    save('mq_topic_picker', { subject: subjectSel.value || '', topic: topicSel.value || '' });
+  });
+}
+
+
 /* ---------- Topics & Difficulty ---------- */
 let currentTopicId = null, currentQ = null;
 let difficulty = 'easy';
@@ -200,13 +352,15 @@ function checkAnswer(){
     xpState.streak = 0; saveXP(); syncHUD();
   }
 }
+
+/*
 function populateTopics(){
   const sel = $('#topicSelect'); clear(sel);
   for (const t of topicsRegistry){
     const o = document.createElement('option'); o.value=t.id; o.textContent=t.label; sel.appendChild(o);
   }
   currentTopicId = topicsRegistry[0]?.id || null; sel.value = currentTopicId || '';
-}
+}*/
 
 /* ---------- On-screen keyboard & mobile suppression ---------- */
 function insertAtCursor(input, text){
@@ -341,7 +495,11 @@ function init(){
   loadXP(); syncHUD();
 
   // topics
-  populateTopics(); renderDifficulty();
+    // topics
+  // populateTopics();  // <- remove old call
+  renderTopicPicker();  // <- new two-step picker
+  // NOTE: newQuestion() is called when a topic is picked.
+  renderDifficulty();
   $('#topicSelect').addEventListener('change', e=>{ currentTopicId = e.target.value; newQuestion(); });
   if (currentTopicId) newQuestion();
 
