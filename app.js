@@ -119,9 +119,7 @@ function renderChestTest(){
     // 2) Try likely paths, stop at first that loads
     const candidates = [
       'TreasureChestDefault.png',                // same folder as the Loot page
-      'assets/Loot/TreasureChestDefault.png',    // /testApp/assets/Loot/...
-      'LootAssets/TreasureChestDefault.png',     // /testApp/LootAssets/...
-      '../assets/Loot/TreasureChestDefault.png', // if Loot/ is nested deeper
+     
     ];
 
     const img = new Image();
