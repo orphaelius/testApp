@@ -3,22 +3,19 @@ const DEFAULT_PLAYER = {
   shape: 'rounded',
   color: '#6aa6ff',
   asset: {
-    url: './CharacterAssets/Model1.gif', // <-- put your exact path/case here
+    url: 'CharacterAssets/Model1.gif', // no leading "./"
     scale: 3,
     offset: { x: 0, y: 0 }
   }
 };
-
-
-/* === Assets config (your three GIFs) === */
-const ASSET_FOLDER = './CharacterAssets/';
+const ASSET_FOLDER = 'CharacterAssets/';
 const ASSET_LIST   = ['Model1.gif','Model2.gif','Model3.gif'];
-// Only your models — no avatarId anywhere
 const MODEL_ASSETS = [
   { label:'Model 1', url:'CharacterAssets/Model1.gif' },
   { label:'Model 2', url:'CharacterAssets/Model2.gif' },
   { label:'Model 3', url:'CharacterAssets/Model3.gif' },
 ];
+
 
 
 /* ---- storage helpers ---- */
@@ -35,39 +32,34 @@ function shapeClip(shape){
 }
 function renderAvatarInto(el, p, size=220){
   el.innerHTML='';
-  const sclip=shapeClip(p.shape);
-  const container=document.createElement('div');
-  Object.assign(container.style,{width:size+'px',height:size+'px',clipPath:sclip,borderRadius:'14%',background:'transparent',display:'grid',placeItems:'center'});
+  const sclip = shapeClip(p.shape);
+  const container = document.createElement('div');
+  Object.assign(container.style, {
+    width:size+'px', height:size+'px', clipPath:sclip, borderRadius:'14%',
+    background:'transparent', display:'grid', placeItems:'center'
+  });
 
   if (p.asset?.url){
-    const sc=p.asset.scale ?? 3; const off=p.asset.offset || {x:0,y:0};
-    if (p.asset.type==='sprite'){
-      const cols=p.asset.cols||6, fps=p.asset.fps||8, frame=64;
-      const d=document.createElement('div');
-      d.style.width=Math.round(frame*sc)+'px'; d.style.height=Math.round(frame*sc)+'px';
-      d.style.backgroundImage=`url(${resolveURL(p.asset.url)})`;
-      d.style.backgroundRepeat='no-repeat';
-      d.style.backgroundSize=`${cols*frame}px ${frame}px`;
-      d.style.transform=`translate(${off.x||0}px, ${off.y||0}px)`;
-      const anim=`s-${cols}-${fps}-${Math.random().toString(36).slice(2)}`;
-      const st=document.createElement('style');
-      st.textContent=`@keyframes ${anim}{from{background-position-x:0px}to{background-position-x:-${cols*frame}px}}`;
-      document.head.appendChild(st);
-      d.style.animation=`${anim} ${(cols/fps).toFixed(4)}s steps(${cols}) infinite`;
-      container.appendChild(d);
-    } else {
-      const img=document.createElement('img');
-      img.src=resolveURL(p.asset.url); img.alt='avatar';
-      img.style.width=Math.round(64*sc)+'px'; img.style.height=Math.round(64*sc)+'px';
-      img.style.objectFit='contain'; img.style.imageRendering='pixelated';
-      img.style.transform=`translate(${off.x||0}px, ${off.y||0}px)`;
-      container.appendChild(img);
-    }
-  } /* ---- build models grid (no block presets) ---- */
+    const sc  = p.asset.scale ?? 3;
+    const off = p.asset.offset || {x:0,y:0};
+    const img = document.createElement('img');
+    img.src = resolveURL(p.asset.url);
+    img.alt = 'avatar';
+    img.style.width  = Math.round(64*sc)+'px';
+    img.style.height = Math.round(64*sc)+'px';
+    img.style.objectFit = 'contain';
+    img.style.imageRendering = 'pixelated';
+    img.style.transform = `translate(${off.x||0}px, ${off.y||0}px)`;
+    container.appendChild(img);
+  }
+
+  el.appendChild(container);
+} // <-- important: close the function here
+
 function buildModelGrid(){
-  const grid = document.getElementById('avatarGrid') || window.avatarGrid; // adjust to your actual ref
+  const grid = document.getElementById('avatarGrid') || window.avatarGrid;
   if (!grid) return;
-  grid.textContent = ''; // clear
+  grid.textContent = '';
 
   for (const m of MODEL_ASSETS){
     const card = document.createElement('div');
@@ -76,8 +68,6 @@ function buildModelGrid(){
     const thumb = document.createElement('div');
     thumb.style.width = '100px';
     thumb.style.height = '100px';
-
-    // render a thumbnail using the image-only path
     renderAvatarInto(thumb, { ...state, asset:{ url:m.url, scale:3, offset:{x:0,y:0} } }, 100);
 
     const btn = document.createElement('button');
@@ -86,10 +76,9 @@ function buildModelGrid(){
     btn.textContent = `Use ${m.label}`;
     btn.addEventListener('click', ()=>{
       state.asset = { url:m.url, scale:3, offset:{x:0,y:0} };
-      // ensure we never fall back to blocks again
-      delete state.avatarId;
-      if (typeof save === 'function') save('mq_player', { ...(load('mq_player', {})), asset: state.asset });
-      refresh?.(); // or call renderAvatar() + any HUD sync directly
+      delete state.avatarId;                 // ensure presets can’t come back
+      savePlayer(state);                     // <-- use your helper
+      refresh();
     });
 
     card.appendChild(thumb);
@@ -173,10 +162,15 @@ function goHome(){ const u=new URL('./index.html', window.location.href); window
 function init(){
   const y = document.getElementById('year');
   if (y) y.textContent = new Date().getFullYear();
-  // buildAvatarGrid();  // remove this
-buildModelGrid(); buildAssetGrid(); wireSwatches(); refresh();
-  shapeSel.addEventListener('change', e=>{ state.shape=e.target.value; refresh(); });
+
+  buildModelGrid();
+  buildAssetGrid();
+  wireSwatches();
+  refresh();
+
+  shapeSel.addEventListener('change', e=>{ state.shape = e.target.value; refresh(); });
   nameInput.addEventListener('input', e=>{ state.name = e.target.value; });
   form.addEventListener('submit', e=>{ e.preventDefault(); savePlayer(state); goHome(); });
 }
+
 if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
