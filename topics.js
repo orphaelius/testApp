@@ -20,7 +20,7 @@ function parseNumberish(s){
 
 /* ---------- Base topics ---------- */
 const arithmetic = {
-  id:'arithmetic', label:'Arithmetic (±×÷)',
+  id:'arithmetic', label:'Arithmetic (±×÷)', subject:'Arithmetic',
   generateQuestion(d=DIFF){
     const range = d==='hard'? 200 : d==='medium'? 60 : 30;
     const a=rnd(1,range), b=rnd(1,range), op=pick(['+','-','×','÷']);
@@ -36,19 +36,23 @@ const arithmetic = {
 };
 
 const trigBasics = {
-  id:'trig_basics', label:'Trig (special angles)',
+  id:'trig_basics', label:'Trig (special angles)', subject:'Trigonometry',
   generateQuestion(d=DIFF){
     const angles = d==='hard' ? [0,15,30,45,60,75,90] : [0,30,45,60,90];
     const fns=['\\sin','\\cos'], θ=pick(angles), fn=pick(fns);
     const val = fn==='\\sin' ? Math.sin((θ*Math.PI)/180) : Math.cos((θ*Math.PI)/180);
     const dp = d==='hard'? 4 : 3; const correct=Number(val.toFixed(dp));
-    return { prompt:`\\( ${fn}(${θ}^{\\circ}) \\approx ?\\;\\text{(${dp}dp)} \\)`, correct, answerFormat:'number' };
+    return { prompt:`\\( ${fn}(${θ}^{\\circ}) \\approx ?\\;\\text{(${dp}dp)} \\)`, correct, meta:{dp}, answerFormat:'number' };
   },
-  checkAnswer(i,d){ const n=parseNumberish(i); if (n===null) return {correct:false,feedback:'Enter a number (e.g., 0.866 or 3/4).'}; return approxEq(n,d.correct, d==='hard'?1e-4:1e-3); }
+  checkAnswer(i,data){
+    const n=parseNumberish(i); if (n===null) return {correct:false,feedback:'Enter a number (e.g., 0.866 or 3/4).'};
+    const tol = (data.meta?.dp ?? 3) >= 4 ? 1e-4 : 1e-3;
+    return approxEq(n,data.correct,tol);
+  }
 };
 
 const rationalLimits = {
-  id:'rational_limits', label:'Rational Limits',
+  id:'rational_limits', label:'Rational Limits', subject:'Calculus',
   generateQuestion(d=DIFF){
     const mode=pick(['finite','infty']);
     if (mode==='finite'){
@@ -71,7 +75,7 @@ const rationalLimits = {
 };
 
 const derivativesEval = {
-  id:'derivatives_eval', label:`Derivatives (evaluate f'(x₀))`,
+  id:'derivatives_eval', label:`Derivatives (evaluate f'(x₀))`, subject:'Calculus',
   generateQuestion(d=DIFF){
     const mode=pick(['poly','prod']);
     if (mode==='poly'){
@@ -89,20 +93,19 @@ const derivativesEval = {
 };
 
 /* ---------- 10 NEW topics ---------- */
-function linearSolve(d){
-  const m = (d==='hard')? rnd(-7,7)||2 : (d==='medium'? rnd(-5,5)||2 : rnd(2,7));
-  const b = rnd(-12,12), c = rnd(-12,12);
-  const x = (c - b)/m;
-  return { prompt: `\\( ${m}x + ${b} = ${c} \\;\\; \\text{Solve for } x \\)`, x };
-}
 const topic_linear = {
-  id:'linear_eq', label:'Solve Linear Eq.',
-  generateQuestion(d=DIFF){ const q=linearSolve(d); return { prompt:q.prompt, meta:q, answerFormat:'number' }; },
+  id:'linear_eq', label:'Solve Linear Eq.', subject:'Algebra',
+  generateQuestion(d=DIFF){ const q=(function linearSolve(d){
+    const m = (d==='hard')? rnd(-7,7)||2 : (d==='medium'? rnd(-5,5)||2 : rnd(2,7));
+    const b = rnd(-12,12), c = rnd(-12,12);
+    const x = (c - b)/m;
+    return { prompt: `\\( ${m}x + ${b} = ${c} \\;\\; \\text{Solve for } x \\)`, x };
+  })(d); return { prompt:q.prompt, meta:q, answerFormat:'number' }; },
   checkAnswer(i,d){ const n=parseNumberish(i); if (n===null) return {correct:false,feedback:'Enter a number.'}; return approxEq(n,d.meta.x,1e-3); }
 };
 
 const topic_quadratic = {
-  id:'quadratic_fact', label:'Quadratic Roots',
+  id:'quadratic_fact', label:'Quadratic Roots', subject:'Algebra',
   generateQuestion(d=DIFF){
     const r1=rnd(-5,5), r2=rnd(-5,5); const a = (d==='hard')? pick([2,3]):1;
     const b = -a*(r1+r2), c = a*r1*r2;
@@ -112,7 +115,7 @@ const topic_quadratic = {
 };
 
 const topic_exp_log = {
-  id:'exp_log', label:'Exponentials & Logs',
+  id:'exp_log', label:'Exponentials & Logs', subject:'Algebra',
   generateQuestion(d=DIFF){
     const base = (d==='hard')? pick([2,3,5,7,10]) : pick([2,10]);
     const k = rnd(1,3); const x = rnd(1,4);
@@ -129,7 +132,7 @@ const topic_exp_log = {
 };
 
 const topic_comp = {
-  id:'function_comp', label:'Function Composition',
+  id:'function_comp', label:'Function Composition', subject:'Algebra',
   generateQuestion(d=DIFF){
     const a=rnd(1,4), b=rnd(-3,3), c=rnd(1,4), d0=rnd(-3,3), x0=rnd(-3,3);
     const val = a*(c*x0+d0)+b;
@@ -139,7 +142,7 @@ const topic_comp = {
 };
 
 const topic_systems = {
-  id:'systems_2x2', label:'Solve 2×2 System',
+  id:'systems_2x2', label:'Solve 2×2 System', subject:'Algebra',
   generateQuestion(d=DIFF){
     const a=rnd(1,6), b=rnd(1,6), c=rnd(-8,8);
     const d1=rnd(1,6), e=rnd(1,6), f=rnd(-8,8);
@@ -151,7 +154,7 @@ const topic_systems = {
 };
 
 const topic_limit_point = {
-  id:'limit_point', label:'Limit at a Point',
+  id:'limit_point', label:'Limit at a Point', subject:'Calculus',
   generateQuestion(d=DIFF){
     const c=rnd(-4,4), A=rnd(-3,3)||2, B=rnd(-3,3);
     return { prompt:`\\( \\lim_{x\\to ${c}} (${A}x+${B}) = ? \\)`, correct: A*c+B, answerFormat:'number' };
@@ -160,7 +163,7 @@ const topic_limit_point = {
 };
 
 const topic_diff_quotient = {
-  id:'diff_quotient', label:'Numerical Derivative',
+  id:'diff_quotient', label:'Numerical Derivative', subject:'Calculus',
   generateQuestion(d=DIFF){
     const a=rnd(1,3), b=rnd(-4,4), x0=rnd(-3,3), h = (d==='hard'? 1e-4 : d==='medium'? 1e-3 : 1e-2);
     const f=x=>a*x*x + b*x;
@@ -171,7 +174,7 @@ const topic_diff_quotient = {
 };
 
 const topic_power_rule = {
-  id:'power_rule', label:'Derivatives: Power Rule',
+  id:'power_rule', label:'Derivatives: Power Rule', subject:'Calculus',
   generateQuestion(d=DIFF){
     const n = (d==='hard')? rnd(3,7) : rnd(2,5);
     const a = rnd(-4,4)||1, x0=rnd(-3,3);
@@ -182,7 +185,7 @@ const topic_power_rule = {
 };
 
 const topic_product_rule = {
-  id:'product_rule', label:'Derivatives: Product Rule',
+  id:'product_rule', label:'Derivatives: Product Rule', subject:'Calculus',
   generateQuestion(d=DIFF){
     const a=rnd(1,4), b=rnd(1,4), x0=rnd(-3,3);
     const correct = (a+b)*Math.pow(x0, a+b-1);
@@ -192,7 +195,7 @@ const topic_product_rule = {
 };
 
 const topic_chain_rule = {
-  id:'chain_rule', label:'Derivatives: Chain Rule',
+  id:'chain_rule', label:'Derivatives: Chain Rule', subject:'Calculus',
   generateQuestion(d=DIFF){
     const a=rnd(1,3), b=rnd(1,3), x0=rnd(-2,2);
     const correct = 3*Math.pow(a*x0+b,2)*a;
@@ -202,7 +205,7 @@ const topic_chain_rule = {
 };
 
 const topic_tangent_line = {
-  id:'tangent_line', label:'Tangent Line at a Point',
+  id:'tangent_line', label:'Tangent Line at a Point', subject:'Calculus',
   generateQuestion(d=DIFF){
     const m=rnd(-5,5)||2, b=rnd(-6,6), x0=rnd(-3,3);
     const y0 = m*x0 + b;
@@ -216,7 +219,7 @@ const topic_tangent_line = {
 };
 
 const topic_continuity = {
-  id:'continuity', label:'Continuity (classify)',
+  id:'continuity', label:'Continuity (classify)', subject:'Calculus',
   generateQuestion(d=DIFF){
     const type = pick(['removable','jump','none']);
     let prompt, answer;
@@ -230,10 +233,10 @@ const topic_continuity = {
 
 export const topicsRegistry = [
   arithmetic, trigBasics, rationalLimits, derivativesEval,
-  // 10 new topics:
   topic_linear, topic_quadratic, topic_exp_log, topic_comp, topic_systems,
   topic_limit_point, topic_diff_quotient, topic_power_rule, topic_product_rule,
   topic_chain_rule, topic_tangent_line, topic_continuity
 ];
+
 
 export function findTopic(id){ return topicsRegistry.find(t=>t.id===id); }
