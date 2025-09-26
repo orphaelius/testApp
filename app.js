@@ -106,7 +106,10 @@ function renderAvatar(){
 }
 
 function renderChestTest(){
-  const host = document.querySelector('#lootWindow, #treasureWindow, #treasureIcon');
+  // Support id or class on the loot container
+  const host = document.querySelector(
+    '#lootWindow, .lootWindow, #treasureWindow, .treasureWindow, #treasureIcon, .treasureIcon'
+  );
   if (!host) { console.warn('[chest] host not found'); return; }
 
   Object.assign(host.style, { minWidth:'64px', minHeight:'64px', display:'grid', placeItems:'center' });
@@ -116,22 +119,32 @@ function renderChestTest(){
   img.alt = 'Treasure Chest';
   Object.assign(img.style, { width:'100%', height:'100%', objectFit:'contain', imageRendering:'pixelated' });
 
-  // Because your PNG is in /testApp/Loot/
-  // Use this if the page itself lives in /testApp/Loot/...
-  img.src = 'Loot/TreasureChestDefault.png';
+  // Try likely locations based on your repo layout
+  const tries = [
+    'TreasureChestDefault.png',            // same folder as the Loot page (/testApp/Loot/)
+    'Loot/TreasureChestDefault.png',       // if page is outside Loot/
+    'LootAssets/TreasureChestDefault.png', // if you moved assets
+    'assets/Loot/TreasureChestDefault.png' // if stored under /testApp/assets/Loot/
+  ];
 
-  // If your page is NOT in /testApp/Loot/, comment the line above and use:
-  // img.src = 'Loot/TreasureChestDefault.png';
+  let i = 0;
+  const tryNext = () => {
+    if (i >= tries.length){
+      console.error('[chest] All path candidates failed. Check exact path/case.');
+      return;
+    }
+    const rel = tries[i++];
+    const url = new URL(rel, document.baseURI).toString();
+    console.log('[chest] trying', url);
+    img.src = url;
+  };
 
   img.addEventListener('load',  () => { console.log('[chest] OK', img.naturalWidth, img.naturalHeight, img.src); host.appendChild(img); });
-  img.addEventListener('error', () => console.error('[chest] load FAIL → check path/case:', img.src));
+  img.addEventListener('error', () => { console.warn('[chest] FAIL →', img.src); tryNext(); });
+
+  tryNext();
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', renderChestTest, { once:true });
-} else {
-  renderChestTest();
-}
 
 
 
