@@ -8,7 +8,7 @@
 const DEFAULT_PLAYER = {
   name: 'Player',
   asset: {
-    // ⚠️ Make sure case & path match your repo exactly (GitHub Pages is case-sensitive)
+    
     url: 'CharacterAssets/Model1.gif',
     scale: 3,
     offset: { x: 0, y: 0 }
@@ -16,11 +16,11 @@ const DEFAULT_PLAYER = {
 };
 
 const ASSET_FOLDER = 'CharacterAssets/';
-const ASSET_LIST   = ['Model1.gif','Model2.gif','Model3.gif'];
+const ASSET_LIST   = ['Model1.gif','Model2Walk.gif','Model3Walk.gif'];
 const MODEL_ASSETS = [
   { label:'Model 1', url:'CharacterAssets/Model1.gif' },
-  { label:'Model 2', url:'CharacterAssets/Model2.gif' },
-  { label:'Model 3', url:'CharacterAssets/Model3.gif' },
+  { label:'Model 2', url:'CharacterAssets/Model2Walk.gif' },
+  { label:'Model 3', url:'CharacterAssets/Model3Walk.gif' },
 ];
 
 /* ---- storage helpers ---- */
