@@ -363,6 +363,46 @@ function populateTopics(){
 }*/
 
 /* ---------- On-screen keyboard & mobile suppression ---------- */
+
+function setOnscreenKeyboard(on){
+  const kbd = $('#kbd');
+  const toggle = $('#kbdToggle');
+  const inp = $('#answerInput');
+  if (!kbd || !toggle || !inp) return;
+
+  if (on){
+    // Show on-screen keyboard; hide device keyboard
+    kbd.removeAttribute('hidden');
+    kbd.classList.add('open');
+    toggle.setAttribute('aria-expanded','true');
+
+    // Suppress device keyboard
+    inp.setAttribute('inputmode','none');   // mobile-friendly
+    inp.readOnly = true;                    // desktop friendly
+    // Keep focus on input so inserts go where the cursor is
+    inp.focus({ preventScroll: true });
+  } else {
+    // Hide on-screen keyboard; enable device keyboard
+    kbd.classList.remove('open');
+    kbd.setAttribute('hidden','');
+    toggle.setAttribute('aria-expanded','false');
+
+    // Re-enable device keyboard
+    inp.removeAttribute('inputmode');
+    inp.readOnly = false;
+    // Focusing will pop the device keyboard on mobile
+    inp.focus({ preventScroll: true });
+  }
+  // Persist user preference (optional)
+  save('kbd_mode', { onscreen: on });
+}
+
+function toggleKeyboard(){
+  const kbd = $('#kbd');
+  const on = !(kbd?.classList.contains('open')); // will open if currently closed
+  setOnscreenKeyboard(on);
+}
+
 function insertAtCursor(input, text){
   const wasReadOnly = input.readOnly; input.readOnly = false;
   const start = input.selectionStart ?? input.value.length, end = input.selectionEnd ?? input.value.length;
@@ -396,14 +436,14 @@ function wireKeyboard(){
   });
 
   if (enter) enter.addEventListener('click', checkAnswer);
-
+  /*
   if (toggle){
     toggle.addEventListener('click', ()=>{
       const k = $('#kbd'); if (!k) return;
       const open = k.classList.toggle('open');
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
-  }
+  }*/
 
   if (inp) inp.addEventListener('dblclick', ()=>{ inp.readOnly = !inp.readOnly; });
 }
@@ -442,20 +482,21 @@ function attachPressGlow(root = document){
 
 // REBINDING KEYBOARD TOGGLE 
 function bindKbdToggle(){
-  const toggle = document.querySelector('#kbdToggle');
-  const kbd = document.querySelector('#kbd');
+  const toggle = $('#kbdToggle');
+  const kbd = $('#kbd');
   if (!toggle || !kbd) return;
   if (toggle.dataset.wired === '1') return;
+
   toggle.dataset.wired = '1';
-  // ensure it doesn't submit a form
   try { toggle.type = 'button'; } catch {}
-  toggle.addEventListener('click', ()=>{
-    const willOpen = kbd.hasAttribute('hidden') || !kbd.classList.contains('open');
-    if (willOpen){ kbd.removeAttribute('hidden'); kbd.classList.add('open'); }
-    else { kbd.classList.remove('open'); kbd.setAttribute('hidden',''); }
-    toggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
-  });
+
+  toggle.addEventListener('click', toggleKeyboard);
+
+  // Restore last mode
+  const last = load('kbd_mode', { onscreen: false });
+  setOnscreenKeyboard(!!last.onscreen);
 }
+
 
 
 function watchForKeyboardToggle(){
