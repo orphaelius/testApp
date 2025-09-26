@@ -7,9 +7,7 @@ async function typesetMath(el){ const mj = window.MathJax; if (mj?.typesetPromis
 
 const DEFAULT_PLAYER = {
   name:'Player',
-  avatarId:0,
-  shape:'rounded',
-  color:'#6aa6ff',
+  avatarId:0,  
   asset:{ url:'assets/avatars/avatarA.gif', scale:3, offset:{x:0,y:0} } // <- your GIF
 };
 
@@ -37,13 +35,13 @@ function loadSettings(){ return load('asym_settings', DEFAULT_SETTINGS); }
 function applyTheme(theme){ document.documentElement.setAttribute('data-theme', theme); }
 function resolveURL(urlLike){ try{ return new URL(urlLike, document.baseURI).toString(); }catch{ return urlLike; } }
 
-/* ---------- Avatar & Pet Rendering ---------- */
+/* ---------- Avatar & Pet Rendering ---------- 
 function shapeClip(shape){
   return shape==='circle' ? 'circle(50% at 50% 50%)' :
          shape==='diamond'? 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' :
          shape==='hex'    ? 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%)' :
          'inset(0 round 14%)';
-}
+}*/
 function renderAvatarBG(){
   const settings = loadSettings();
   const bg = $('#avatarBG');
@@ -63,11 +61,12 @@ function renderAvatar(){
 
   const container = document.createElement('div');
   Object.assign(container.style, {
-    width:size+'px', height:size+'px',
-    clipPath:shapeClip(p?.shape || 'rounded'),
-    borderRadius:'14%', background:'transparent',
-    position:'relative', display:'grid', placeItems:'center'
-  });
+  width:size+'px', height:size+'px',
+  borderRadius:'14%', background:'transparent',
+  position:'relative', display:'grid', placeItems:'center'
+  // no clipPath
+});
+
 
   if (p?.asset?.url){
     const scale = (typeof p.asset.scale === 'number') ? p.asset.scale : 3;
