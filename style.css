@@ -215,3 +215,18 @@ mjx-container[jax="CHTML"]{ font-size:120% !important }
   #drawer{ position: sticky; bottom:0; z-index:40; backdrop-filter: blur(10px) }
   body{ padding-bottom: env(safe-area-inset-bottom, 0px) }
 }
+
+/* Ensure the keyboard toggle is visible & clickable on desktop */
+#kbdToggle { display:inline-flex; position:relative; z-index:10; }
+
+/* Common culprits that can sit on top */
+#avatarBG { pointer-events:none; }
+#pixelCharContainer { position:relative; z-index:1; }
+
+/* If any parent clipped it on wide layouts */
+.header, .toolbar, #toolbar { overflow:visible; }
+
+/* Make the panel show/hide predictably */
+#kbd[hidden] { display:none !important; }
+#kbd.open { display:block; }
+
