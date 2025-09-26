@@ -89,19 +89,7 @@ function buildModelGrid(){
 
   
   
-  /*else {
-    // preset block avatar
-    const svgNS='http://www.w3.org/2000/svg';
-    const svg=document.createElementNS(svgNS,'svg');
-    svg.setAttribute('viewBox','0 0 64 64'); svg.setAttribute('width',size); svg.setAttribute('height',size);
-    svg.style.clipPath=sclip; svg.style.background='transparent';
-    const presets=[[[1,1],[2,1],[1,2],[2,2],[1,3],[2,3]],[[0,1],[1,1],[2,1],[1,2],[1,3]],[[0,0],[3,0],[1,1],[2,1],[1,2],[2,2],[0,3],[3,3]],[[1,0],[2,0],[0,1],[3,1],[1,2],[2,2],[1,3],[2,3]],[[0,0],[1,1],[2,2],[3,3],[3,0],[2,1],[1,2],[0,3]],[[1,0],[2,0],[0,2],[1,2],[2,2],[3,2]],[[0,1],[3,1],[1,2],[2,2],[1,3],[2,3]],[[1,1],[2,1],[0,2],[1,2],[2,2],[3,2]],[[1,0],[2,0],[1,1],[2,1],[1,2],[2,2]],[[0,0],[3,0],[0,3],[3,3],[1,1],[2,2]]];
-    const cells=presets[(p.avatarId||0)%presets.length]; const cell=14, pad=6;
-    cells.forEach(([cx,cy])=>{ const r=document.createElementNS(svgNS,'rect'); r.setAttribute('x', pad + cx*cell); r.setAttribute('y', pad + cy*cell); r.setAttribute('width',cell); r.setAttribute('height',cell); r.setAttribute('rx',3); r.setAttribute('fill', p.color); svg.appendChild(r); });
-    container.appendChild(svg);
-  } */
-  el.appendChild(container);
-}
+
 
 /* ---- DOM refs ---- */
 const form = document.getElementById('creatorForm');
@@ -135,11 +123,13 @@ function buildAssetCard(file){
   state.asset = {
     type: 'gif',
     url,
-    scale: 3,                 // <-- default to 3×
+    scale: 3,
     offset: { x: 0, y: 0 }
   };
++ savePlayer(state);
   refresh();
 });
+
 
   card.appendChild(img); card.appendChild(btn); assetGrid.appendChild(card);
 }
