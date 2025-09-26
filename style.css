@@ -216,12 +216,12 @@ mjx-container[jax="CHTML"]{ font-size:120% !important }
   body{ padding-bottom: env(safe-area-inset-bottom, 0px) }
 }
 
-/* Ensure the keyboard toggle is visible & clickable on desktop */
-#kbdToggle { display:inline-flex; position:relative; z-index:10; }
+/* --- Keyboard toggle visibility / stacking fixes --- */
+#kbdToggle{ position:relative; z-index:10; display:inline-flex; }
+#avatarBG{ pointer-events:none; }         /* overlays don’t eat clicks */
+#pixelCharContainer{ position:relative; z-index:1; }
+.header,.toolbar,#toolbar{ overflow:visible; }
 
-/* Common culprits that can sit on top */
-#avatarBG { pointer-events:none; }
-#pixelCharContainer { position:relative; z-index:1; }
 
 /* If any parent clipped it on wide layouts */
 .header, .toolbar, #toolbar { overflow:visible; }
