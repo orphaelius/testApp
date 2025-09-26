@@ -7,6 +7,7 @@
   --avatar-tint: rgba(106,166,255,.20);
   --avatar-glow: 0 0 18px rgba(106,166,255,.28);
   --loot-img: url("./LootAssets/TreasureChestDefault.png");
+  --space: clamp(8px, 2vw, 14px);
 
    /* tweak to match your theme */
   --press-glow-color: #6aa6ff;
@@ -365,6 +366,40 @@ mjx-container[jax="CHTML"]{ font-size:120% !important }
   #drawer{ position: sticky; bottom:0; z-index:40; backdrop-filter: blur(10px) }
   body{ padding-bottom: env(safe-area-inset-bottom, 0px) }
 }
+
+/* Reduce gap between top (avatar/topic/xp) and problem area */
+.stage{ gap: calc(var(--space) * 0.7); }
+.hud-top{ margin-bottom: 0; }
+
+/* Problem panel compaction */
+#drawer, .drawer{ 
+  margin-top: -8px;            /* pull up */
+  padding-top: 8px;            /* lighter top padding */
+}
+.drawer .prob-head{ 
+  margin-bottom: 6px;
+}
+.prompt.pretty{
+  margin: 6px 0;
+  padding: 8px 10px;
+}
+.answer-row{ 
+  margin-top: 8px;
+}
+.feedback{
+  margin-top: 6px;
+  min-height: 0;               /* if you previously reserved a tall space */
+}
+
+/* If the header used to reserve space for streak/solving, collapse layout */
+.drawer .prob-head{
+  display: grid;
+  grid-template-columns: 1fr;  /* single column now */
+  align-items: center;
+}
+
+/* Ensure the on-screen keyboard doesn’t add extra blank space when hidden */
+#kbd:not(.open){ margin-top: 0; }
 
 /* --- Keyboard toggle visibility / stacking fixes --- */
 #kbdToggle{ position:relative; z-index:10; display:inline-flex; }
