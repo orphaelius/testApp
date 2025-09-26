@@ -13,6 +13,13 @@ const DEFAULT_PLAYER = {
 /* === Assets config (your three GIFs) === */
 const ASSET_FOLDER = './CharacterAssets/';
 const ASSET_LIST   = ['Model1.gif','Model2.gif','Model3.gif'];
+// Only your models — no avatarId anywhere
+const MODEL_ASSETS = [
+  { label:'Model 1', url:'CharacterAssets/Model1.gif' },
+  { label:'Model 2', url:'CharacterAssets/Model2.gif' },
+  { label:'Model 3', url:'CharacterAssets/Model3.gif' },
+];
+
 
 /* ---- storage helpers ---- */
 function loadPlayer(){ try{ return JSON.parse(localStorage.getItem('mq_player')) || { ...DEFAULT_PLAYER }; }catch{ return { ...DEFAULT_PLAYER }; } }
@@ -56,7 +63,44 @@ function renderAvatarInto(el, p, size=220){
       img.style.transform=`translate(${off.x||0}px, ${off.y||0}px)`;
       container.appendChild(img);
     }
-  } /*else {
+  } /* ---- build models grid (no block presets) ---- */
+function buildModelGrid(){
+  const grid = document.getElementById('avatarGrid') || window.avatarGrid; // adjust to your actual ref
+  if (!grid) return;
+  grid.textContent = ''; // clear
+
+  for (const m of MODEL_ASSETS){
+    const card = document.createElement('div');
+    card.className = 'avatar-card';
+
+    const thumb = document.createElement('div');
+    thumb.style.width = '100px';
+    thumb.style.height = '100px';
+
+    // render a thumbnail using the image-only path
+    renderAvatarInto(thumb, { ...state, asset:{ url:m.url, scale:3, offset:{x:0,y:0} } }, 100);
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn small';
+    btn.textContent = `Use ${m.label}`;
+    btn.addEventListener('click', ()=>{
+      state.asset = { url:m.url, scale:3, offset:{x:0,y:0} };
+      // ensure we never fall back to blocks again
+      delete state.avatarId;
+      if (typeof save === 'function') save('mq_player', { ...(load('mq_player', {})), asset: state.asset });
+      refresh?.(); // or call renderAvatar() + any HUD sync directly
+    });
+
+    card.appendChild(thumb);
+    card.appendChild(btn);
+    grid.appendChild(card);
+  }
+}
+
+  
+  
+  /*else {
     // preset block avatar
     const svgNS='http://www.w3.org/2000/svg';
     const svg=document.createElementNS(svgNS,'svg');
@@ -129,7 +173,8 @@ function goHome(){ const u=new URL('./index.html', window.location.href); window
 function init(){
   const y = document.getElementById('year');
   if (y) y.textContent = new Date().getFullYear();
-  buildAvatarGrid(); buildAssetGrid(); wireSwatches(); refresh();
+  // buildAvatarGrid();  // remove this
+buildModelGrid(); buildAssetGrid(); wireSwatches(); refresh();
   shapeSel.addEventListener('change', e=>{ state.shape=e.target.value; refresh(); });
   nameInput.addEventListener('input', e=>{ state.name = e.target.value; });
   form.addEventListener('submit', e=>{ e.preventDefault(); savePlayer(state); goHome(); });
