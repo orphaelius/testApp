@@ -6,6 +6,7 @@
   --glow: 0 0 14px color-mix(in srgb, var(--accent) 40%, transparent), 0 0 30px color-mix(in srgb, var(--accent) 20%, transparent);
   --avatar-tint: rgba(106,166,255,.20);
   --avatar-glow: 0 0 18px rgba(106,166,255,.28);
+  --loot-img: url("./LootAssets/TreasureChestDefault.png");
 }
 
 /* Themes */
@@ -63,13 +64,30 @@ img{max-width:100%;display:block}
   .avatar-area{ grid-template-columns: 1fr; justify-items:center }
 }
 .loot-box{ display:grid; place-items:center; text-decoration:none; gap:6px }
-.loot-art, .loot-art.lg{ width:56px; height:56px; border-radius:12px; background:
-  radial-gradient(closest-side, rgba(255,233,141,.18), transparent 70%),
-  linear-gradient(180deg,#8d6b2d,#3d2a12); border:1px solid #5a3f18; box-shadow:0 0 20px rgba(255,210,77,.25) }
+/* Loot art now uses your PNG; gradient glows remain as a subtle background */
+.loot-art, .loot-art.lg{
+  background:
+    radial-gradient(closest-side, rgba(255,233,141,.18), transparent 70%),
+    var(--loot-img);                                /* your image */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;                         /* keep aspect ratio */
+  border-radius:12px;
+  border:1px solid #5a3f18;
+  box-shadow:0 0 20px rgba(255,210,77,.25);
+  width:56px; height:56px;
+}
 .loot-art.lg{ width:80px; height:80px }
-.loot-art.science{ background:
-  radial-gradient(closest-side, rgba(141,255,233,.16), transparent 70%),
-  linear-gradient(180deg,#2d8d6b,#123d2a); border-color:#185a3f }
+/* Optional alt style used on loot.html for the “science” card */
+.loot-art.science{
+  background:
+    radial-gradient(closest-side, rgba(141,255,233,.16), transparent 70%),
+    var(--loot-img);
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:contain;
+  border-color:#185a3f;
+}
 .loot-count{ font-weight:800; color:#ffd24d }
 
 /* Avatar container: no window/frame */
