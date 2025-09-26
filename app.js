@@ -114,7 +114,7 @@ function renderChestTest(){
   // Clear and inject the image
   while (host.firstChild) host.removeChild(host.firstChild);
   const img = new Image();
-  img.src = resolveURL('./Loot/TreasureChestDefault.png'); // <- adjust to your exact path & case
+  img.src = resolveURL('assets/Loot/TreasureChestDefault.png');
   img.alt = 'Treasure Chest';
   Object.assign(img.style, { width:'100%', height:'100%', objectFit:'contain', imageRendering:'pixelated' });
 
