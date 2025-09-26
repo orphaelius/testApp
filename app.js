@@ -253,6 +253,32 @@ function wireKeyboard(){
 
   if (inp) inp.addEventListener('dblclick', ()=>{ inp.readOnly = !inp.readOnly; });
 }
+// REBINDING KEYBOARD TOGGLE 
+function bindKbdToggle(){
+  const toggle = document.querySelector('#kbdToggle');
+  const kbd    = document.querySelector('#kbd');
+  if (!toggle || !kbd) return;
+
+  // prevent duplicate listeners
+  if (toggle.dataset.wired === '1') return;
+  toggle.dataset.wired = '1';
+
+  toggle.addEventListener('click', ()=>{
+    const open = kbd.classList.toggle('open');
+    if (open) kbd.removeAttribute('hidden'); else kbd.setAttribute('hidden','');
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+}
+
+function watchForKeyboardToggle(){
+  // Re-attempt binding whenever DOM changes (e.g., toolbar injected later)
+  const mo = new MutationObserver(bindKbdToggle);
+  mo.observe(document.body, { childList:true, subtree:true });
+
+  // Also retry when tab becomes visible (fixes restore-from-bfcache cases)
+  document.addEventListener('visibilitychange', bindKbdToggle);
+}
+
 
 
 /* ---------- Difficulty toggle ---------- */
@@ -291,5 +317,7 @@ function init(){
 
   // keyboard + difficulty
   wireKeyboard(); wireDifficulty();
+  bindKbdToggle();       
+  watchForKeyboardToggle(); 
 }
 if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
