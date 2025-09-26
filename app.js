@@ -16,7 +16,11 @@ const DEFAULT_PLAYER = {
 const DEFAULT_SETTINGS = { theme:'blue', tintStrength:0.25, pet:null };
 
 function load(key, fallback){ try{ return JSON.parse(localStorage.getItem(key)) ?? fallback; }catch{ return fallback; } }
-function save(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+function save(key, val){
+  try { localStorage.setItem(key, JSON.stringify(val)); }
+  catch (e) { console.warn('[storage/save] failed for', key, e); }
+}
+
 
 function loadPlayer(){ return load('mq_player', DEFAULT_PLAYER); }
 function normalizePlayer(p){
@@ -213,18 +217,43 @@ function insertAtCursor(input, text){
   input.focus({ preventScroll:true });
 }
 function wireKeyboard(){
-  $$('#kbd [data-ins]').forEach(btn=> btn.addEventListener('click', ()=> insertAtCursor($('#answerInput'), btn.getAttribute('data-ins'))));
-  $('#kbdBack').addEventListener('click', ()=>{
-    const s=$('#answerInput'); const was=s.readOnly; s.readOnly=false; const st=s.selectionStart??s.value.length; if(st>0){ s.value=s.value.slice(0,st-1)+s.value.slice(st); s.setSelectionRange(st-1,st-1); } s.readOnly=was; s.focus({preventScroll:true});
+  // on-screen key inserts
+  $$('#kbd [data-ins]').forEach(btn => {
+    btn.addEventListener('click', () => insertAtCursor($('#answerInput'), btn.getAttribute('data-ins')));
   });
-  $('#kbdClear').addEventListener('click', ()=>{ const s=$('#answerInput'); const was=s.readOnly; s.readOnly=false; s.value=''; s.readOnly=was; s.focus({preventScroll:true}); });
-  $('#kbdEnter').addEventListener('click', checkAnswer);
-  $('#kbdToggle').addEventListener('click', ()=>{
-    const k=$('#kbd'); const open = k.classList.toggle('open'); $('#kbdToggle').setAttribute('aria-expanded', open?'true':'false');
+
+  const back  = $('#kbdBack');
+  const clr   = $('#kbdClear');
+  const enter = $('#kbdEnter');
+  const inp   = $('#answerInput');
+  const toggle= $('#kbdToggle');
+
+  if (back)  back.addEventListener('click', ()=>{
+    const s = $('#answerInput'); if (!s) return;
+    const was = s.readOnly; s.readOnly=false;
+    const st = s.selectionStart ?? s.value.length;
+    if (st>0){ s.value = s.value.slice(0,st-1)+s.value.slice(st); s.setSelectionRange(st-1,st-1); }
+    s.readOnly = was; s.focus({preventScroll:true});
   });
-  // Prevent native keyboard on mobile (input stays readonly; desktop can dbl-click to toggle)
-  const inp = $('#answerInput'); inp.addEventListener('dblclick', ()=>{ inp.readOnly = !inp.readOnly; });
+
+  if (clr)   clr.addEventListener('click', ()=>{
+    const s = $('#answerInput'); if (!s) return;
+    const was = s.readOnly; s.readOnly=false; s.value=''; s.readOnly=was; s.focus({preventScroll:true});
+  });
+
+  if (enter) enter.addEventListener('click', checkAnswer);
+
+  if (toggle){
+    toggle.addEventListener('click', ()=>{
+      const k = $('#kbd'); if (!k) return;
+      const open = k.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
+
+  if (inp) inp.addEventListener('dblclick', ()=>{ inp.readOnly = !inp.readOnly; });
 }
+
 
 /* ---------- Difficulty toggle ---------- */
 function renderDifficulty(){ $('#difficultyBtn').textContent = getDifficultyLabel(difficulty); }
