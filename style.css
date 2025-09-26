@@ -219,6 +219,24 @@ img{max-width:100%;display:block}
   padding:12px 14px; border-radius:12px; font-weight:700; max-width:100%;
 }
 
+/* Center the subject/topic picker row */
+.topic-picker{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  justify-content:center; /* centered */
+  flex-wrap:wrap;
+  margin: 8px auto;
+  width: min(760px, 100%);
+}
+
+/* Make selects consistent with your existing .select style */
+.topic-picker select.select{
+  min-width: 200px;
+  text-align: left;
+}
+
+
 /* Buttons — upgraded */
 .btn{
   background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 16%, #0f1528), #0a0f1f);
