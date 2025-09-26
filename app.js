@@ -12,6 +12,16 @@ function load(key, fallback){ try{ return JSON.parse(localStorage.getItem(key)) 
 function save(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
 
 function loadPlayer(){ return load('mq_player', DEFAULT_PLAYER); }
+function normalizePlayer(p){
+  // If an avatar is selected but scale is missing/old (<= 2.5), bump to 3×
+  if (p && p.asset && p.asset.url) {
+    if (typeof p.asset.scale !== 'number' || p.asset.scale <= 2.5) {
+      p.asset.scale = 3;
+      save('mq_player', p); // persist the migration
+    }
+  }
+  return p;
+}
 function loadSettings(){ return load('asym_settings', DEFAULT_SETTINGS); }
 function applyTheme(theme){ document.documentElement.setAttribute('data-theme', theme); }
 function resolveURL(urlLike){ try{ return new URL(urlLike, document.baseURI).toString(); }catch{ return urlLike; } }
@@ -30,7 +40,10 @@ function renderAvatarBG(){
   bg.style.background = `color-mix(in srgb, var(--avatar-tint) ${(settings.tintStrength*100)|0}%, transparent)`;
 }
 function renderAvatar(){
-  const p = loadPlayer();
+  function renderAvatar(){
+  const p = normalizePlayer(loadPlayer());  // <— migrate to 3× if needed
+  // ...
+
   $('#hudPlayerName').textContent = p.name || DEFAULT_PLAYER.name;
 
   const wrap = $('#pixelCharContainer'); if (!wrap) return; clear(wrap);
@@ -40,7 +53,7 @@ function renderAvatar(){
   Object.assign(container.style, { width:size+'px', height:size+'px', clipPath:shapeClip(p.shape), borderRadius:'14%', background:'transparent', position:'relative', display:'grid', placeItems:'center' });
 
   if (p.asset?.url){
-    const scale = (typeof p.asset.scale==='number')?p.asset.scale:1;
+    const scale = (typeof p.asset.scale==='number')?p.asset.scale:3;
     const off = p.asset.offset || {x:0,y:0};
     if (p.asset.type==='sprite'){
       const cols = Math.max(1, p.asset.cols||6);
