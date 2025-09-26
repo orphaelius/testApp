@@ -1,4 +1,14 @@
-const DEFAULT_PLAYER = { name:'Player', avatarId:0, shape:'rounded', color:'#6aa6ff', asset:null };
+const DEFAULT_PLAYER = {
+  name: 'Player',
+  shape: 'rounded',
+  color: '#6aa6ff',
+  asset: {
+    url: './CharacterAssets/Model1.gif', // <-- put your exact path/case here
+    scale: 3,
+    offset: { x: 0, y: 0 }
+  }
+};
+
 
 /* === Assets config (your three GIFs) === */
 const ASSET_FOLDER = './CharacterAssets/';
