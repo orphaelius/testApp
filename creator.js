@@ -80,7 +80,7 @@ const nameInput = document.getElementById('name');
 
 let state = loadPlayer();
 
-/* ---- build preset grid ---- */
+/* ---- build preset grid ---- 
 function buildAvatarGrid(){
   for(let i=0;i<10;i++){
     const card=document.createElement('div'); card.className='avatar-card';
@@ -90,7 +90,7 @@ function buildAvatarGrid(){
     btn.addEventListener('click', ()=>{ state.avatarId=i; state.asset=null; refresh(); });
     card.appendChild(thumb); card.appendChild(btn); avatarGrid.appendChild(card);
   }
-}
+} */
 
 /* ---- assets folder grid (your 3 GIFs) ---- */
 function buildAssetCard(file){
