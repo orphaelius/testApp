@@ -106,56 +106,33 @@ function renderAvatar(){
 }
 
 function renderChestTest(){
-  // 1) Wait until the host exists (use the exact ID that’s on this page)
-  const SELECTOR = '#lootWindow, #treasureWindow, #treasureIcon'; // put the *real* one first
-  const waitForHost = () => {
-    const host = document.querySelector(SELECTOR);
-    if (!host) { requestAnimationFrame(waitForHost); return; }
+  const host = document.querySelector('#lootWindow, #treasureWindow, #treasureIcon');
+  if (!host) { console.warn('[chest] host not found'); return; }
 
-    // Give it some visible size while testing
-    Object.assign(host.style, { minWidth:'64px', minHeight:'64px', display:'grid', placeItems:'center' });
-    while (host.firstChild) host.removeChild(host.firstChild);
+  Object.assign(host.style, { minWidth:'64px', minHeight:'64px', display:'grid', placeItems:'center' });
+  while (host.firstChild) host.removeChild(host.firstChild);
 
-    // 2) Try likely paths, stop at first that loads
-    const candidates = [
-      'TreasureChestDefault.png',                // same folder as the Loot page
-     
-    ];
+  const img = new Image();
+  img.alt = 'Treasure Chest';
+  Object.assign(img.style, { width:'100%', height:'100%', objectFit:'contain', imageRendering:'pixelated' });
 
-    const img = new Image();
-    img.alt = 'Treasure Chest';
-    Object.assign(img.style, { width:'100%', height:'100%', objectFit:'contain', imageRendering:'pixelated' });
+  // Because your PNG is in /testApp/Loot/
+  // Use this if the page itself lives in /testApp/Loot/...
+  img.src = 'TreasureChestDefault.png';
 
-    let i = 0;
-    const tryNext = () => {
-      if (i >= candidates.length){
-        console.error('[chest] All path candidates failed. Check path/case and folder.');
-        return;
-      }
-      const rel = candidates[i++];
-      const url = new URL(rel, document.baseURI).toString();
-      console.log('[chest] trying', url);
-      img.src = url;
-    };
+  // If your page is NOT in /testApp/Loot/, comment the line above and use:
+  // img.src = 'Loot/TreasureChestDefault.png';
 
-    img.addEventListener('load',  () => {
-      console.log('[chest] OK', img.naturalWidth, img.naturalHeight, img.src);
-      host.appendChild(img);
-    });
-    img.addEventListener('error', () => {
-      console.warn('[chest] FAIL →', img.src);
-      tryNext();
-    });
-
-    tryNext();
-  };
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', waitForHost, { once:true });
-  } else {
-    waitForHost();
-  }
+  img.addEventListener('load',  () => { console.log('[chest] OK', img.naturalWidth, img.naturalHeight, img.src); host.appendChild(img); });
+  img.addEventListener('error', () => console.error('[chest] load FAIL → check path/case:', img.src));
 }
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', renderChestTest, { once:true });
+} else {
+  renderChestTest();
+}
+
 
 
 
