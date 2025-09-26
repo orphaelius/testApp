@@ -7,6 +7,11 @@
   --avatar-tint: rgba(106,166,255,.20);
   --avatar-glow: 0 0 18px rgba(106,166,255,.28);
   --loot-img: url("./LootAssets/TreasureChestDefault.png");
+
+   /* tweak to match your theme */
+  --press-glow-color: #6aa6ff;
+  --press-glow-spread: 18px;   /* max glow radius */
+  --press-glow-duration: 380ms;
 }
 
 /* Themes */
@@ -172,6 +177,45 @@ mjx-container[jax="CHTML"]{ font-size:120% !important }
 .kbd-grid .primary{ background:linear-gradient(180deg,var(--accent),var(--accent-2)); color:#0b1020; border:none }
 .kbd-grid .accent{ color:#0b1020; background:linear-gradient(180deg,#ffd24d,#ffe9a1); border:none }
 .kbd-grid .danger{ border-color:#3b2330; background:#1b0f16; color:#ffb1c1 }
+
+.press-glow{
+  position: relative; /* needed for the pseudo-element */
+  /* optional subtle default shadow */
+  transition: box-shadow 120ms ease;
+}
+
+/* Glow layer */
+.press-glow::after{
+  content: "";
+  position: absolute;
+  inset: -2px;               /* slightly outside the button edge */
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  box-shadow: 0 0 0 var(--press-glow-spread) var(--press-glow-color);
+  filter: blur(8px);
+}
+
+/* Triggered state (JS adds .is-pressing briefly) */
+.press-glow.is-pressing{
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--press-glow-color) 60%, transparent);
+}
+
+.press-glow.is-pressing::after{
+  animation: press-glow-pop var(--press-glow-duration) ease-out;
+}
+
+/* Keyframes: quick bloom then fade */
+@keyframes press-glow-pop{
+  0%   { opacity: 0;   box-shadow: 0 0 0 0 var(--press-glow-color); }
+  25%  { opacity: .75; box-shadow: 0 0 0 var(--press-glow-spread) var(--press-glow-color); }
+  100% { opacity: 0;   box-shadow: 0 0 0 0 var(--press-glow-color); }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .press-glow.is-pressing::after{ animation-duration: 1ms; }
+}
 
 /* XP Float */
 .xp-float{
