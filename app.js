@@ -176,11 +176,7 @@ function awardXPAnimated(amountTotal=15){
   tick();
 }
 
-/* ---------- Robust Subject → Topic Picker (drop-in) ---------- */
-/* Requirements:
-   - globals available: topicsRegistry, currentTopicId, difficulty, newQuestion()
-   - an element with id="questionPrompt" exists for messages (optional)
-*/
+/* ---------- Robust Subject → Topic Picker (with first-topic auto-select) ---------- */
 
 const SUBJECT_ORDER = ['Arithmetic','Algebra','Calculus','Trigonometry','Geometry','General'];
 
@@ -200,23 +196,20 @@ function getSubject(t){
   }
   return 'General';
 }
-
 function hasWorkingGenerator(t){
   const gen = t?.generateQuestion ?? t?.generate ?? t?.next;
   return typeof gen === 'function';
 }
-
 function buildSubjectsMap(){
-  const map = new Map();
+  const m = new Map();
   for (const t of (Array.isArray(topicsRegistry) ? topicsRegistry : [])){
     if (!t) continue;
-    const subj = getSubject(t);
-    if (!map.has(subj)) map.set(subj, []);
-    map.get(subj).push(t);
+    const s = getSubject(t);
+    if (!m.has(s)) m.set(s, []);
+    m.get(s).push(t);
   }
-  return map;
+  return m;
 }
-
 function sortSubjects(keys){
   return keys.sort((a,b)=>{
     const ia = SUBJECT_ORDER.indexOf(a), ib = SUBJECT_ORDER.indexOf(b);
@@ -228,17 +221,15 @@ function sortSubjects(keys){
 }
 
 export function renderTopicPicker(){
-  // remove any legacy "Choose a topic" label
+  // clean any legacy "Choose a topic" label
   document.querySelectorAll('label[for="topicSelect"], #topicLabel, .topic-label')
     .forEach(n => { if (/choose a topic/i.test(n.textContent||'')) n.remove(); });
 
-  // find old select to replace; choose a host
   const old = document.getElementById('topicSelect');
   let host = old?.parentElement
-          || document.querySelector('#toolbar, .toolbar, .header')
-          || document.body;
+           || document.querySelector('#toolbar, .toolbar, .header')
+           || document.body;
 
-  // build centered row + picker container
   const row  = document.createElement('div');
   row.className = 'topic-picker-row';
   const wrap = document.createElement('div');
@@ -260,34 +251,28 @@ export function renderTopicPicker(){
   wrap.appendChild(subjectSel);
   wrap.appendChild(topicSel);
 
-  // mount the new UI
   if (old){ host.insertBefore(row, old); old.remove(); } else { host.appendChild(row); }
 
-  // data model
   const map = buildSubjectsMap();
   const subjects = sortSubjects([...map.keys()]);
 
-  // build subjects list
+  // build Subject options
   subjectSel.innerHTML = '';
   const subjPh = new Option('Select subject…','', true, false);
   subjPh.disabled = true;
   subjectSel.appendChild(subjPh);
   for (const s of subjects) subjectSel.appendChild(new Option(s, s));
 
-  // helper to populate topics for a subject
+  // populate topics for a subject; returns filtered list
   function populateTopicsFor(subject){
-    const all = map.get(subject) || [];
-    const list = all.filter(hasWorkingGenerator);
-
+    const list = (map.get(subject) || []).filter(hasWorkingGenerator);
     topicSel.innerHTML = '';
     const ph = new Option('Select topic…','', true, false);
     ph.disabled = true;
     topicSel.appendChild(ph);
-
     for (const t of list){
       topicSel.appendChild(new Option(t.label || t.id, t.id));
     }
-
     if (list.length){
       topicSel.disabled = false;
       topicSel.style.display = '';
@@ -297,58 +282,65 @@ export function renderTopicPicker(){
       const pEl = document.getElementById('questionPrompt');
       if (pEl) pEl.textContent = `No available topics in “${subject}” yet.`;
     }
+    return list;
   }
 
-  // events
+  // helper to commit a topic selection and render (defers one tick for iOS)
+  function selectTopicAndRender(topicId){
+    if (!topicId) return;
+    topicSel.value = topicId;
+    if (typeof currentTopicId !== 'undefined') currentTopicId = topicId;
+    // defer a tick so layout/selection settles on mobile Safari
+    setTimeout(()=> { if (typeof newQuestion === 'function') newQuestion(); }, 0);
+  }
+
+  // Subject change: populate topics, then auto-select the FIRST real topic
   subjectSel.addEventListener('change', e=>{
     const subj = e.target.value;
-    populateTopicsFor(subj);
+    const list = populateTopicsFor(subj);
     if (typeof currentTopicId !== 'undefined') currentTopicId = null;
     const pEl = document.getElementById('questionPrompt');
     if (pEl) pEl.textContent = '';
-    try { localStorage.setItem('mq_topic_picker', JSON.stringify({subject: subj, topic:''})); } catch {}
+
+    // auto-pick first topic to avoid the "first click does nothing" quirk
+    if (list.length){
+      const firstId = list[0].id;
+      selectTopicAndRender(firstId);
+      try { localStorage.setItem('mq_topic_picker', JSON.stringify({subject: subj, topic: firstId})); } catch {}
+    } else {
+      try { localStorage.setItem('mq_topic_picker', JSON.stringify({subject: subj, topic: ''})); } catch {}
+    }
   });
 
-  topicSel.addEventListener('change', e=>{
+  // Topic selection: listen to both 'change' and 'input' for maximum reliability
+  const onTopicPick = (e)=>{
     const topicId = e.target.value;
+    if (!topicId) return;
     if (typeof currentTopicId !== 'undefined') currentTopicId = topicId;
     try {
       const subj = subjectSel.value || '';
       localStorage.setItem('mq_topic_picker', JSON.stringify({subject: subj, topic: topicId}));
     } catch {}
-    if (topicId && typeof newQuestion === 'function') newQuestion();
-  });
+    selectTopicAndRender(topicId);
+  };
+  topicSel.addEventListener('change', onTopicPick);
+  topicSel.addEventListener('input',  onTopicPick);
 
-  // restore last selection if valid
+  // Restore last selection (if valid); otherwise leave subject placeholder
   let last = null;
   try { last = JSON.parse(localStorage.getItem('mq_topic_picker') || 'null'); } catch {}
   if (last?.subject && map.has(last.subject)){
     subjectSel.value = last.subject;
-    populateTopicsFor(last.subject);
-    const list = (map.get(last.subject) || []).filter(hasWorkingGenerator);
-    if (last.topic && list.some(t=>t.id===last.topic)){
-      topicSel.value = last.topic;
-      if (typeof currentTopicId !== 'undefined') currentTopicId = last.topic;
-      if (typeof newQuestion === 'function') newQuestion();
-    } else {
-      // stale topic → clear it
-      try { localStorage.setItem('mq_topic_picker', JSON.stringify({subject:last.subject, topic:''})); } catch {}
-    }
+    const list = populateTopicsFor(last.subject);
+    const valid = last.topic && list.some(t=>t.id===last.topic);
+    selectTopicAndRender(valid ? last.topic : (list[0]?.id || ''));
+    try { localStorage.setItem('mq_topic_picker', JSON.stringify({
+      subject: last.subject,
+      topic: valid ? last.topic : (list[0]?.id || '')
+    })); } catch {}
   }
 }
 
-/* (Optional) one-time console audit to spot issues quickly */
-export function auditTopicsOnce(){
-  const rows = [];
-  for (const t of topicsRegistry){
-    const gen = t?.generateQuestion ?? t?.generate ?? t?.next;
-    rows.push({
-      id: t.id, label: t.label, subject: getSubject(t),
-      hasGenerator: typeof gen === 'function'
-    });
-  }
-  console.table(rows);
-}
 
 
 
