@@ -56,7 +56,7 @@ function renderAvatarInto(el, p, size=220){
       img.style.transform=`translate(${off.x||0}px, ${off.y||0}px)`;
       container.appendChild(img);
     }
-  } else {
+  } /*else {
     // preset block avatar
     const svgNS='http://www.w3.org/2000/svg';
     const svg=document.createElementNS(svgNS,'svg');
@@ -66,7 +66,7 @@ function renderAvatarInto(el, p, size=220){
     const cells=presets[(p.avatarId||0)%presets.length]; const cell=14, pad=6;
     cells.forEach(([cx,cy])=>{ const r=document.createElementNS(svgNS,'rect'); r.setAttribute('x', pad + cx*cell); r.setAttribute('y', pad + cy*cell); r.setAttribute('width',cell); r.setAttribute('height',cell); r.setAttribute('rx',3); r.setAttribute('fill', p.color); svg.appendChild(r); });
     container.appendChild(svg);
-  }
+  } */
   el.appendChild(container);
 }
 
