@@ -134,12 +134,14 @@ const xpState = { level:1, xp:0, streak:0, loot:0, get xpNeeded(){ return 100*th
 function loadXP(){ Object.assign(xpState, load('mq_xp', {level:1,xp:0,streak:0,loot:0})); }
 function saveXP(){ save('mq_xp', {level:xpState.level, xp:xpState.xp, streak:xpState.streak, loot:xpState.loot}); }
 function syncHUD(){
-  $('#hudLevel').textContent = xpState.level;
-  $('#hudXP').textContent = xpState.xp;
-  $('#streakVal').textContent = xpState.streak;
-  $('#lootCount').textContent = xpState.loot;
+  $('#hudLevel')  && ($('#hudLevel').textContent  = xpState.level);
+  $('#hudXP')     && ($('#hudXP').textContent     = xpState.xp);
+  $('#lootCount') && ($('#lootCount').textContent = xpState.loot);
   updateXPBar();
+  // If the old node exists, blank it (optional)
+  const sv = $('#streakVal'); if (sv) sv.textContent = '';
 }
+
 function updateXPBar(){
   const pct = Math.max(0, Math.min(100, Math.round(xpState.xp/xpState.xpNeeded*100)));
   $('#xpBar').style.width = pct + '%';
