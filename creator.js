@@ -154,7 +154,7 @@ function init(){
   if (y) y.textContent = new Date().getFullYear();
 
   buildModelGrid();
-  buildAssetGrid();
+  //buildAssetGrid();
   wireSwatches();
   refresh();
 
