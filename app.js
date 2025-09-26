@@ -102,6 +102,26 @@ function renderAvatar(){
   }
 }
 
+function renderChestTest(){
+  const host = document.querySelector('#treasureWindow, #lootWindow, #treasureIcon'); // pick the right id/class
+  if (!host) { console.warn('Treasure host not found'); return; }
+  // Give the window a visible box while testing
+  Object.assign(host.style, { minWidth:'64px', minHeight:'64px', display:'grid', placeItems:'center' });
+
+  // Clear and inject the image
+  while (host.firstChild) host.removeChild(host.firstChild);
+  const img = new Image();
+  img.src = resolveURL('assets/Loot/TreasureChestDefault.png'); // <- adjust to your exact path & case
+  img.alt = 'Treasure Chest';
+  Object.assign(img.style, { width:'100%', height:'100%', objectFit:'contain', imageRendering:'pixelated' });
+
+  img.addEventListener('load', () => console.log('[chest] OK', img.naturalWidth, img.naturalHeight, img.src));
+  img.addEventListener('error', () => console.error('[chest] load FAIL → check path/case:', img.src));
+
+  host.appendChild(img);
+}
+renderChestTest();
+
 
    
 
