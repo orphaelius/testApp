@@ -1,13 +1,20 @@
+/* creator.js — safe without shape/color pickers
+   - No reliance on #shape or color swatches
+   - Null-safe DOM reads
+   - Rounded, frameless avatar preview (no clipPath)
+*/
+
+/* ---- config ---- */
 const DEFAULT_PLAYER = {
   name: 'Player',
-  shape: 'rounded',
-  color: '#6aa6ff',
   asset: {
-    url: 'CharacterAssets/Model1.gif', // no leading "./"
+    // ⚠️ Make sure case & path match your repo exactly (GitHub Pages is case-sensitive)
+    url: 'CharacterAssets/Model1.gif',
     scale: 3,
     offset: { x: 0, y: 0 }
   }
 };
+
 const ASSET_FOLDER = 'CharacterAssets/';
 const ASSET_LIST   = ['Model1.gif','Model2.gif','Model3.gif'];
 const MODEL_ASSETS = [
@@ -16,27 +23,57 @@ const MODEL_ASSETS = [
   { label:'Model 3', url:'CharacterAssets/Model3.gif' },
 ];
 
-
-
 /* ---- storage helpers ---- */
-function loadPlayer(){ try{ return JSON.parse(localStorage.getItem('mq_player')) || { ...DEFAULT_PLAYER }; }catch{ return { ...DEFAULT_PLAYER }; } }
-function savePlayer(p){ localStorage.setItem('mq_player', JSON.stringify(p)); }
-function resolveURL(u){ try{ return new URL(u, document.baseURI).toString(); }catch{ return u; } }
+function loadPlayer(){
+  try{
+    const raw = localStorage.getItem('mq_player');
+    const p = raw ? JSON.parse(raw) : { ...DEFAULT_PLAYER };
+    // Drop legacy fields if present
+    delete p.shape;
+    delete p.color;
+    // Normalize asset block
+    p.asset = p.asset || {};
+    if (typeof p.asset.scale !== 'number') p.asset.scale = 3;
+    if (!p.asset.offset) p.asset.offset = { x:0, y:0 };
+    return p;
+  }catch{
+    return { ...DEFAULT_PLAYER };
+  }
+}
+function savePlayer(p){
+  // Persist only supported fields
+  const clean = {
+    name: p?.name ?? DEFAULT_PLAYER.name,
+    asset: {
+      url: p?.asset?.url ?? DEFAULT_PLAYER.asset.url,
+      scale: typeof p?.asset?.scale === 'number' ? p.asset.scale : 3,
+      offset: {
+        x: typeof p?.asset?.offset?.x === 'number' ? p.asset.offset.x : 0,
+        y: typeof p?.asset?.offset?.y === 'number' ? p.asset.offset.y : 0
+      }
+    }
+  };
+  localStorage.setItem('mq_player', JSON.stringify(clean));
+}
+function resolveURL(u){
+  try{ return new URL(u, document.baseURI).toString(); }
+  catch{ return u; }
+}
 
 /* ---- visuals ---- */
-function shapeClip(shape){
-  return shape==='circle' ? 'circle(50% at 50% 50%)' :
-         shape==='diamond'? 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' :
-         shape==='hex'    ? 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%)' :
-         'inset(0 round 14%)';
-}
 function renderAvatarInto(el, p, size=220){
-  el.innerHTML='';
-  const sclip = shapeClip(p.shape);
+  if (!el) return;
+  el.innerHTML = '';
+
   const container = document.createElement('div');
   Object.assign(container.style, {
-    width:size+'px', height:size+'px', clipPath:sclip, borderRadius:'14%',
-    background:'transparent', display:'grid', placeItems:'center'
+    width: size + 'px',
+    height: size + 'px',
+    borderRadius: '14%',
+    background: 'transparent',
+    display: 'grid',
+    placeItems: 'center',
+    overflow: 'visible'
   });
 
   if (p.asset?.url){
@@ -45,17 +82,21 @@ function renderAvatarInto(el, p, size=220){
     const img = document.createElement('img');
     img.src = resolveURL(p.asset.url);
     img.alt = 'avatar';
-    img.style.width  = Math.round(64*sc)+'px';
-    img.style.height = Math.round(64*sc)+'px';
+    img.style.width  = Math.round(64*sc) + 'px';
+    img.style.height = Math.round(64*sc) + 'px';
     img.style.objectFit = 'contain';
     img.style.imageRendering = 'pixelated';
     img.style.transform = `translate(${off.x||0}px, ${off.y||0}px)`;
+
+    // simple diagnostics if asset path is wrong
+    img.addEventListener('error', () => console.error('[creator] avatar failed to load:', img.src));
     container.appendChild(img);
   }
 
   el.appendChild(container);
-} // <-- important: close the function here
+}
 
+/* ---- model presets (optional grid) ---- */
 function buildModelGrid(){
   const grid = document.getElementById('avatarGrid') || window.avatarGrid;
   if (!grid) return;
@@ -76,8 +117,7 @@ function buildModelGrid(){
     btn.textContent = `Use ${m.label}`;
     btn.addEventListener('click', ()=>{
       state.asset = { url:m.url, scale:3, offset:{x:0,y:0} };
-      delete state.avatarId;                 // ensure presets can’t come back
-      savePlayer(state);                     // <-- use your helper
+      savePlayer(state);
       refresh();
     });
 
@@ -87,80 +127,111 @@ function buildModelGrid(){
   }
 }
 
-  
-  
-
-
-/* ---- DOM refs ---- */
-const form = document.getElementById('creatorForm');
-const preview = document.getElementById('creatorPreview');
-const avatarGrid = document.getElementById('avatarGrid');
-const assetGrid  = document.getElementById('assetGrid');
-const shapeSel = document.getElementById('shape');
-const nameInput = document.getElementById('name');
-
-let state = loadPlayer();
-
-/* ---- build preset grid ---- 
-function buildAvatarGrid(){
-  for(let i=0;i<10;i++){
-    const card=document.createElement('div'); card.className='avatar-card';
-    const thumb=document.createElement('div'); thumb.style.width='100px'; thumb.style.height='100px';
-    renderAvatarInto(thumb, { ...state, asset:null, avatarId:i }, 100);
-    const btn=document.createElement('button'); btn.type='button'; btn.className='btn small'; btn.textContent='Use preset';
-    btn.addEventListener('click', ()=>{ state.avatarId=i; state.asset=null; refresh(); });
-    card.appendChild(thumb); card.appendChild(btn); avatarGrid.appendChild(card);
-  }
-} */
-
 /* ---- assets folder grid (your 3 GIFs) ---- */
 function buildAssetCard(file){
+  const grid = document.getElementById('assetGrid');
+  if (!grid) return;
+
   const url = ASSET_FOLDER + file;
-  const card=document.createElement('div'); card.className='avatar-card';
-  const img=document.createElement('img'); img.src=url; img.alt=file; img.style.width='64px'; img.style.height='64px'; img.style.objectFit='contain'; img.style.imageRendering='pixelated';
-  const btn=document.createElement('button'); btn.type='button'; btn.className='btn small'; btn.textContent='Select';
+
+  const card = document.createElement('div');
+  card.className = 'avatar-card';
+
+  const img  = document.createElement('img');
+  img.src = url;
+  img.alt = file;
+  Object.assign(img.style, {
+    width:'64px', height:'64px', objectFit:'contain', imageRendering:'pixelated'
+  });
+
+  const btn  = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'btn small';
+  btn.textContent = 'Select';
   btn.addEventListener('click', ()=>{
-  state.asset = {
-    type: 'gif',
-    url,
-    scale: 3,
-    offset: { x: 0, y: 0 }
-  };
-+ savePlayer(state);
-  refresh();
-});
+    state.asset = { type:'gif', url, scale:3, offset:{ x:0, y:0 } };
+    savePlayer(state);
+    refresh();
+  });
 
-
-  card.appendChild(img); card.appendChild(btn); assetGrid.appendChild(card);
+  card.appendChild(img);
+  card.appendChild(btn);
+  grid.appendChild(card);
 }
 function buildAssetGrid(){
-  assetGrid.innerHTML='';
-  ASSET_LIST.forEach(f=> buildAssetCard(f));
+  const grid = document.getElementById('assetGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  ASSET_LIST.forEach(buildAssetCard);
 }
 
-/* ---- swatches ---- */
-function wireSwatches(){ document.querySelectorAll('.swatch').forEach(b=> b.addEventListener('click', ()=>{ state.color = b.getAttribute('data-color'); refresh(); })); }
+/* ---- state & DOM refs ---- */
+let state = loadPlayer();
 
 /* ---- Preview + form ---- */
 function refresh(){
-  document.getElementById('name').value = state.name || '';
-  document.getElementById('shape').value = state.shape || 'rounded';
-  renderAvatarInto(preview, state, 220);
-}
-function goHome(){ const u=new URL('./index.html', window.location.href); window.location.assign(u.toString()); }
+  // DOM refs (re-query in case page fragments change)
+  const preview = document.getElementById('creatorPreview');
+  const nameInput = document.getElementById('name');
 
+  if (nameInput){
+    // keep input reflecting state (don’t overwrite while typing if focused)
+    if (document.activeElement !== nameInput){
+      nameInput.value = state.name || '';
+    }
+  }
+
+  if (preview){
+    // ensure the preview region can actually display
+    if (!preview.style.minWidth)  preview.style.minWidth  = '120px';
+    if (!preview.style.minHeight) preview.style.minHeight = '120px';
+    if (!preview.style.display)   preview.style.display   = 'grid';
+    preview.style.placeItems = preview.style.placeItems || 'center';
+
+    renderAvatarInto(preview, state, 220);
+  }
+}
+
+function goHome(){
+  const u = new URL('./index.html', window.location.href);
+  window.location.assign(u.toString());
+}
+
+/* ---- init wiring ---- */
 function init(){
   const y = document.getElementById('year');
   if (y) y.textContent = new Date().getFullYear();
 
-  //buildModelGrid();
-  buildAssetGrid();
-  wireSwatches();
-  refresh();
+  // Build selectors/grids if present
+  buildAssetGrid();     // uses #assetGrid if it exists
+  // buildModelGrid();  // enable if you render #avatarGrid on this page
 
-  shapeSel.addEventListener('change', e=>{ state.shape = e.target.value; refresh(); });
-  nameInput.addEventListener('input', e=>{ state.name = e.target.value; });
-  form.addEventListener('submit', e=>{ e.preventDefault(); savePlayer(state); goHome(); });
+  // Input listeners (all null-safe)
+  const nameInput = document.getElementById('name');
+  if (nameInput){
+    nameInput.addEventListener('input', e=>{
+      state.name = e.target.value || 'Player';
+      savePlayer(state);
+      refresh();
+    });
+  }
+
+  const form = document.getElementById('creatorForm');
+  if (form){
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      savePlayer(state);
+      goHome();
+    });
+  }
+
+  // First paint
+  refresh();
 }
 
-if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
+/* ---- bootstrap ---- */
+if (document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', init, { once:true });
+} else {
+  init();
+}
