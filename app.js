@@ -253,6 +253,39 @@ function wireKeyboard(){
 
   if (inp) inp.addEventListener('dblclick', ()=>{ inp.readOnly = !inp.readOnly; });
 }
+
+function attachPressGlow(root = document){
+  // Pick which buttons get the glow:
+  const targets = [
+    ...root.querySelectorAll('.btn'),
+    ...root.querySelectorAll('#kbd button'),     // keyboard keys
+    ...root.querySelectorAll('#kbdToggle'),      // toggle itself
+  ];
+
+  for (const el of targets){
+    el.classList.add('press-glow');
+
+    // Avoid duplicate listeners
+    if (el.dataset.glowWired === '1') continue;
+    el.dataset.glowWired = '1';
+
+    const add = () => {
+      el.classList.add('is-pressing');
+      // Remove when animation ends OR after a timeout fallback
+      const cleanup = () => el.classList.remove('is-pressing');
+      el.addEventListener('animationend', cleanup, { once:true });
+      setTimeout(cleanup, 500); // fallback
+    };
+
+    // Pointer-friendly for mouse + touch
+    el.addEventListener('pointerdown', add);
+    // Keyboard accessibility
+    el.addEventListener('keydown', (e)=> {
+      if (e.key === ' ' || e.key === 'Enter') add();
+    });
+  }
+}
+
 // REBINDING KEYBOARD TOGGLE 
 function bindKbdToggle(){
   const toggle = document.querySelector('#kbdToggle');
@@ -320,7 +353,8 @@ function init(){
   wireKeyboard(); wireDifficulty();
   bindKbdToggle();
   new MutationObserver(bindKbdToggle).observe(document.body, {childList:true, subtree:true});
-      
+  // attach glow after UI exists
+  attachPressGlow();      
   watchForKeyboardToggle(); 
 }
 if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
