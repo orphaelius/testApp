@@ -1,0 +1,2306 @@
+{
+  "title": "CISSP Practice Exam (100 Qs)",
+  "version": "v1",
+  "questions": [
+    {
+      "question": "Perfect Forward Secrecy depends on:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "RSA only"
+        },
+        {
+          "key": "B",
+          "text": "Static keys"
+        },
+        {
+          "key": "C",
+          "text": "Ephemeral key exchange (e.g., ECDHE)"
+        },
+        {
+          "key": "D",
+          "text": "SSLv3"
+        }
+      ],
+      "answer": "C",
+      "domain": "Communication and Network Security"
+    },
+    {
+      "question": "Zero Trust networking emphasizes:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Strong perimeter"
+        },
+        {
+          "key": "B",
+          "text": "Implicit internal trust"
+        },
+        {
+          "key": "C",
+          "text": "Continuous verification"
+        },
+        {
+          "key": "D",
+          "text": "Single factor auth"
+        }
+      ],
+      "answer": "C",
+      "domain": "Communication and Network Security"
+    },
+    {
+      "question": "The PRIMARY goal of input validation is to:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Speed up apps"
+        },
+        {
+          "key": "B",
+          "text": "Prevent injection and undefined behaviors"
+        },
+        {
+          "key": "C",
+          "text": "Encrypt data"
+        },
+        {
+          "key": "D",
+          "text": "Reduce bandwidth"
+        }
+      ],
+      "answer": "B",
+      "domain": "Software Development Security"
+    },
+    {
+      "question": "Which framework focuses on governance objectives? (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "COBIT"
+        },
+        {
+          "key": "B",
+          "text": "OWASP ASVS"
+        },
+        {
+          "key": "C",
+          "text": "ITIL Service Ops"
+        },
+        {
+          "key": "D",
+          "text": "CMMI-DEV"
+        }
+      ],
+      "answer": "A",
+      "domain": "Security and Risk Management"
+    },
+    {
+      "question": "A black-box test assumes:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Full design docs"
+        },
+        {
+          "key": "B",
+          "text": "No internal knowledge"
+        },
+        {
+          "key": "C",
+          "text": "Source code access"
+        },
+        {
+          "key": "D",
+          "text": "Database admin"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security Assessment and Testing"
+    },
+    {
+      "question": "Perfect Forward Secrecy depends on: (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "RSA only"
+        },
+        {
+          "key": "B",
+          "text": "Static keys"
+        },
+        {
+          "key": "C",
+          "text": "Ephemeral key exchange (e.g., ECDHE)"
+        },
+        {
+          "key": "D",
+          "text": "SSLv3"
+        }
+      ],
+      "answer": "C",
+      "domain": "Communication and Network Security"
+    },
+    {
+      "question": "What is the PRIMARY purpose of an information security policy?",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Define specific configs"
+        },
+        {
+          "key": "B",
+          "text": "Meet audit checklists"
+        },
+        {
+          "key": "C",
+          "text": "State management’s intent and direction"
+        },
+        {
+          "key": "D",
+          "text": "Describe step-by-step procedures"
+        }
+      ],
+      "answer": "C",
+      "domain": "Security and Risk Management"
+    },
+    {
+      "question": "The BEST validation that a control operates effectively over time is: (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Design review"
+        },
+        {
+          "key": "B",
+          "text": "Point-in-time test"
+        },
+        {
+          "key": "C",
+          "text": "Continuous monitoring evidence"
+        },
+        {
+          "key": "D",
+          "text": "User survey"
+        }
+      ],
+      "answer": "C",
+      "domain": "Security Assessment and Testing"
+    },
+    {
+      "question": "Which control type best reduces the likelihood of a threat event? (scenario 4)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Detective"
+        },
+        {
+          "key": "B",
+          "text": "Preventive"
+        },
+        {
+          "key": "C",
+          "text": "Corrective"
+        },
+        {
+          "key": "D",
+          "text": "Deterrent"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security and Risk Management"
+    },
+    {
+      "question": "Which metric indicates detection capability over time?",
+      "choices": [
+        {
+          "key": "A",
+          "text": "MTTD"
+        },
+        {
+          "key": "B",
+          "text": "MTTR"
+        },
+        {
+          "key": "C",
+          "text": "RPO"
+        },
+        {
+          "key": "D",
+          "text": "ALE"
+        }
+      ],
+      "answer": "A",
+      "domain": "Security Operations"
+    },
+    {
+      "question": "A black-box test assumes: (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Full design docs"
+        },
+        {
+          "key": "B",
+          "text": "No internal knowledge"
+        },
+        {
+          "key": "C",
+          "text": "Source code access"
+        },
+        {
+          "key": "D",
+          "text": "Database admin"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security Assessment and Testing"
+    },
+    {
+      "question": "Which control type best reduces the likelihood of a threat event? (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Detective"
+        },
+        {
+          "key": "B",
+          "text": "Preventive"
+        },
+        {
+          "key": "C",
+          "text": "Corrective"
+        },
+        {
+          "key": "D",
+          "text": "Deterrent"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security and Risk Management"
+    },
+    {
+      "question": "The PRIMARY purpose of SSO is to:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Eliminate MFA"
+        },
+        {
+          "key": "B",
+          "text": "Reduce password reuse and improve UX"
+        },
+        {
+          "key": "C",
+          "text": "Increase password length"
+        },
+        {
+          "key": "D",
+          "text": "Replace RBAC"
+        }
+      ],
+      "answer": "B",
+      "domain": "Identity and Access Management (IAM)"
+    },
+    {
+      "question": "Which is the STRONGEST factor pair? (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Password + SMS OTP"
+        },
+        {
+          "key": "B",
+          "text": "Password + push-based app OTP"
+        },
+        {
+          "key": "C",
+          "text": "Password + security questions"
+        },
+        {
+          "key": "D",
+          "text": "Password only"
+        }
+      ],
+      "answer": "B",
+      "domain": "Identity and Access Management (IAM)"
+    },
+    {
+      "question": "Static application testing examines: (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Running app behavior"
+        },
+        {
+          "key": "B",
+          "text": "Network ACL behavior"
+        },
+        {
+          "key": "C",
+          "text": "Source or bytecode without executing"
+        },
+        {
+          "key": "D",
+          "text": "User training artifacts"
+        }
+      ],
+      "answer": "C",
+      "domain": "Security Assessment and Testing"
+    },
+    {
+      "question": "Zero Trust networking emphasizes: (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Strong perimeter"
+        },
+        {
+          "key": "B",
+          "text": "Implicit internal trust"
+        },
+        {
+          "key": "C",
+          "text": "Continuous verification"
+        },
+        {
+          "key": "D",
+          "text": "Single factor auth"
+        }
+      ],
+      "answer": "C",
+      "domain": "Communication and Network Security"
+    },
+    {
+      "question": "Best control to prevent VLAN hopping is: (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Port security and proper trunking"
+        },
+        {
+          "key": "B",
+          "text": "NAT"
+        },
+        {
+          "key": "C",
+          "text": "DNSSEC"
+        },
+        {
+          "key": "D",
+          "text": "Anycast"
+        }
+      ],
+      "answer": "A",
+      "domain": "Communication and Network Security"
+    },
+    {
+      "question": "A secure SDLC should include:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Pen test only"
+        },
+        {
+          "key": "B",
+          "text": "Code review, SAST/DAST, and security gates"
+        },
+        {
+          "key": "C",
+          "text": "Waterfall only"
+        },
+        {
+          "key": "D",
+          "text": "Weekly releases"
+        }
+      ],
+      "answer": "B",
+      "domain": "Software Development Security"
+    },
+    {
+      "question": "Static application testing examines: (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Running app behavior"
+        },
+        {
+          "key": "B",
+          "text": "Network ACL behavior"
+        },
+        {
+          "key": "C",
+          "text": "Source or bytecode without executing"
+        },
+        {
+          "key": "D",
+          "text": "User training artifacts"
+        }
+      ],
+      "answer": "C",
+      "domain": "Security Assessment and Testing"
+    },
+    {
+      "question": "Side-channel attacks most often target: (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Algorithm math"
+        },
+        {
+          "key": "B",
+          "text": "Implementation and emanations"
+        },
+        {
+          "key": "C",
+          "text": "Key length only"
+        },
+        {
+          "key": "D",
+          "text": "User awareness"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security Architecture and Engineering"
+    },
+    {
+      "question": "Least privilege is BEST implemented through: (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "DAC"
+        },
+        {
+          "key": "B",
+          "text": "MAC"
+        },
+        {
+          "key": "C",
+          "text": "RBAC with granular permissions"
+        },
+        {
+          "key": "D",
+          "text": "Open access with auditing"
+        }
+      ],
+      "answer": "C",
+      "domain": "Security Architecture and Engineering"
+    },
+    {
+      "question": "Which is the BEST place to enforce data retention? (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Backups only"
+        },
+        {
+          "key": "B",
+          "text": "Application layer and storage policies"
+        },
+        {
+          "key": "C",
+          "text": "Network ACLs"
+        },
+        {
+          "key": "D",
+          "text": "Endpoint BIOS"
+        }
+      ],
+      "answer": "B",
+      "domain": "Asset Security"
+    },
+    {
+      "question": "What does a HSM primarily protect? (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Network traffic"
+        },
+        {
+          "key": "B",
+          "text": "Cryptographic keys"
+        },
+        {
+          "key": "C",
+          "text": "File integrity only"
+        },
+        {
+          "key": "D",
+          "text": "Cloud IAM roles"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security Architecture and Engineering"
+    },
+    {
+      "question": "A secure SDLC should include: (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Pen test only"
+        },
+        {
+          "key": "B",
+          "text": "Code review, SAST/DAST, and security gates"
+        },
+        {
+          "key": "C",
+          "text": "Waterfall only"
+        },
+        {
+          "key": "D",
+          "text": "Weekly releases"
+        }
+      ],
+      "answer": "B",
+      "domain": "Software Development Security"
+    },
+    {
+      "question": "A well-tuned SIEM reduces:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Data storage costs only"
+        },
+        {
+          "key": "B",
+          "text": "Mean time to acknowledge and false positives"
+        },
+        {
+          "key": "C",
+          "text": "Business continuity"
+        },
+        {
+          "key": "D",
+          "text": "Forensics chain of custody"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security Operations"
+    },
+    {
+      "question": "Zero Trust networking emphasizes: (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Strong perimeter"
+        },
+        {
+          "key": "B",
+          "text": "Implicit internal trust"
+        },
+        {
+          "key": "C",
+          "text": "Continuous verification"
+        },
+        {
+          "key": "D",
+          "text": "Single factor auth"
+        }
+      ],
+      "answer": "C",
+      "domain": "Communication and Network Security"
+    },
+    {
+      "question": "A runbook is BEST described as: (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "High-level policy"
+        },
+        {
+          "key": "B",
+          "text": "Step-by-step operational procedure"
+        },
+        {
+          "key": "C",
+          "text": "Vendor contract"
+        },
+        {
+          "key": "D",
+          "text": "Risk register"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security Operations"
+    },
+    {
+      "question": "Least privilege is BEST implemented through:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "DAC"
+        },
+        {
+          "key": "B",
+          "text": "MAC"
+        },
+        {
+          "key": "C",
+          "text": "RBAC with granular permissions"
+        },
+        {
+          "key": "D",
+          "text": "Open access with auditing"
+        }
+      ],
+      "answer": "C",
+      "domain": "Security Architecture and Engineering"
+    },
+    {
+      "question": "A runbook is BEST described as: (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "High-level policy"
+        },
+        {
+          "key": "B",
+          "text": "Step-by-step operational procedure"
+        },
+        {
+          "key": "C",
+          "text": "Vendor contract"
+        },
+        {
+          "key": "D",
+          "text": "Risk register"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security Operations"
+    },
+    {
+      "question": "Side-channel attacks most often target: (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Algorithm math"
+        },
+        {
+          "key": "B",
+          "text": "Implementation and emanations"
+        },
+        {
+          "key": "C",
+          "text": "Key length only"
+        },
+        {
+          "key": "D",
+          "text": "User awareness"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security Architecture and Engineering"
+    },
+    {
+      "question": "Accepting risk is most appropriate when: (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Cost of control exceeds benefit"
+        },
+        {
+          "key": "B",
+          "text": "Regulatory requires mitigation"
+        },
+        {
+          "key": "C",
+          "text": "Reputation is at stake"
+        },
+        {
+          "key": "D",
+          "text": "Threat is unknown"
+        }
+      ],
+      "answer": "A",
+      "domain": "Security and Risk Management"
+    },
+    {
+      "question": "Which protocol provides confidentiality and integrity for web apps? (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "TLS"
+        },
+        {
+          "key": "B",
+          "text": "HTTP"
+        },
+        {
+          "key": "C",
+          "text": "FTP"
+        },
+        {
+          "key": "D",
+          "text": "Telnet"
+        }
+      ],
+      "answer": "A",
+      "domain": "Communication and Network Security"
+    },
+    {
+      "question": "The PRIMARY purpose of SSO is to: (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Eliminate MFA"
+        },
+        {
+          "key": "B",
+          "text": "Reduce password reuse and improve UX"
+        },
+        {
+          "key": "C",
+          "text": "Increase password length"
+        },
+        {
+          "key": "D",
+          "text": "Replace RBAC"
+        }
+      ],
+      "answer": "B",
+      "domain": "Identity and Access Management (IAM)"
+    },
+    {
+      "question": "The PRIMARY purpose of SSO is to: (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Eliminate MFA"
+        },
+        {
+          "key": "B",
+          "text": "Reduce password reuse and improve UX"
+        },
+        {
+          "key": "C",
+          "text": "Increase password length"
+        },
+        {
+          "key": "D",
+          "text": "Replace RBAC"
+        }
+      ],
+      "answer": "B",
+      "domain": "Identity and Access Management (IAM)"
+    },
+    {
+      "question": "The BEST validation that a control operates effectively over time is: (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Design review"
+        },
+        {
+          "key": "B",
+          "text": "Point-in-time test"
+        },
+        {
+          "key": "C",
+          "text": "Continuous monitoring evidence"
+        },
+        {
+          "key": "D",
+          "text": "User survey"
+        }
+      ],
+      "answer": "C",
+      "domain": "Security Assessment and Testing"
+    },
+    {
+      "question": "Best control to prevent VLAN hopping is: (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Port security and proper trunking"
+        },
+        {
+          "key": "B",
+          "text": "NAT"
+        },
+        {
+          "key": "C",
+          "text": "DNSSEC"
+        },
+        {
+          "key": "D",
+          "text": "Anycast"
+        }
+      ],
+      "answer": "A",
+      "domain": "Communication and Network Security"
+    },
+    {
+      "question": "Threat modeling is MOST effective when performed: (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Only after release"
+        },
+        {
+          "key": "B",
+          "text": "During design and before coding"
+        },
+        {
+          "key": "C",
+          "text": "Only during incident response"
+        },
+        {
+          "key": "D",
+          "text": "Only by QA"
+        }
+      ],
+      "answer": "B",
+      "domain": "Software Development Security"
+    },
+    {
+      "question": "Which is the STRONGEST factor pair?",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Password + SMS OTP"
+        },
+        {
+          "key": "B",
+          "text": "Password + push-based app OTP"
+        },
+        {
+          "key": "C",
+          "text": "Password + security questions"
+        },
+        {
+          "key": "D",
+          "text": "Password only"
+        }
+      ],
+      "answer": "B",
+      "domain": "Identity and Access Management (IAM)"
+    },
+    {
+      "question": "During incident containment, the FIRST consideration is: (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Attribution"
+        },
+        {
+          "key": "B",
+          "text": "Eradication"
+        },
+        {
+          "key": "C",
+          "text": "Preserving safety and critical operations"
+        },
+        {
+          "key": "D",
+          "text": "Public disclosure"
+        }
+      ],
+      "answer": "C",
+      "domain": "Security Operations"
+    },
+    {
+      "question": "A qualitative risk assessment primarily uses: (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Monetary values"
+        },
+        {
+          "key": "B",
+          "text": "Ordinal scales and scenarios"
+        },
+        {
+          "key": "C",
+          "text": "Probability density functions"
+        },
+        {
+          "key": "D",
+          "text": "Monte Carlo outputs"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security and Risk Management"
+    },
+    {
+      "question": "What does a HSM primarily protect? (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Network traffic"
+        },
+        {
+          "key": "B",
+          "text": "Cryptographic keys"
+        },
+        {
+          "key": "C",
+          "text": "File integrity only"
+        },
+        {
+          "key": "D",
+          "text": "Cloud IAM roles"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security Architecture and Engineering"
+    },
+    {
+      "question": "Tokenization differs from encryption in that it: (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Is reversible without a vault"
+        },
+        {
+          "key": "B",
+          "text": "Requires PKI"
+        },
+        {
+          "key": "C",
+          "text": "Uses non-sensitive substitutes"
+        },
+        {
+          "key": "D",
+          "text": "Is a hashing method"
+        }
+      ],
+      "answer": "C",
+      "domain": "Asset Security"
+    },
+    {
+      "question": "Which protocol provides confidentiality and integrity for web apps?",
+      "choices": [
+        {
+          "key": "A",
+          "text": "TLS"
+        },
+        {
+          "key": "B",
+          "text": "HTTP"
+        },
+        {
+          "key": "C",
+          "text": "FTP"
+        },
+        {
+          "key": "D",
+          "text": "Telnet"
+        }
+      ],
+      "answer": "A",
+      "domain": "Communication and Network Security"
+    },
+    {
+      "question": "Best control to prevent VLAN hopping is:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Port security and proper trunking"
+        },
+        {
+          "key": "B",
+          "text": "NAT"
+        },
+        {
+          "key": "C",
+          "text": "DNSSEC"
+        },
+        {
+          "key": "D",
+          "text": "Anycast"
+        }
+      ],
+      "answer": "A",
+      "domain": "Communication and Network Security"
+    },
+    {
+      "question": "Which role approves access to a dataset?",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Data processor"
+        },
+        {
+          "key": "B",
+          "text": "Data owner"
+        },
+        {
+          "key": "C",
+          "text": "Custodian"
+        },
+        {
+          "key": "D",
+          "text": "Privacy officer"
+        }
+      ],
+      "answer": "B",
+      "domain": "Asset Security"
+    },
+    {
+      "question": "The BEST validation that a control operates effectively over time is:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Design review"
+        },
+        {
+          "key": "B",
+          "text": "Point-in-time test"
+        },
+        {
+          "key": "C",
+          "text": "Continuous monitoring evidence"
+        },
+        {
+          "key": "D",
+          "text": "User survey"
+        }
+      ],
+      "answer": "C",
+      "domain": "Security Assessment and Testing"
+    },
+    {
+      "question": "Provisioning should follow: (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Ad hoc approvals"
+        },
+        {
+          "key": "B",
+          "text": "Joiner-mover-leaver process"
+        },
+        {
+          "key": "C",
+          "text": "Peer requests"
+        },
+        {
+          "key": "D",
+          "text": "Quarterly batch imports"
+        }
+      ],
+      "answer": "B",
+      "domain": "Identity and Access Management (IAM)"
+    },
+    {
+      "question": "Which is the STRONGEST factor pair? (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Password + SMS OTP"
+        },
+        {
+          "key": "B",
+          "text": "Password + push-based app OTP"
+        },
+        {
+          "key": "C",
+          "text": "Password + security questions"
+        },
+        {
+          "key": "D",
+          "text": "Password only"
+        }
+      ],
+      "answer": "B",
+      "domain": "Identity and Access Management (IAM)"
+    },
+    {
+      "question": "A qualitative risk assessment primarily uses: (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Monetary values"
+        },
+        {
+          "key": "B",
+          "text": "Ordinal scales and scenarios"
+        },
+        {
+          "key": "C",
+          "text": "Probability density functions"
+        },
+        {
+          "key": "D",
+          "text": "Monte Carlo outputs"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security and Risk Management"
+    },
+    {
+      "question": "Least privilege is BEST implemented through: (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "DAC"
+        },
+        {
+          "key": "B",
+          "text": "MAC"
+        },
+        {
+          "key": "C",
+          "text": "RBAC with granular permissions"
+        },
+        {
+          "key": "D",
+          "text": "Open access with auditing"
+        }
+      ],
+      "answer": "C",
+      "domain": "Security Architecture and Engineering"
+    },
+    {
+      "question": "The PRIMARY goal of input validation is to: (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Speed up apps"
+        },
+        {
+          "key": "B",
+          "text": "Prevent injection and undefined behaviors"
+        },
+        {
+          "key": "C",
+          "text": "Encrypt data"
+        },
+        {
+          "key": "D",
+          "text": "Reduce bandwidth"
+        }
+      ],
+      "answer": "B",
+      "domain": "Software Development Security"
+    },
+    {
+      "question": "Perfect Forward Secrecy depends on: (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "RSA only"
+        },
+        {
+          "key": "B",
+          "text": "Static keys"
+        },
+        {
+          "key": "C",
+          "text": "Ephemeral key exchange (e.g., ECDHE)"
+        },
+        {
+          "key": "D",
+          "text": "SSLv3"
+        }
+      ],
+      "answer": "C",
+      "domain": "Communication and Network Security"
+    },
+    {
+      "question": "A qualitative risk assessment primarily uses:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Monetary values"
+        },
+        {
+          "key": "B",
+          "text": "Ordinal scales and scenarios"
+        },
+        {
+          "key": "C",
+          "text": "Probability density functions"
+        },
+        {
+          "key": "D",
+          "text": "Monte Carlo outputs"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security and Risk Management"
+    },
+    {
+      "question": "Which protocol provides confidentiality and integrity for web apps? (scenario 4)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "TLS"
+        },
+        {
+          "key": "B",
+          "text": "HTTP"
+        },
+        {
+          "key": "C",
+          "text": "FTP"
+        },
+        {
+          "key": "D",
+          "text": "Telnet"
+        }
+      ],
+      "answer": "A",
+      "domain": "Communication and Network Security"
+    },
+    {
+      "question": "Data classification is PRIMARILY used to:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Meet SLA targets"
+        },
+        {
+          "key": "B",
+          "text": "Determine handling requirements"
+        },
+        {
+          "key": "C",
+          "text": "Assign IP ranges"
+        },
+        {
+          "key": "D",
+          "text": "Reduce RTO"
+        }
+      ],
+      "answer": "B",
+      "domain": "Asset Security"
+    },
+    {
+      "question": "Least privilege is BEST implemented through: (scenario 4)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "DAC"
+        },
+        {
+          "key": "B",
+          "text": "MAC"
+        },
+        {
+          "key": "C",
+          "text": "RBAC with granular permissions"
+        },
+        {
+          "key": "D",
+          "text": "Open access with auditing"
+        }
+      ],
+      "answer": "C",
+      "domain": "Security Architecture and Engineering"
+    },
+    {
+      "question": "Federation enables: (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Local accounts only"
+        },
+        {
+          "key": "B",
+          "text": "Cross-domain auth via assertions"
+        },
+        {
+          "key": "C",
+          "text": "VPN tunnels"
+        },
+        {
+          "key": "D",
+          "text": "NAT traversal"
+        }
+      ],
+      "answer": "B",
+      "domain": "Identity and Access Management (IAM)"
+    },
+    {
+      "question": "Static application testing examines:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Running app behavior"
+        },
+        {
+          "key": "B",
+          "text": "Network ACL behavior"
+        },
+        {
+          "key": "C",
+          "text": "Source or bytecode without executing"
+        },
+        {
+          "key": "D",
+          "text": "User training artifacts"
+        }
+      ],
+      "answer": "C",
+      "domain": "Security Assessment and Testing"
+    },
+    {
+      "question": "Which role approves access to a dataset? (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Data processor"
+        },
+        {
+          "key": "B",
+          "text": "Data owner"
+        },
+        {
+          "key": "C",
+          "text": "Custodian"
+        },
+        {
+          "key": "D",
+          "text": "Privacy officer"
+        }
+      ],
+      "answer": "B",
+      "domain": "Asset Security"
+    },
+    {
+      "question": "Federation enables: (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Local accounts only"
+        },
+        {
+          "key": "B",
+          "text": "Cross-domain auth via assertions"
+        },
+        {
+          "key": "C",
+          "text": "VPN tunnels"
+        },
+        {
+          "key": "D",
+          "text": "NAT traversal"
+        }
+      ],
+      "answer": "B",
+      "domain": "Identity and Access Management (IAM)"
+    },
+    {
+      "question": "Data classification is PRIMARILY used to: (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Meet SLA targets"
+        },
+        {
+          "key": "B",
+          "text": "Determine handling requirements"
+        },
+        {
+          "key": "C",
+          "text": "Assign IP ranges"
+        },
+        {
+          "key": "D",
+          "text": "Reduce RTO"
+        }
+      ],
+      "answer": "B",
+      "domain": "Asset Security"
+    },
+    {
+      "question": "Which control type best reduces the likelihood of a threat event? (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Detective"
+        },
+        {
+          "key": "B",
+          "text": "Preventive"
+        },
+        {
+          "key": "C",
+          "text": "Corrective"
+        },
+        {
+          "key": "D",
+          "text": "Deterrent"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security and Risk Management"
+    },
+    {
+      "question": "What is the PRIMARY purpose of an information security policy? (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Define specific configs"
+        },
+        {
+          "key": "B",
+          "text": "Meet audit checklists"
+        },
+        {
+          "key": "C",
+          "text": "State management’s intent and direction"
+        },
+        {
+          "key": "D",
+          "text": "Describe step-by-step procedures"
+        }
+      ],
+      "answer": "C",
+      "domain": "Security and Risk Management"
+    },
+    {
+      "question": "A vulnerability scan differs from a penetration test by:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Being exploit-focused"
+        },
+        {
+          "key": "B",
+          "text": "Proving business impact"
+        },
+        {
+          "key": "C",
+          "text": "Identifying potential weaknesses without exploitation"
+        },
+        {
+          "key": "D",
+          "text": "Requiring social engineering"
+        }
+      ],
+      "answer": "C",
+      "domain": "Security Assessment and Testing"
+    },
+    {
+      "question": "Which metric indicates detection capability over time? (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "MTTD"
+        },
+        {
+          "key": "B",
+          "text": "MTTR"
+        },
+        {
+          "key": "C",
+          "text": "RPO"
+        },
+        {
+          "key": "D",
+          "text": "ALE"
+        }
+      ],
+      "answer": "A",
+      "domain": "Security Operations"
+    },
+    {
+      "question": "Tokenization differs from encryption in that it:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Is reversible without a vault"
+        },
+        {
+          "key": "B",
+          "text": "Requires PKI"
+        },
+        {
+          "key": "C",
+          "text": "Uses non-sensitive substitutes"
+        },
+        {
+          "key": "D",
+          "text": "Is a hashing method"
+        }
+      ],
+      "answer": "C",
+      "domain": "Asset Security"
+    },
+    {
+      "question": "A runbook is BEST described as:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "High-level policy"
+        },
+        {
+          "key": "B",
+          "text": "Step-by-step operational procedure"
+        },
+        {
+          "key": "C",
+          "text": "Vendor contract"
+        },
+        {
+          "key": "D",
+          "text": "Risk register"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security Operations"
+    },
+    {
+      "question": "Which protocol provides confidentiality and integrity for web apps? (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "TLS"
+        },
+        {
+          "key": "B",
+          "text": "HTTP"
+        },
+        {
+          "key": "C",
+          "text": "FTP"
+        },
+        {
+          "key": "D",
+          "text": "Telnet"
+        }
+      ],
+      "answer": "A",
+      "domain": "Communication and Network Security"
+    },
+    {
+      "question": "Threat modeling is MOST effective when performed:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Only after release"
+        },
+        {
+          "key": "B",
+          "text": "During design and before coding"
+        },
+        {
+          "key": "C",
+          "text": "Only during incident response"
+        },
+        {
+          "key": "D",
+          "text": "Only by QA"
+        }
+      ],
+      "answer": "B",
+      "domain": "Software Development Security"
+    },
+    {
+      "question": "Data classification is PRIMARILY used to: (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Meet SLA targets"
+        },
+        {
+          "key": "B",
+          "text": "Determine handling requirements"
+        },
+        {
+          "key": "C",
+          "text": "Assign IP ranges"
+        },
+        {
+          "key": "D",
+          "text": "Reduce RTO"
+        }
+      ],
+      "answer": "B",
+      "domain": "Asset Security"
+    },
+    {
+      "question": "Which control type best reduces the likelihood of a threat event?",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Detective"
+        },
+        {
+          "key": "B",
+          "text": "Preventive"
+        },
+        {
+          "key": "C",
+          "text": "Corrective"
+        },
+        {
+          "key": "D",
+          "text": "Deterrent"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security and Risk Management"
+    },
+    {
+      "question": "The PRIMARY goal of input validation is to: (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Speed up apps"
+        },
+        {
+          "key": "B",
+          "text": "Prevent injection and undefined behaviors"
+        },
+        {
+          "key": "C",
+          "text": "Encrypt data"
+        },
+        {
+          "key": "D",
+          "text": "Reduce bandwidth"
+        }
+      ],
+      "answer": "B",
+      "domain": "Software Development Security"
+    },
+    {
+      "question": "Provisioning should follow: (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Ad hoc approvals"
+        },
+        {
+          "key": "B",
+          "text": "Joiner-mover-leaver process"
+        },
+        {
+          "key": "C",
+          "text": "Peer requests"
+        },
+        {
+          "key": "D",
+          "text": "Quarterly batch imports"
+        }
+      ],
+      "answer": "B",
+      "domain": "Identity and Access Management (IAM)"
+    },
+    {
+      "question": "Which practice prevents dependency risks?",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Ignoring CVEs"
+        },
+        {
+          "key": "B",
+          "text": "Lockfile removal"
+        },
+        {
+          "key": "C",
+          "text": "Software composition analysis and timely patching"
+        },
+        {
+          "key": "D",
+          "text": "Disable unit tests"
+        }
+      ],
+      "answer": "C",
+      "domain": "Software Development Security"
+    },
+    {
+      "question": "Provisioning should follow:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Ad hoc approvals"
+        },
+        {
+          "key": "B",
+          "text": "Joiner-mover-leaver process"
+        },
+        {
+          "key": "C",
+          "text": "Peer requests"
+        },
+        {
+          "key": "D",
+          "text": "Quarterly batch imports"
+        }
+      ],
+      "answer": "B",
+      "domain": "Identity and Access Management (IAM)"
+    },
+    {
+      "question": "During incident containment, the FIRST consideration is: (scenario 4)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Attribution"
+        },
+        {
+          "key": "B",
+          "text": "Eradication"
+        },
+        {
+          "key": "C",
+          "text": "Preserving safety and critical operations"
+        },
+        {
+          "key": "D",
+          "text": "Public disclosure"
+        }
+      ],
+      "answer": "C",
+      "domain": "Security Operations"
+    },
+    {
+      "question": "Which is the BEST place to enforce data retention? (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Backups only"
+        },
+        {
+          "key": "B",
+          "text": "Application layer and storage policies"
+        },
+        {
+          "key": "C",
+          "text": "Network ACLs"
+        },
+        {
+          "key": "D",
+          "text": "Endpoint BIOS"
+        }
+      ],
+      "answer": "B",
+      "domain": "Asset Security"
+    },
+    {
+      "question": "A vulnerability scan differs from a penetration test by: (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Being exploit-focused"
+        },
+        {
+          "key": "B",
+          "text": "Proving business impact"
+        },
+        {
+          "key": "C",
+          "text": "Identifying potential weaknesses without exploitation"
+        },
+        {
+          "key": "D",
+          "text": "Requiring social engineering"
+        }
+      ],
+      "answer": "C",
+      "domain": "Security Assessment and Testing"
+    },
+    {
+      "question": "A well-tuned SIEM reduces: (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Data storage costs only"
+        },
+        {
+          "key": "B",
+          "text": "Mean time to acknowledge and false positives"
+        },
+        {
+          "key": "C",
+          "text": "Business continuity"
+        },
+        {
+          "key": "D",
+          "text": "Forensics chain of custody"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security Operations"
+    },
+    {
+      "question": "During incident containment, the FIRST consideration is:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Attribution"
+        },
+        {
+          "key": "B",
+          "text": "Eradication"
+        },
+        {
+          "key": "C",
+          "text": "Preserving safety and critical operations"
+        },
+        {
+          "key": "D",
+          "text": "Public disclosure"
+        }
+      ],
+      "answer": "C",
+      "domain": "Security Operations"
+    },
+    {
+      "question": "Which is the STRONGEST factor pair? (scenario 4)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Password + SMS OTP"
+        },
+        {
+          "key": "B",
+          "text": "Password + push-based app OTP"
+        },
+        {
+          "key": "C",
+          "text": "Password + security questions"
+        },
+        {
+          "key": "D",
+          "text": "Password only"
+        }
+      ],
+      "answer": "B",
+      "domain": "Identity and Access Management (IAM)"
+    },
+    {
+      "question": "Side-channel attacks most often target:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Algorithm math"
+        },
+        {
+          "key": "B",
+          "text": "Implementation and emanations"
+        },
+        {
+          "key": "C",
+          "text": "Key length only"
+        },
+        {
+          "key": "D",
+          "text": "User awareness"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security Architecture and Engineering"
+    },
+    {
+      "question": "A secure design pattern that limits blast radius is:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Monolithic kernel"
+        },
+        {
+          "key": "B",
+          "text": "Segmentation and isolation"
+        },
+        {
+          "key": "C",
+          "text": "Single shared secret"
+        },
+        {
+          "key": "D",
+          "text": "Trust everything inside"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security Architecture and Engineering"
+    },
+    {
+      "question": "A well-tuned SIEM reduces: (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Data storage costs only"
+        },
+        {
+          "key": "B",
+          "text": "Mean time to acknowledge and false positives"
+        },
+        {
+          "key": "C",
+          "text": "Business continuity"
+        },
+        {
+          "key": "D",
+          "text": "Forensics chain of custody"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security Operations"
+    },
+    {
+      "question": "Which practice prevents dependency risks? (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Ignoring CVEs"
+        },
+        {
+          "key": "B",
+          "text": "Lockfile removal"
+        },
+        {
+          "key": "C",
+          "text": "Software composition analysis and timely patching"
+        },
+        {
+          "key": "D",
+          "text": "Disable unit tests"
+        }
+      ],
+      "answer": "C",
+      "domain": "Software Development Security"
+    },
+    {
+      "question": "Which framework focuses on governance objectives?",
+      "choices": [
+        {
+          "key": "A",
+          "text": "COBIT"
+        },
+        {
+          "key": "B",
+          "text": "OWASP ASVS"
+        },
+        {
+          "key": "C",
+          "text": "ITIL Service Ops"
+        },
+        {
+          "key": "D",
+          "text": "CMMI-DEV"
+        }
+      ],
+      "answer": "A",
+      "domain": "Security and Risk Management"
+    },
+    {
+      "question": "Federation enables:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Local accounts only"
+        },
+        {
+          "key": "B",
+          "text": "Cross-domain auth via assertions"
+        },
+        {
+          "key": "C",
+          "text": "VPN tunnels"
+        },
+        {
+          "key": "D",
+          "text": "NAT traversal"
+        }
+      ],
+      "answer": "B",
+      "domain": "Identity and Access Management (IAM)"
+    },
+    {
+      "question": "A vulnerability scan differs from a penetration test by: (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Being exploit-focused"
+        },
+        {
+          "key": "B",
+          "text": "Proving business impact"
+        },
+        {
+          "key": "C",
+          "text": "Identifying potential weaknesses without exploitation"
+        },
+        {
+          "key": "D",
+          "text": "Requiring social engineering"
+        }
+      ],
+      "answer": "C",
+      "domain": "Security Assessment and Testing"
+    },
+    {
+      "question": "What is the PRIMARY purpose of an information security policy? (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Define specific configs"
+        },
+        {
+          "key": "B",
+          "text": "Meet audit checklists"
+        },
+        {
+          "key": "C",
+          "text": "State management’s intent and direction"
+        },
+        {
+          "key": "D",
+          "text": "Describe step-by-step procedures"
+        }
+      ],
+      "answer": "C",
+      "domain": "Security and Risk Management"
+    },
+    {
+      "question": "A black-box test assumes: (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Full design docs"
+        },
+        {
+          "key": "B",
+          "text": "No internal knowledge"
+        },
+        {
+          "key": "C",
+          "text": "Source code access"
+        },
+        {
+          "key": "D",
+          "text": "Database admin"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security Assessment and Testing"
+    },
+    {
+      "question": "Which metric indicates detection capability over time? (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "MTTD"
+        },
+        {
+          "key": "B",
+          "text": "MTTR"
+        },
+        {
+          "key": "C",
+          "text": "RPO"
+        },
+        {
+          "key": "D",
+          "text": "ALE"
+        }
+      ],
+      "answer": "A",
+      "domain": "Security Operations"
+    },
+    {
+      "question": "Accepting risk is most appropriate when: (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Cost of control exceeds benefit"
+        },
+        {
+          "key": "B",
+          "text": "Regulatory requires mitigation"
+        },
+        {
+          "key": "C",
+          "text": "Reputation is at stake"
+        },
+        {
+          "key": "D",
+          "text": "Threat is unknown"
+        }
+      ],
+      "answer": "A",
+      "domain": "Security and Risk Management"
+    },
+    {
+      "question": "Which is the BEST place to enforce data retention?",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Backups only"
+        },
+        {
+          "key": "B",
+          "text": "Application layer and storage policies"
+        },
+        {
+          "key": "C",
+          "text": "Network ACLs"
+        },
+        {
+          "key": "D",
+          "text": "Endpoint BIOS"
+        }
+      ],
+      "answer": "B",
+      "domain": "Asset Security"
+    },
+    {
+      "question": "What does a HSM primarily protect?",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Network traffic"
+        },
+        {
+          "key": "B",
+          "text": "Cryptographic keys"
+        },
+        {
+          "key": "C",
+          "text": "File integrity only"
+        },
+        {
+          "key": "D",
+          "text": "Cloud IAM roles"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security Architecture and Engineering"
+    },
+    {
+      "question": "A secure design pattern that limits blast radius is: (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Monolithic kernel"
+        },
+        {
+          "key": "B",
+          "text": "Segmentation and isolation"
+        },
+        {
+          "key": "C",
+          "text": "Single shared secret"
+        },
+        {
+          "key": "D",
+          "text": "Trust everything inside"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security Architecture and Engineering"
+    },
+    {
+      "question": "A secure design pattern that limits blast radius is: (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Monolithic kernel"
+        },
+        {
+          "key": "B",
+          "text": "Segmentation and isolation"
+        },
+        {
+          "key": "C",
+          "text": "Single shared secret"
+        },
+        {
+          "key": "D",
+          "text": "Trust everything inside"
+        }
+      ],
+      "answer": "B",
+      "domain": "Security Architecture and Engineering"
+    },
+    {
+      "question": "Threat modeling is MOST effective when performed: (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Only after release"
+        },
+        {
+          "key": "B",
+          "text": "During design and before coding"
+        },
+        {
+          "key": "C",
+          "text": "Only during incident response"
+        },
+        {
+          "key": "D",
+          "text": "Only by QA"
+        }
+      ],
+      "answer": "B",
+      "domain": "Software Development Security"
+    },
+    {
+      "question": "Accepting risk is most appropriate when:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Cost of control exceeds benefit"
+        },
+        {
+          "key": "B",
+          "text": "Regulatory requires mitigation"
+        },
+        {
+          "key": "C",
+          "text": "Reputation is at stake"
+        },
+        {
+          "key": "D",
+          "text": "Threat is unknown"
+        }
+      ],
+      "answer": "A",
+      "domain": "Security and Risk Management"
+    },
+    {
+      "question": "Which framework focuses on governance objectives? (scenario 3)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "COBIT"
+        },
+        {
+          "key": "B",
+          "text": "OWASP ASVS"
+        },
+        {
+          "key": "C",
+          "text": "ITIL Service Ops"
+        },
+        {
+          "key": "D",
+          "text": "CMMI-DEV"
+        }
+      ],
+      "answer": "A",
+      "domain": "Security and Risk Management"
+    },
+    {
+      "question": "During incident containment, the FIRST consideration is: (scenario 2)",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Attribution"
+        },
+        {
+          "key": "B",
+          "text": "Eradication"
+        },
+        {
+          "key": "C",
+          "text": "Preserving safety and critical operations"
+        },
+        {
+          "key": "D",
+          "text": "Public disclosure"
+        }
+      ],
+      "answer": "C",
+      "domain": "Security Operations"
+    }
+  ]
+}
