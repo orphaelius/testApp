@@ -12,6 +12,17 @@
   --press-glow-color: #6aa6ff;
   --press-glow-spread: 18px;   /* max glow radius */
   --press-glow-duration: 380ms;
+
+   /* NEW: glow system drives all buttons */
+  --glow-hue: 220deg;
+  --glow-intensity: 0.5;    /* 0..1; controlled by settings slider */
+  --glow-color: hsl(var(--glow-hue) 100% 65% / calc(0.55 + var(--glow-intensity)*0.45));
+  --glow-color-soft: hsl(var(--glow-hue) 90% 70% / calc(0.25 + var(--glow-intensity)*0.3));
+
+  /* XP bar gradient */
+  --xp1: #f6d365;
+  --xp2: #fda085;
+  --xp3: #ffec99;
 }
 
 /* Themes */
