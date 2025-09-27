@@ -28,39 +28,28 @@
   --press-glow-color: var(--accent);
   --press-glow-spread: 18px;
 
-  /* gold xp 
-  --gold-1:#fdf6d8; --gold-2:#ffe49a; --gold-3:#ffcf59; --gold-4:#d6a63b; --gold-5:#8f6b26;*/
-  /*
-  --xp-gold-outer: 0 0 22px rgba(255, 206, 106, .35), 0 0 44px rgba(255, 220, 140, .20);
-  --xp-gold-inner: inset 0 1px 0 rgba(255,255,255,.55), inset 0 -2px 6px rgba(0,0,0,.35);
-  --xp-gold-bevel: inset 0 10px 20px rgba(255,255,255,.08), inset 0 -10px 24px rgba(0,0,0,.28);*/
+  /* XP gold (deeper & richer) */
   --xp-sheen-speed: 4.5s;
-  /* darker lows, warmer mids, hotter highlights */
   --gold-1:#fff3bf;  /* highlight glaze */
   --gold-2:#ffd669;  /* upper mid */
   --gold-3:#ffb703;  /* core gold (richer) */
   --gold-4:#c98700;  /* shadow gold (deeper) */
   --gold-5:#7a4f00;  /* rim/burnt edge */
-  /* stronger glow */
   --xp-gold-outer: 0 0 22px rgba(255, 196, 72, .55), 0 0 48px rgba(255, 170, 30, .28);
   --xp-gold-inner: inset 0 1px 0 rgba(255,255,255,.65), inset 0 -2px 8px rgba(0,0,0,.45);
   --xp-gold-bevel: inset 0 12px 26px rgba(255,255,255,.10), inset 0 -12px 30px rgba(0,0,0,.35);
 
-  /* ⬅️ explicit sticky height so content never sits under it */
+  /* explicit sticky height so content never sits under it */
   --appbar-h: 64px;
 
-  
-  /* implement a moving background image */
-  --walk-bg-url: url("./Tiles/Big_tree.png"); /* <- your image */
-  --walk-bg-height: 70%;      /* how tall the ground strip is (relative to window height) */
-  --walk-bg-offset-y: 0px;    /* fine-tune vertical alignment to the avatar's feet */
-  --walk-bg-speed: 40s;       /* time for one full scroll (slower = bigger number) */
-  /* Base size of one tile of your PNG (set to your image’s native aspect) */
-  --walk-tile-w: 256px;
-  --walk-tile-h: 64px;
+  /* walking background (you can tweak per page) */
+  --walk-bg-url: url("./Tiles/Big_tree.png");
+  --walk-bg-height: 70%;
+  --walk-bg-offset-y: 0px;
+  --walk-bg-speed: 40s;
 }
 
-/* Themes (5 creative variants kept) */
+/* Themes (5 variants) */
 html[data-theme="blue"]{ --accent:#79c8ff; --accent-2:#b7e3ff; --bg: radial-gradient(1000px 720px at 15% -10%, #152242 0%, #0e1530 40%, #080c1e 100%), linear-gradient(160deg,#0b1328 0%, #0c1022 60%, #0b0f19 100%); --panel:#111935; --surface:#0e142e; --avatar-tint: rgba(121,200,255,.20); }
 html[data-theme="pink"]{ --accent:#ff78c4; --accent-2:#ffd0ec; --bg: radial-gradient(900px 640px at 80% -20%, #361730 0%, #1b1023 50%, #0b0f19 100%); --panel:#20132a; --surface:#161022; --avatar-tint: rgba(255,120,196,.18); }
 html[data-theme="burgundy"]{ --accent:#d14b5d; --accent-2:#ff9aa8; --bg: radial-gradient(1100px 760px at 10% -15%, #35121b 0%, #1b0f16 50%, #0b0f19 100%); --panel:#1e1218; --surface:#161016; --avatar-tint: rgba(209,75,93,.16); }
@@ -80,50 +69,49 @@ img{max-width:100%;display:block}
 /* App Bar */
 .appbar{ position:sticky; top:0; z-index:100; background:rgba(8,12,22,.78); backdrop-filter:blur(10px); border-bottom:1px solid #1c2540 }
 
-/* ⬅️ restore + modernize appbar-inner so height is consistent */
-/* Header container: same left/right padding & max-width as .wrap */
+/* Header container */
 .appbar-inner{
   max-width: min(1160px, 100vw - 2*var(--space));
   margin: 0 auto;
   padding: 0 var(--space);
   min-height: var(--appbar-h);
-  display: grid;                       /* ← switch to grid for precise alignment */
-  grid-template-columns: auto 1fr;     /* brand | nav/menu */
-  align-items: center;                  /* vertical centering */
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
   gap: 12px;
 }
-
 @media (max-width: 760px){
   .appbar-inner{
     grid-template-columns: 1fr;  /* stack brand above menu */
     row-gap: 8px;
-    justify-items: center;        /* center both on small screens */
+    justify-items: center;
   }
 }
 
-
-/* Keep the 4-button toolbar aligned with the brand edges & keypad width */
+/* 4-button toolbar aligned with keypad width */
 #toolbar{
+  display:flex;
+  align-items:center;
   justify-content: space-evenly;
   gap: 12px;
   max-width: 560px;    /* matches keypad/xp hud width */
-  margin-left: auto;   /* stays on the right column of the grid */
+  margin-left: auto;
   width: 100%;
 }
 #toolbar .btn{
   min-width:120px;
   flex: 1 1 0;
-  max-width:160px;        /* tidy on wide screens */
+  max-width:160px;
 }
 
-/* ⬅️ align keypad to same width for visual harmony */
+/* Keypad aligned width */
 #kbd{
   max-width:560px;
   margin:0 auto;
   width:100%;
 }
 
-/* Brand (app name) — baseline-aligned, fluid sizing */
+/* Brand (app name) */
 .brand{
   display: inline-flex;
   align-items: center;
@@ -137,27 +125,13 @@ img{max-width:100%;display:block}
   white-space: nowrap;
 }
 
-/* FUTURE LOGO PLACEMENT 
-.brand .logo{
-  width: 22px;
-  height: 22px;
-  display: inline-block;
-  vertical-align: middle;
-}*/
-
-/* Menu / nav on the right, flush with the same grid as brand */
-.nav, #toolbar{
-  display: flex;
-  align-items: center;
-}
-/*.nav{ display:flex; gap:10px; align-items:center; overflow-x:auto; -webkit-overflow-scrolling:touch }*/
+/* Menu / nav */
 .nav::-webkit-scrollbar{ display:none }
 .nav-link{ color:var(--muted); text-decoration:none; padding:8px 12px; border-radius:10px; border:1px solid transparent; white-space:nowrap; flex:0 0 auto }
 .nav-link:hover, .nav-link.active{ color:var(--text); border-color:#223055; background:rgba(255,255,255,.03) }
 
 /* Layout */
 .wrap{ max-width:min(1160px, 100%); margin:var(--space) auto; padding:0 var(--space); display:grid; gap:var(--space);
-  /* ⬅️ ensures content starts below sticky bar */
   padding-top: calc(var(--appbar-h) + 8px);
 }
 .layout-single{ max-width:min(900px, 100%); margin:var(--space) auto; padding:0 var(--space) }
@@ -168,7 +142,7 @@ img{max-width:100%;display:block}
 #solving, #streak, #streakRow, #streakWrap, .solving, .streak { display: none !important; }
 
 /* Stage (avatar + HUD) */
-.stage{ display:grid; gap: calc(var(--space) * 0.7); align-items:center; justify-items:center }  /* ⬅️ tighter gap */
+.stage{ display:grid; gap: calc(var(--space) * 0.7); align-items:center; justify-items:center }
 .hud-top{ width:100%; display:grid; place-items:center; margin-bottom:0 }
 
 .xp-hud{ width:min(560px, 92%); display:grid; gap:8px; }
@@ -187,76 +161,36 @@ img{max-width:100%;display:block}
   overflow:hidden;
 }
 
-/* XP bar 
+/* XP bar (deeper gold) */
 .xp-bar{
   position:absolute; inset:0 auto 0 0; width:0; border-radius:999px;
   background:
-    linear-gradient(180deg, rgba(255,255,255,.35), rgba(255,255,255,0) 45%) top/100% 55% no-repeat,
-    linear-gradient(180deg, var(--gold-2), var(--gold-3) 50%, var(--gold-4) 85%),
-    repeating-linear-gradient(90deg, rgba(255,255,255,.04) 0 8px, rgba(0,0,0,.04) 8px 16px);
-  box-shadow: var(--xp-gold-outer), var(--xp-gold-inner), var(--xp-gold-bevel);
-  transition:width .6s cubic-bezier(.2,.8,.2,1), filter .25s ease;
-}
-.xp-bar::before{
-  content:""; position:absolute; inset:-30% -10% -30% auto; width:28%;
-  transform:skewX(-18deg);
-  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.55) 45%, rgba(255,255,255,0) 100%);
-  mix-blend-mode:screen; animation: xpSheen var(--xp-sheen-speed) linear infinite; opacity:.7; pointer-events:none;
-}
-.xp-bar::after{
-  content:""; position:absolute; inset:auto 0 0 0; height:45%;
-  border-bottom-left-radius:999px; border-bottom-right-radius:999px;
-  background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.22));
-  pointer-events:none;
-}
-.xp-pulse{ position:absolute; inset:0; pointer-events:none; opacity:0 }
-.xp-rail.pulse .xp-bar{
-  filter: drop-shadow(0 0 10px rgba(255, 226, 140, .45)) drop-shadow(0 0 22px rgba(255, 226, 140, .25));
-}*/
-/* 2) XP bar fill: deeper body, stronger speculars, subtle color burn at the base */
-.xp-bar{
-  position:absolute; inset:0 auto 0 0; width:0; border-radius:999px;
-  background:
-    /* brighter top specular rim */
     linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,0) 44%) top/100% 58% no-repeat,
-    /* hot body gradient with deeper base */
     linear-gradient(180deg, var(--gold-2) 0%, var(--gold-3) 48%, var(--gold-4) 86%, var(--gold-5) 100%),
-    /* fine metallic banding */
     repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 8px, rgba(0,0,0,.05) 8px 16px);
   box-shadow: var(--xp-gold-outer), var(--xp-gold-inner), var(--xp-gold-bevel);
   transition:width .6s cubic-bezier(.2,.8,.2,1), filter .25s ease;
-  filter: saturate(1.9) contrast(1.05); /* <- boosts richness without blowing highlights */
+  filter: saturate(1.9) contrast(1.05);
 }
-
-/* 3) Sheen pass: narrower + brighter for a sharper “metal swipe” */
 .xp-bar::before{
-  content:""; position:absolute; inset:-30% -10% -30% auto; width:28%;
+  content:""; position:absolute; inset:-30% -10% -30% auto;
   transform:skewX(-18deg);
   width:22%;
-  background: linear-gradient(90deg,
-              rgba(255,255,255,0) 0%,
-              rgba(255,255,255,.75) 45%,
-              rgba(255,255,255,0) 100%);
-  mix-blend-mode:screen; animation: xpSheen var(--xp-sheen-speed) linear infinite; opacity:.7; pointer-events:none;
-  opacity:.85;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.75) 45%, rgba(255,255,255,0) 100%);
+  mix-blend-mode:screen; animation: xpSheen var(--xp-sheen-speed) linear infinite; opacity:.85; pointer-events:none;
 }
-/* 4) Base curvature shadow a bit stronger to deepen the gold */
 .xp-bar::after{
   content:""; position:absolute; inset:auto 0 0 0; height:45%;
   border-bottom-left-radius:999px; border-bottom-right-radius:999px;
   background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.30));
   pointer-events:none;
 }
-
-/* 5) Pulse state glow (when .xp-rail gets .pulse) – warmer and brighter */
 .xp-rail.pulse .xp-bar{
   filter: saturate(1.28) contrast(1.08)
           drop-shadow(0 0 12px rgba(255, 186, 64, .55))
           drop-shadow(0 0 26px rgba(255, 168, 28, .32));
 }
-
 @keyframes xpSheen{ 0%{ transform:translateX(-120%) skewX(-18deg) } 100%{ transform:translateX(220%) skewX(-18deg) } }
-@keyframes xpPulse{ 0%{opacity:.0} 15%{opacity:.8; box-shadow:inset 0 0 0 999px rgba(255,255,255,.0)} 100%{opacity:0} }
 
 .avatar-area{
   display:grid; grid-template-columns: auto minmax(220px, 1fr); gap:18px; align-items:center; width:100%;
@@ -265,6 +199,7 @@ img{max-width:100%;display:block}
   .avatar-area{ grid-template-columns: 1fr; justify-items:center }
 }
 
+/* Loot visuals */
 .loot-box{ display:grid; place-items:center; text-decoration:none; gap:6px }
 .loot-art, .loot-art.lg{
   background:
@@ -285,37 +220,36 @@ img{max-width:100%;display:block}
 }
 .loot-count{ font-weight:800; color:#ffd24d }
 
+/* Avatar window + layers */
 .avatar-window{ width: clamp(112px, 33.6vw, 252px); aspect-ratio: 1/1; position:relative; display:grid; place-items:center; border:none; border-radius:0; background:transparent; box-shadow:none; overflow:visible; }
 .avatar-bg{ display:none !important; }
 .avatar-stage{ position:relative; z-index:1; width:auto; height:auto; display:grid; place-items:center; }
 
-/* background viewport */
+/* Clipping viewport for background */
 .avatar-viewport {
   position: relative;
   width: 100%;
   height: 100%;
-  overflow: hidden;           /* clip the background to the window */
-  border-radius: inherit;     /* keep any rounding consistent */
+  overflow: hidden;
+  border-radius: inherit;
 }
 
-/* drifting backgroud */
-/* The drifting ground/background strip */
+/* Drifting background strip (fixed to defined vars) */
 .avatar-walk-bg{
   position: absolute;
   left: 0; right: 0;
-  bottom: var(--walk-bg-offset-y);   /* align bottom to the feet; tweak offset if needed */
-  height: var(--walk-tile-h);
+  bottom: var(--walk-bg-offset-y, 0px);
+  height: var(--walk-bg-height, 70%);
   background-image: var(--walk-bg-url);
-  background-repeat: repeat-x;       /* tiles horizontally */
-  background-size: var(--walk-tile-w) var(--walk-tile-h);
-  background-position: 0 100%;       /* start at bottom */
-  animation: walkScroll var(--walk-bg-speed) linear infinite;
-  z-index: 0;                        /* behind the avatar image */
+  background-repeat: repeat-x;
+  background-size: auto var(--walk-bg-height, 70%);
+  background-position: 0 100%;
+  animation: walkScroll var(--walk-bg-speed, 40s) linear infinite;
+  z-index: 0;
 }
-/* Horizontal drift from right to left */
 @keyframes walkScroll{
   from { background-position-x: 0; }
-  to   { background-position-x: calc(-1 * var(--walk-tile-w)); }
+  to   { background-position-x: -100%; }
 }
 
 .pet-stage{ position:absolute; right:-4%; bottom:-2%; width:28%; height:28%; display:none; z-index:2; }
@@ -328,7 +262,7 @@ img{max-width:100%;display:block}
   padding:12px 14px; border-radius:12px; font-weight:700; max-width:100%;
 }
 
-/* Center the subject/topic picker row */
+/* Subject/topic picker */
 .topic-picker{ display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap; margin: 8px auto; width: min(760px, 100%); }
 .topic-picker select.select{ min-width: 200px; text-align: left; }
 
@@ -347,10 +281,10 @@ img{max-width:100%;display:block}
 .btn-ghost{ background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 12%, var(--surface)), var(--surface)); color: var(--text); border:1px solid color-mix(in srgb, var(--accent) 36%, #223055); }
 .btn.small{ padding:8px 12px; border-radius:12px; font-size:.92rem }
 
+/* Mobile toolbar: two per row */
 .only-mobile{ display:none }
 @media (max-width: 760px){
   .only-mobile{ display:inline-block }
-  /* ⬅️ on mobile, two buttons per row looks nice */
   #toolbar .btn{ flex: 1 1 calc(50% - 12px); max-width:none; }
 }
 
@@ -376,6 +310,7 @@ mjx-container[jax="CHTML"]{ font-size:120% !important }
 .kbd-grid .accent{ color:#0b1020; background:linear-gradient(180deg,#ffd24d,#ffe9a1); border:none }
 .kbd-grid .danger{ border-color:#3b2330; background:#1b0f16; color:#ffb1c1 }
 
+/* Press glow */
 .press-glow{ position: relative; transition: box-shadow 120ms ease; }
 .press-glow::after{ content: ""; position: absolute; inset: -2px; border-radius: inherit; pointer-events: none; opacity: 0; box-shadow: 0 0 0 var(--press-glow-spread) var(--press-glow-color); filter: blur(8px); }
 .press-glow.is-pressing{ box-shadow: 0 0 0 2px color-mix(in srgb, var(--press-glow-color) 60%, transparent); }
@@ -383,21 +318,23 @@ mjx-container[jax="CHTML"]{ font-size:120% !important }
 @keyframes press-glow-pop{ 0%{opacity:0; box-shadow: 0 0 0 0 var(--press-glow-color);} 25%{opacity:.75; box-shadow: 0 0 0 var(--press-glow-spread) var(--press-glow-color);} 100%{opacity:0; box-shadow: 0 0 0 0 var(--press-glow-color);} }
 @media (prefers-reduced-motion: reduce){ .press-glow.is-pressing::after{ animation-duration: 1ms; } }
 
-/* XP Float 
-.xp-float{ position:absolute; left:50%; transform:translateX(-50%); bottom: -8px; background:rgba(32,255,163,.12); border:1px solid rgba(32,255,163,.35); color:#2aff9f; padding:8px 12px; border-radius:12px; font-weight:800; animation:rise 1800ms ease forwards; pointer-events:none }
-@keyframes rise{ 0%{opacity:0; transform:translate(-50%, 10px) scale(.9)} 20%{opacity:1; transform:translate(-50%, 0) scale(1)} 100%{opacity:0; transform:translate(-50%, -60px) scale(.95)} }*/
-
-/* New variant: float from the avatar's right edge and drift up-right */
+/* XP Float (right of avatar) */
 .xp-float.right-of-avatar{
+  position:absolute;
   left: auto;
-  right: -10px;        /* nudges the chip just outside the frame */
-  bottom: 22%;         /* vertical anchor roughly mid-height */
-  transform: none;     /* let the animation control movement */
+  right: -10px;
+  bottom: 22%;
+  transform: none;
+  background:rgba(32,255,163,.12);
+  border:1px solid rgba(32,255,163,.35);
+  color:#2aff9f;
+  padding:8px 12px;
+  border-radius:12px;
+  font-weight:800;
   animation: riseRight 1800ms ease forwards;
-  z-index: 5;          /* above avatar/pet */
+  pointer-events:none;
+  z-index: 5;
 }
-
-/* Up-and-right drift */
 @keyframes riseRight{
   0%   { opacity: 0; transform: translate(6px, 10px) scale(.9); }
   15%  { opacity: 1; transform: translate(0, 0) scale(1); }
@@ -457,55 +394,27 @@ mjx-container[jax="CHTML"]{ font-size:120% !important }
 #kbd[hidden] { display:none !important; }
 #kbd.open { display:block; }
 
-
-
-
-
-@media (max-width: 900px){
-  :root{
-    --walk-tile-w: 224px;
-    --walk-tile-h: 56px;
-  }
-}
-@media (max-width: 640px){
-  :root{
-    --walk-tile-w: 192px;
-    --walk-tile-h: 48px;
-  }
-}
-
-
 /* Mobile header alignment fix */
 @media (max-width: 760px){
-  /* Make sure the header container switches to a single centered column */
   .appbar-inner{
-    display: grid;                 /* ensure we’re on grid, not flex */
-    grid-template-columns: 1fr;    /* stack brand above menu */
+    display: grid;
+    grid-template-columns: 1fr;
     grid-auto-flow: row;
-    justify-items: center;         /* center children horizontally */
+    justify-items: center;
     align-items: center;
     padding: 8px var(--space);
     width: 100%;
     box-sizing: border-box;
   }
-
-  /* Brand: no floats/margins; center it on the grid */
-  .appbar .brand,
-  .brand{
+  .appbar .brand, .brand{
     justify-self: center;
     margin: 0;
-    float: none;                   /* in case any theme floated it */
+    float: none;
   }
-
-  /* Menu/toolbar: center and don’t overflow */
-  .appbar .nav,
-  .nav,
-  .appbar #toolbar,
-  #toolbar{
+  .appbar .nav, .nav, .appbar #toolbar, #toolbar{
     justify-content: center;
     margin: 0;
     max-width: 100%;
     width: 100%;
   }
 }
-
