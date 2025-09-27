@@ -47,6 +47,7 @@
   --walk-bg-height: 110%;
   --walk-bg-offset-y: 0px;
   --walk-bg-speed: 20s;
+  --walk-tile-w: 600px; /* how wide 1 repeat is */
 }
 
 /* Themes (5 variants) */
@@ -242,14 +243,14 @@ img{max-width:100%;display:block}
   height: var(--walk-bg-height, 70%);
   background-image: var(--walk-bg-url);
   background-repeat: repeat-x;
-  background-size: auto var(--walk-bg-height, 70%);
+  background-size: var(--walk-tile-w) var(--walk-bg-height);
   background-position: 0 100%;
   animation: walkScroll var(--walk-bg-speed, 40s) linear infinite;
   z-index: 0;
 }
 @keyframes walkScroll{
   from { background-position-x: 0; }
-  to   { background-position-x: -100%; }
+  to   { background-position-x: calc(-1 * var(--walk-tile-w)); }
 }
 
 .pet-stage{ position:absolute; right:-4%; bottom:-2%; width:28%; height:28%; display:none; z-index:2; }
