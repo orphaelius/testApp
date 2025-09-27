@@ -8,9 +8,6 @@
   --avatar-glow: 0 0 18px rgba(106,166,255,.28);
   --loot-img: url("./LootAssets/TreasureChestDefault.png");
   --space: clamp(8px, 2vw, 14px);
-
-
-
   
   /*additional palette features*/
   /* core */
@@ -24,12 +21,7 @@
   --accent-2:#9bc2ff;
    /* avatar tint + loot */
   --avatar-tint: color-mix(in srgb, var(--accent) 34%, transparent);
-  --loot-img: url("./LootAssets/TreasureChestDefault.png");
-
-
-
-
-  
+  --loot-img: url("./LootAssets/TreasureChestDefault.png");  
 
    /* tweak to match your theme */
   --press-glow-color: #6aa6ff;
@@ -119,11 +111,20 @@ img{max-width:100%;display:block}
 
 /* App Bar */
 .appbar{ position:sticky; top:0; z-index:100; background:rgba(8,12,22,.78); backdrop-filter:blur(10px); border-bottom:1px solid #1c2540 }
+/* Home page button container — adjust selectors if needed */
+#toolbar,
+.appbar-inner,
+.header {
+  display: flex;
+  flex-wrap: wrap;   /* <- allows buttons to move to a new line instead of overlapping */
+  gap: 8px;          /* consistent spacing between them */
+}
+/* OG APP BAR CODE IN CASE BUTTONS ON HOME PAGE BREAK
 .appbar-inner{
   max-width:min(1160px, 100vw - 2*var(--space));
   margin:0 auto; padding:12px var(--space);
   display:flex; gap:12px; align-items:center; justify-content:space-between;
-}
+}*/
 .brand{ font-weight:800; letter-spacing:.4px; font-size:18px; text-decoration:none; color:var(--text); white-space:nowrap }
 .nav{ display:flex; gap:10px; align-items:center; overflow-x:auto; -webkit-overflow-scrolling:touch }
 .nav::-webkit-scrollbar{ display:none }
