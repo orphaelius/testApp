@@ -373,11 +373,24 @@ let currentTopicId = null, currentQ = null;
 let difficulty = 'easy';
 
 async function newQuestion(){
-  const topic = findTopic(currentTopicId); if (!topic) return;
-  currentQ = topic.generateQuestion(difficulty);
-  const p = $('#questionPrompt'); p.textContent = currentQ.prompt; await typesetMath(p);
-  const ai = $('#answerInput'); ai.value=''; $('#feedback').className='feedback'; $('#feedback').textContent='';
+  const topic = findTopic(currentTopicId);
+  if (!topic || !topic.generateQuestion) return;
+
+  const maybe = topic.generateQuestion(difficulty);
+  currentQ = (maybe && typeof maybe.then === 'function') ? await maybe : maybe;
+
+  const p = document.querySelector('#questionPrompt');
+  if (p && currentQ?.prompt != null) {
+    p.textContent = currentQ.prompt;
+    await typesetMath(p); // safe if not math too
+  }
+
+  const ai = document.querySelector('#answerInput');
+  if (ai) ai.value = '';
+  const fb = document.querySelector('#feedback');
+  if (fb){ fb.className='feedback'; fb.textContent=''; }
 }
+
 function parseResult(r){ return (typeof r==='boolean')? {correct:r} : r; }
 function checkAnswer(){
   const topic = findTopic(currentTopicId); if (!topic || !currentQ) return;
