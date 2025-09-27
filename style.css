@@ -399,3 +399,38 @@ mjx-container[jax="CHTML"]{ font-size:120% !important }
 .header, .toolbar, #toolbar { overflow:visible; }
 #kbd[hidden] { display:none !important; }
 #kbd.open { display:block; }
+
+/* Mobile header alignment fix */
+@media (max-width: 760px){
+  /* Make sure the header container switches to a single centered column */
+  .appbar-inner{
+    display: grid;                 /* ensure we’re on grid, not flex */
+    grid-template-columns: 1fr;    /* stack brand above menu */
+    grid-auto-flow: row;
+    justify-items: center;         /* center children horizontally */
+    align-items: center;
+    padding: 8px var(--space);
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Brand: no floats/margins; center it on the grid */
+  .appbar .brand,
+  .brand{
+    justify-self: center;
+    margin: 0;
+    float: none;                   /* in case any theme floated it */
+  }
+
+  /* Menu/toolbar: center and don’t overflow */
+  .appbar .nav,
+  .nav,
+  .appbar #toolbar,
+  #toolbar{
+    justify-content: center;
+    margin: 0;
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
