@@ -52,7 +52,7 @@
   
   /* implement a moving background image */
   --walk-bg-url: url("./Tiles/Big_tree.png"); /* <- your image */
-  --walk-bg-height: 50%;      /* how tall the ground strip is (relative to window height) */
+  --walk-bg-height: 70%;      /* how tall the ground strip is (relative to window height) */
   --walk-bg-offset-y: 0px;    /* fine-tune vertical alignment to the avatar's feet */
   --walk-bg-speed: 40s;       /* time for one full scroll (slower = bigger number) */
 }
