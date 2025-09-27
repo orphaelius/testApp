@@ -8,6 +8,13 @@
   --avatar-glow: 0 0 18px rgba(106,166,255,.28);
   --loot-img: url("./LootAssets/TreasureChestDefault.png");
   --space: clamp(8px, 2vw, 14px);
+  
+  /*additional palette features*/
+  --text: #e4e8ff;
+  --bg: #0f1320;
+  --panel: #1c2137;
+  --glow: 0 0 8px rgba(180,220,255,0.6);
+  --accent: #6aa6ff;
 
    /* tweak to match your theme */
   --press-glow-color: #6aa6ff;
@@ -37,11 +44,29 @@
 
 
 /* Themes */
-html[data-theme="blue"]{ --accent:#6aa6ff; --accent-2:#9bc2ff; --avatar-tint: rgba(106,166,255,.18); }
-html[data-theme="pink"]{ --accent:#ff78c4; --accent-2:#ffc2e3; --avatar-tint: rgba(255,120,196,.16); }
-html[data-theme="burgundy"]{ --accent:#a33a4a; --accent-2:#cf6b7c; --avatar-tint: rgba(163,58,74,.16); }
-html[data-theme="green"]{ --accent:#4bdc84; --accent-2:#9df2c0; --avatar-tint: rgba(75,220,132,.16); }
-html[data-theme="yellow"]{ --accent:#ffd24d; --accent-2:#ffe9a1; --avatar-tint: rgba(255,210,77,.14); }
+[data-theme="blue"] {
+  --accent: #7cc7ff;
+  --glow: 0 0 12px rgba(124,199,255,0.8);
+  --bg: linear-gradient(135deg, #0f1528, #182447);
+}
+
+[data-theme="purple"] {
+  --accent: #b77cff;
+  --glow: 0 0 14px rgba(183,124,255,0.8);
+  --bg: linear-gradient(135deg, #1b0f28, #2d1c47);
+}
+
+[data-theme="emerald"] {
+  --accent: #3cffc7;
+  --glow: 0 0 14px rgba(60,255,199,0.8);
+  --bg: linear-gradient(135deg, #0f2821, #1a3d34);
+}
+
+[data-theme="sunset"] {
+  --accent: #ff9d6c;
+  --glow: 0 0 14px rgba(255,157,108,0.8);
+  --bg: linear-gradient(135deg, #28140f, #47261c);
+}
 
 *{box-sizing:border-box}
 html,body{
