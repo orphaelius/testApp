@@ -9,7 +9,7 @@ function applyTheme(t){ document.documentElement.setAttribute('data-theme', t); 
 
 /* Your pet assets */
 const PET_FOLDER = './PetAssets/';          // put folder next to index.html
-const PET_LIST   = ['Doggo.png','Pet2.gif','Pet3.gif']; // change to your filenames
+const PET_LIST   = ['Doggo.png','fox.png','dragon.png']; // change to your filenames
 
 function buildPetCard(filename){
   const url = new URL(PET_FOLDER + filename, document.baseURI).toString();
