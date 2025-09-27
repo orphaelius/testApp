@@ -34,7 +34,7 @@
   --xp-gold-outer: 0 0 22px rgba(255, 206, 106, .35), 0 0 44px rgba(255, 220, 140, .20);
   --xp-gold-inner: inset 0 1px 0 rgba(255,255,255,.55), inset 0 -2px 6px rgba(0,0,0,.35);
   --xp-gold-bevel: inset 0 10px 20px rgba(255,255,255,.08), inset 0 -10px 24px rgba(0,0,0,.28);*/
-  --xp-sheen-speed: 3.5s;
+  --xp-sheen-speed: 4.5s;
   /* darker lows, warmer mids, hotter highlights */
   --gold-1:#fff3bf;  /* highlight glaze */
   --gold-2:#ffd669;  /* upper mid */
@@ -215,7 +215,7 @@ img{max-width:100%;display:block}
     repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 8px, rgba(0,0,0,.05) 8px 16px);
   box-shadow: var(--xp-gold-outer), var(--xp-gold-inner), var(--xp-gold-bevel);
   transition:width .6s cubic-bezier(.2,.8,.2,1), filter .25s ease;
-  filter: saturate(1.2) contrast(1.05); /* <- boosts richness without blowing highlights */
+  filter: saturate(1.6) contrast(1.05); /* <- boosts richness without blowing highlights */
 }
 
 /* 3) Sheen pass: narrower + brighter for a sharper “metal swipe” */
