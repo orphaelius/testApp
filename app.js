@@ -256,8 +256,32 @@ function renderAvatar(){
 
 
 
+// --- Walking background sizing (keeps tile size responsive) ---
+const WALK_META = { ratio: 4 }; // width/height of one tile (adjust if your PNG isn't 4:1)
+
+function syncWalkStrip(){
+  const win = document.querySelector('.avatar-window');
+  const viewport = win?.querySelector('.avatar-viewport');
+  const bg = viewport?.querySelector('#avatarBG');
+  if (!bg || !viewport) return;
+
+  // Make the ground strip ~22% of the avatar window height (tweak as you like)
+  const vp = viewport.getBoundingClientRect();
+  const stripH = Math.max(40, Math.round(vp.height * 0.22));   // px
+  const tileW  = Math.round(stripH * WALK_META.ratio);          // keep aspect
+
+  // Feed the CSS custom properties the JS-computed sizes
+  bg.style.setProperty('--walk-tile-h', stripH + 'px');
+  bg.style.setProperty('--walk-tile-w', tileW  + 'px');
+}
 
 
+  // After creating/inserting the bg layer, size it for the current viewport
+  syncWalkStrip();
+  stage.appendChild(container);
+
+  // Re-sync background height/width now that the stage exists
+  syncWalkStrip();
 
 
 
@@ -805,6 +829,8 @@ function init(){
   // avatar & pet
   renderAvatar();
   window.addEventListener('resize', renderAvatar, { passive:true });
+  // keep the walking ground sized on viewport changes
+  window.addEventListener('resize', syncWalkStrip, { passive:true });
 
   // xp & loot
   loadXP(); syncHUD();
