@@ -201,7 +201,7 @@ function awardXPAnimated(amountTotal=15){
 
 /* ---------- Robust Subject → Topic Picker (with first-topic auto-select) ---------- */
 
-const SUBJECT_ORDER = ['Arithmetic','Algebra','Calculus','Trigonometry','Geometry','General'];
+const SUBJECT_ORDER = ['Arithmetic','Algebra','Calculus','Trigonometry','Geometry','General', 'CISSP'];
 
 function getSubject(t){
   if (t?.subject && typeof t.subject === 'string'){
