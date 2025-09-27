@@ -55,11 +55,13 @@
 
         <!-- Avatar Window (center, 30% smaller) -->
         <div class="avatar-window">
-          <div id="avatarBG" class="avatar-bg"></div>
-          <div id="pixelCharContainer" class="avatar-stage" aria-label="User avatar"></div>
-          <div id="petStage" class="pet-stage" aria-hidden="true"></div>
+          <div class="avatar-viewport">
+            <div id="avatarBG" class="avatar-walk-bg"></div>  <!-- new drifting ground -->
+            <div class="avatar-stage" id="pixelCharContainer"><!-- avatar is rendered here --></div>
+            <div class="pet-stage" id="petStage"></div>
+          </div>
         </div>
-      </div>
+
 
       <!-- Character name under avatar -->
       <div class="char-name">
