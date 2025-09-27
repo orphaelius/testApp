@@ -60,23 +60,33 @@ img{max-width:100%;display:block}
 .appbar{ position:sticky; top:0; z-index:100; background:rgba(8,12,22,.78); backdrop-filter:blur(10px); border-bottom:1px solid #1c2540 }
 
 /* ⬅️ restore + modernize appbar-inner so height is consistent */
+/* Header container: same left/right padding & max-width as .wrap */
 .appbar-inner{
-  max-width:min(1160px, 100vw - 2*var(--space));
-  margin:0 auto; padding:8px var(--space);
+  max-width: min(1160px, 100vw - 2*var(--space));
+  margin: 0 auto;
+  padding: 0 var(--space);
   min-height: var(--appbar-h);
-  display:flex; align-items:center; justify-content:space-between; gap:12px;
-  flex-wrap: wrap;
+  display: grid;                       /* ← switch to grid for precise alignment */
+  grid-template-columns: auto 1fr;     /* brand | nav/menu */
+  align-items: center;                  /* vertical centering */
+  gap: 12px;
 }
 
-/* ⬅️ evenly spaced 4-button toolbar aligned to keypad */
+@media (max-width: 760px){
+  .appbar-inner{
+    grid-template-columns: 1fr;  /* stack brand above menu */
+    row-gap: 8px;
+    justify-items: center;        /* center both on small screens */
+  }
+}
+
+
+/* Keep the 4-button toolbar aligned with the brand edges & keypad width */
 #toolbar{
-  display:flex; flex-wrap:wrap;
   justify-content: space-evenly;
-  align-items:center;
-  gap:12px;
-  padding: 8px 0;
-  max-width: 560px;       /* align with keypad/xp hud */
-  margin: 0 auto;         /* centered */
+  gap: 12px;
+  max-width: 560px;    /* matches keypad/xp hud width */
+  margin-left: auto;   /* stays on the right column of the grid */
   width: 100%;
 }
 #toolbar .btn{
@@ -92,8 +102,34 @@ img{max-width:100%;display:block}
   width:100%;
 }
 
-.brand{ font-weight:800; letter-spacing:.4px; font-size:18px; text-decoration:none; color:var(--text); white-space:nowrap }
-.nav{ display:flex; gap:10px; align-items:center; overflow-x:auto; -webkit-overflow-scrolling:touch }
+/* Brand (app name) — baseline-aligned, fluid sizing */
+.brand{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 900;
+  letter-spacing: .4px;
+  font-size: clamp(16px, 2.2vw, 20px);
+  line-height: 1;
+  text-decoration: none;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* FUTURE LOGO PLACEMENT 
+.brand .logo{
+  width: 22px;
+  height: 22px;
+  display: inline-block;
+  vertical-align: middle;
+}*/
+
+/* Menu / nav on the right, flush with the same grid as brand */
+.nav, #toolbar{
+  display: flex;
+  align-items: center;
+}
+/*.nav{ display:flex; gap:10px; align-items:center; overflow-x:auto; -webkit-overflow-scrolling:touch }*/
 .nav::-webkit-scrollbar{ display:none }
 .nav-link{ color:var(--muted); text-decoration:none; padding:8px 12px; border-radius:10px; border:1px solid transparent; white-space:nowrap; flex:0 0 auto }
 .nav-link:hover, .nav-link.active{ color:var(--text); border-color:#223055; background:rgba(255,255,255,.03) }
