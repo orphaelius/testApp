@@ -46,7 +46,7 @@
   --walk-bg-url: url("./Tiles/Big_tree.png");
   --walk-bg-height: 90%;
   --walk-bg-offset-y: 0px;
-  --walk-bg-speed: 60s;
+  --walk-bg-speed: 20s;
 }
 
 /* Themes (5 variants) */
