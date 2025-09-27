@@ -182,6 +182,34 @@ function awardXPAnimated(amountTotal=15){
   // float chip
   const tpl = $('#xpFloatTpl'); const node = tpl.content.firstElementChild.cloneNode(true);
   node.querySelector('span').textContent = amountTotal; const host = $('#feedback'); host.style.position='relative'; host.appendChild(node); setTimeout(()=>node.remove(), 1850);
+
+   // NEW: dock to the avatar window (fallback = feedback)
+  const avatarHost = document.querySelector('.avatar-window');
+  const host = avatarHost || $('#feedback');
+
+  // mark this chip to use the right-side animation
+  node.classList.add('right-of-avatar');
+
+   // ensure the host can anchor absolute children
+  if (avatarHost) {
+    const cs = getComputedStyle(avatarHost);
+    if (cs.position === 'static') avatarHost.style.position = 'relative';
+  } else {
+    host.style.position = 'relative';
+  }
+
+  host.appendChild(node);
+  setTimeout(()=> node.remove(), 1850);
+
+
+
+
+
+
+
+
+  
+  
   // pulse & slow add
   pulseXP();
   let remaining = amountTotal;
