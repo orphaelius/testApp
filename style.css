@@ -48,6 +48,13 @@
 
   /* ⬅️ explicit sticky height so content never sits under it */
   --appbar-h: 64px;
+
+  
+  /* implement a moving background image */
+  --walk-bg-url: url("assets/backgrounds/ground-tiles.png"); /* <- your image */
+  --walk-bg-height: 22%;      /* how tall the ground strip is (relative to window height) */
+  --walk-bg-offset-y: 0px;    /* fine-tune vertical alignment to the avatar's feet */
+  --walk-bg-speed: 40s;       /* time for one full scroll (slower = bigger number) */
 }
 
 /* Themes (5 creative variants kept) */
@@ -278,6 +285,36 @@ img{max-width:100%;display:block}
 .avatar-window{ width: clamp(112px, 33.6vw, 252px); aspect-ratio: 1/1; position:relative; display:grid; place-items:center; border:none; border-radius:0; background:transparent; box-shadow:none; overflow:visible; }
 .avatar-bg{ display:none !important; }
 .avatar-stage{ position:relative; z-index:1; width:auto; height:auto; display:grid; place-items:center; }
+
+/* background viewport */
+.avatar-viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;           /* clip the background to the window */
+  border-radius: inherit;     /* keep any rounding consistent */
+}
+
+/* drifting backgroud */
+/* The drifting ground/background strip */
+.avatar-walk-bg{
+  position: absolute;
+  left: 0; right: 0;
+  bottom: var(--walk-bg-offset-y);   /* align bottom to the feet; tweak offset if needed */
+  height: var(--walk-bg-height);     /* portion of the window used by ground */
+  background-image: var(--walk-bg-url);
+  background-repeat: repeat-x;       /* tiles horizontally */
+  background-size: auto 100%;        /* scales image height to strip; keeps tiling on X */
+  background-position: 0 100%;       /* start at bottom */
+  animation: walkScroll var(--walk-bg-speed) linear infinite;
+  z-index: 0;                        /* behind the avatar image */
+}
+/* Horizontal drift from right to left */
+@keyframes walkScroll{
+  from { background-position-x: 0; }
+  to   { background-position-x: -800px; } /* move left; increase magnitude for larger tiles */
+}
+
 .pet-stage{ position:absolute; right:-4%; bottom:-2%; width:28%; height:28%; display:none; z-index:2; }
 .pet-stage.on{ display:block }
 .char-name{ text-align:center; font-weight:800; letter-spacing:.3px; }
