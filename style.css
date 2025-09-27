@@ -301,10 +301,10 @@ img{max-width:100%;display:block}
   position: absolute;
   left: 0; right: 0;
   bottom: var(--walk-bg-offset-y);   /* align bottom to the feet; tweak offset if needed */
-  height: var(--walk-bg-height);     /* portion of the window used by ground */
+  height: var(--walk-tile-h);
   background-image: var(--walk-bg-url);
   background-repeat: repeat-x;       /* tiles horizontally */
-  background-size: auto 100%;        /* scales image height to strip; keeps tiling on X */
+  background-size: var(--walk-tile-w) var(--walk-tile-h);
   background-position: 0 100%;       /* start at bottom */
   animation: walkScroll var(--walk-bg-speed) linear infinite;
   z-index: 0;                        /* behind the avatar image */
@@ -312,7 +312,7 @@ img{max-width:100%;display:block}
 /* Horizontal drift from right to left */
 @keyframes walkScroll{
   from { background-position-x: 0; }
-  to   { background-position-x: -800px; } /* move left; increase magnitude for larger tiles */
+  to   { background-position-x: calc(-1 * var(--walk-tile-w)); }
 }
 
 .pet-stage{ position:absolute; right:-4%; bottom:-2%; width:28%; height:28%; display:none; z-index:2; }
