@@ -42,12 +42,73 @@ function shapeClip(shape){
          shape==='hex'    ? 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%)' :
          'inset(0 round 14%)';
 }*/
+
+/* 
 function renderAvatarBG(){
   const settings = loadSettings();
   const bg = $('#avatarBG');
   if (!bg) return;
   bg.style.background = `color-mix(in srgb, var(--avatar-tint) ${(settings.tintStrength*100)|0}%, transparent)`;
+}*/
+
+
+
+
+function renderAvatarBG(){
+  // Ensure we have a walking background layer inside the avatar window
+  const win = document.querySelector('.avatar-window');
+  if (!win) return;
+
+  // Ensure a viewport that clips the background (so it stays inside the window)
+  let viewport = win.querySelector('.avatar-viewport');
+  if (!viewport){
+    viewport = document.createElement('div');
+    viewport.className = 'avatar-viewport';
+    // Move any existing children of .avatar-window into the viewport
+    while (win.firstChild) viewport.appendChild(win.firstChild);
+    win.appendChild(viewport);
+  }
+
+  // Ensure the drifting ground exists and is the FIRST child (behind avatar/pet)
+  let bg = viewport.querySelector('#avatarBG');
+  if (!bg){
+    bg = document.createElement('div');
+    bg.id = 'avatarBG';
+    bg.className = 'avatar-walk-bg';
+    viewport.prepend(bg);
+  } else {
+    // Make sure it has the right class (in case it was the old tint div)
+    bg.classList.add('avatar-walk-bg');
+  }
+
+  // OPTIONAL: set/override CSS variables here per page/theme
+  // (you can also do this in CSS; doing it here lets you compute dynamically)
+  // Example defaults; tweak to your asset:
+  /*
+  bg.style.setProperty('--walk-bg-url', 'url("assets/backgrounds/ground-tiles.png")');
+  bg.style.setProperty('--walk-tile-w', '256px');     // tile width in px
+  bg.style.setProperty('--walk-bg-height', '22%');    // how tall the strip is
+  bg.style.setProperty('--walk-bg-offset-y', '0px');  // nudge down/up to kiss the feet
+  bg.style.setProperty('--walk-bg-speed', '40s');     // scroll speed*/
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 function renderAvatar(){
   const p = loadPlayer();  // no migration logic
   const nameNode = $('#hudPlayerName');
@@ -103,7 +164,114 @@ function renderAvatar(){
       petStage.classList.remove('on');
     }
   }
+}*/
+
+
+
+
+
+
+
+function renderAvatar(){
+  const p = loadPlayer();
+  const nameNode = $('#hudPlayerName');
+  if (nameNode) nameNode.textContent = p?.name || DEFAULT_PLAYER.name;
+
+  // Find the outer window and make sure our layers exist
+  const win = document.querySelector('.avatar-window');
+  if (!win) return;
+
+  // Make/attach background layer (and viewport wrapper) first
+  renderAvatarBG();
+
+  // Now work inside the viewport
+  const viewport = win.querySelector('.avatar-viewport');
+
+  // Ensure the avatar/pet stages exist
+  let stage = viewport.querySelector('#pixelCharContainer.avatar-stage');
+  if (!stage){
+    stage = document.createElement('div');
+    stage.id = 'pixelCharContainer';
+    stage.className = 'avatar-stage';
+    viewport.appendChild(stage);
+  }
+  let petStage = viewport.querySelector('#petStage.pet-stage');
+  if (!petStage){
+    petStage = document.createElement('div');
+    petStage.id = 'petStage';
+    petStage.className = 'pet-stage';
+    viewport.appendChild(petStage);
+  }
+
+  // ----- Render avatar image into the stage -----
+  clear(stage);
+
+  const bbox = viewport.getBoundingClientRect();
+  const size = Math.min(bbox.width || 0, bbox.height || 0) || 180;
+
+  const container = document.createElement('div');
+  Object.assign(container.style, {
+    width: size + 'px',
+    height: size + 'px',
+    position: 'relative',
+    display: 'grid',
+    placeItems: 'center',
+    background: 'transparent'
+  });
+
+  if (p?.asset?.url){
+    const scale = (typeof p.asset.scale === 'number') ? p.asset.scale : 3;
+    const off = p.asset.offset || {x:0,y:0};
+    const img = document.createElement('img');
+    img.src = resolveURL(p.asset.url);
+    img.alt = 'avatar';
+    img.style.width  = Math.round(64*scale) + 'px';
+    img.style.height = Math.round(64*scale) + 'px';
+    img.style.objectFit = 'contain';
+    img.style.imageRendering = 'pixelated';
+    img.style.transform = `translate(${off.x||0}px, ${off.y||0}px)`;
+    container.appendChild(img);
+  }
+
+  stage.appendChild(container);
+
+  // ----- Pet (unchanged) -----
+  const settings = loadSettings();
+  clear(petStage);
+  const pet = settings.pet;
+  if (pet?.url){
+    const img = document.createElement('img');
+    img.src = resolveURL(pet.url);
+    img.alt = 'pet';
+    img.style.width='100%';
+    img.style.height='100%';
+    img.style.objectFit='contain';
+    img.style.imageRendering='pixelated';
+    petStage.appendChild(img);
+    petStage.classList.add('on');
+  } else {
+    petStage.classList.remove('on');
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function renderChestTest(){
   // Support id or class on the loot container
