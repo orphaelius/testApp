@@ -47,7 +47,7 @@
   --walk-bg-height: 110%;
   --walk-bg-offset-y: 0px;
   --walk-bg-speed: 20s;
-  --walk-tile-w: 600px; /* how wide 1 repeat is */
+  --walk-tile-w: 800px; /* how wide 1 repeat is */
 }
 
 /* Themes (5 variants) */
