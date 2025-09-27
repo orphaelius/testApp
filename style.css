@@ -8,13 +8,28 @@
   --avatar-glow: 0 0 18px rgba(106,166,255,.28);
   --loot-img: url("./LootAssets/TreasureChestDefault.png");
   --space: clamp(8px, 2vw, 14px);
+
+
+
   
   /*additional palette features*/
-  --text: #e4e8ff;
-  --bg: #0f1320;
-  --panel: #1c2137;
-  --glow: 0 0 8px rgba(180,220,255,0.6);
-  --accent: #6aa6ff;
+  /* core */
+  --text:#eaf0ff; --muted:#a9b2c8;
+  --bg: radial-gradient(1200px 800px at 20% -10%, #1a2241 0%, #0b0f19 40%, #070a12 100%);
+  --panel:#12182a; --surface:#0f1528;
+  --radius:16px; --space: clamp(10px, 2.4vw, 18px); --fz: clamp(15px, 1.9vw, 17px);
+  --prompt-fz: clamp(18px, 4vw, 26px);
+  /* accents (fallback defaults; themes override) */
+  --accent:#6aa6ff;
+  --accent-2:#9bc2ff;
+   /* avatar tint + loot */
+  --avatar-tint: color-mix(in srgb, var(--accent) 34%, transparent);
+  --loot-img: url("./LootAssets/TreasureChestDefault.png");
+
+
+
+
+  
 
    /* tweak to match your theme */
   --press-glow-color: #6aa6ff;
@@ -23,9 +38,11 @@
 
    /* NEW: glow system drives all buttons */
   --glow-hue: 220deg;
-  --glow-intensity: 0.5;    /* 0..1; controlled by settings slider */
+  --glow-intensity: 0.6;    /* 0..1; controlled by settings slider */
   --glow-color: hsl(var(--glow-hue) 100% 65% / calc(0.55 + var(--glow-intensity)*0.45));
   --glow-color-soft: hsl(var(--glow-hue) 90% 70% / calc(0.25 + var(--glow-intensity)*0.3));
+  --press-glow-color: var(--accent);
+  --press-glow-spread: 18px;
 
   /* Gold palette */
   --gold-1:#fdf6d8;
@@ -44,28 +61,50 @@
 
 
 /* Themes */
-[data-theme="blue"] {
-  --accent: #7cc7ff;
-  --glow: 0 0 12px rgba(124,199,255,0.8);
-  --bg: linear-gradient(135deg, #0f1528, #182447);
+/* 1) BLUE → “Neon Borealis” */
+html[data-theme="blue"]{
+  --accent:#79c8ff;
+  --accent-2:#b7e3ff;
+  --bg: radial-gradient(1000px 720px at 15% -10%, #152242 0%, #0e1530 40%, #080c1e 100%),
+        linear-gradient(160deg,#0b1328 0%, #0c1022 60%, #0b0f19 100%);
+  --panel:#111935; --surface:#0e142e;
+  --avatar-tint: rgba(121,200,255,.20);
 }
 
-[data-theme="purple"] {
-  --accent: #b77cff;
-  --glow: 0 0 14px rgba(183,124,255,0.8);
-  --bg: linear-gradient(135deg, #1b0f28, #2d1c47);
+/* 2) PINK → “Cyber Sakura” */
+html[data-theme="pink"]{
+  --accent:#ff78c4;
+  --accent-2:#ffd0ec;
+  --bg: radial-gradient(900px 640px at 80% -20%, #361730 0%, #1b1023 50%, #0b0f19 100%);
+  --panel:#20132a; --surface:#161022;
+  --avatar-tint: rgba(255,120,196,.18);
 }
 
-[data-theme="emerald"] {
-  --accent: #3cffc7;
-  --glow: 0 0 14px rgba(60,255,199,0.8);
-  --bg: linear-gradient(135deg, #0f2821, #1a3d34);
+/* 3) BURGUNDY → “Crimson Nebula” */
+html[data-theme="burgundy"]{
+  --accent:#d14b5d;
+  --accent-2:#ff9aa8;
+  --bg: radial-gradient(1100px 760px at 10% -15%, #35121b 0%, #1b0f16 50%, #0b0f19 100%);
+  --panel:#1e1218; --surface:#161016;
+  --avatar-tint: rgba(209,75,93,.16);
 }
 
-[data-theme="sunset"] {
-  --accent: #ff9d6c;
-  --glow: 0 0 14px rgba(255,157,108,0.8);
-  --bg: linear-gradient(135deg, #28140f, #47261c);
+/* 4) GREEN → “Emerald Circuit” */
+html[data-theme="green"]{
+  --accent:#35f7c2;
+  --accent-2:#97ffe5;
+  --bg: radial-gradient(1000px 700px at 85% -15%, #0f2a24 0%, #0b1d19 45%, #081311 100%);
+  --panel:#0f2020; --surface:#0c1716;
+  --avatar-tint: rgba(53,247,194,.16);
+}
+
+/* 5) YELLOW → “Solarflare” */
+html[data-theme="yellow"]{
+  --accent:#ffd24d;
+  --accent-2:#ffeaa3;
+  --bg: radial-gradient(950px 680px at 50% -20%, #2a1e0f 0%, #1b140b 50%, #0b0f19 100%);
+  --panel:#231a10; --surface:#19130e;
+  --avatar-tint: rgba(255,210,77,.14);
 }
 
 *{box-sizing:border-box}
