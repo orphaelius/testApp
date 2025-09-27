@@ -2,7 +2,7 @@
 // Loads 100-question CISSP exam JSON and exposes a topic object.
 function resolveURL(urlLike){ try{ return new URL(urlLike, document.baseURI).toString(); }catch{ return urlLike; } }
 let _bank=null, _order=[], _cursor=0;
-async function loadBank(){ if(_bank) return _bank; const url=resolveURL('cissp_practice_exam_v1.json'); const r=await fetch(url); if(!r.ok) throw new Error('Failed to load CISSP exam JSON: '+r.status); const j=await r.json(); _bank=j.questions||[]; _order=Array.from(_bank.keys()); for(let i=_order.length-1;i>0;i--){ const jx=Math.floor(Math.random()*(i+1)); [_order[i],_order[jx]]=[_order[jx],_order[i]];} _cursor=0; return _bank;}
+async function loadBank(){ if(_bank) return _bank; const url=resolveURL('./CISSP/cissp_practice_exam_v1.json'); const r=await fetch(url); if(!r.ok) throw new Error('Failed to load CISSP exam JSON: '+r.status); const j=await r.json(); _bank=j.questions||[]; _order=Array.from(_bank.keys()); for(let i=_order.length-1;i>0;i--){ const jx=Math.floor(Math.random()*(i+1)); [_order[i],_order[jx]]=[_order[jx],_order[i]];} _cursor=0; return _bank;}
 function formatChoices(q){ return q.choices.map(c=>`${c.key}. ${c.text}`).join('\n'); }
 export const cisspPracticeTopic = {
   id:'cissp_practice_100', label:'CISSP Practice Exam (100 Qs)', subject:'CISSP',
