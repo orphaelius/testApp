@@ -28,14 +28,33 @@
   --press-glow-color: var(--accent);
   --press-glow-spread: 18px;
 
-  /* XP gold (deeper & richer) */
+
+
+  /* blue xp bar instead of gold option */
+  /* Vibrant blue metal */
+  --blue-1: #e6f6ff;  /* highlight glaze */
+  --blue-2: #8fd6ff;  /* upper mid */
+  --blue-3: #32b0ff;  /* core blue */
+  --blue-4: #0a74ff;  /* deep body */
+  --blue-5: #0a1e3f;  /* rim/burnt edge */
+
+  /* Glow & bevel tuned for blue */
+  --xp-blue-outer: 0 0 22px rgba(84, 200, 255, .55), 0 0 48px rgba(40, 160, 255, .28);
+  --xp-blue-inner: inset 0 1px 0 rgba(255,255,255,.65), inset 0 -2px 8px rgba(0,0,0,.45);
+  --xp-blue-bevel: inset 0 12px 26px rgba(255,255,255,.10), inset 0 -12px 30px rgba(0,0,0,.35);
   --xp-sheen-speed: 4.5s;
-  --gold-1:#fff3bf;  /* highlight glaze */
-  --gold-2:#ffd669;  /* upper mid */
-  --gold-3:#ffb703;  /* core gold (richer) */
-  --gold-4:#c98700;  /* shadow gold (deeper) */
-  --gold-5:#7a4f00;  /* rim/burnt edge */
-  --xp-gold-outer: 0 0 22px rgba(255, 196, 72, .55), 0 0 48px rgba(255, 170, 30, .28);
+
+  
+  /* XP bar gold */ 
+  
+
+  
+  /*--gold-1:#fff3bf;  /* highlight glaze */
+  /*--gold-2:#ffd669;  /* upper mid */
+  /*--gold-3:#ffb703;  /* core gold (richer) */
+  /*--gold-4:#c98700;  /* shadow gold (deeper) */
+  /*--gold-5:#7a4f00;  /* rim/burnt edge */
+  /*--xp-gold-outer: 0 0 22px rgba(255, 196, 72, .55), 0 0 48px rgba(255, 170, 30, .28);
   --xp-gold-inner: inset 0 1px 0 rgba(255,255,255,.65), inset 0 -2px 8px rgba(0,0,0,.45);
   --xp-gold-bevel: inset 0 12px 26px rgba(255,255,255,.10), inset 0 -12px 30px rgba(0,0,0,.35);
 
@@ -162,7 +181,44 @@ img{max-width:100%;display:block}
   overflow:hidden;
 }
 
-/* XP bar (deeper gold) */
+/* XP bar: vibrant blue “energy” */
+.xp-bar{
+  position:absolute; inset:0 auto 0 0; width:0; border-radius:999px;
+  background:
+    /* brighter top specular rim */
+    linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,0) 44%) top/100% 58% no-repeat,
+    /* hot blue body gradient with deeper base */
+    linear-gradient(180deg, var(--blue-2) 0%, var(--blue-3) 48%, var(--blue-4) 86%, var(--blue-5) 100%),
+    /* fine metallic banding */
+    repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 8px, rgba(0,0,0,.05) 8px 16px);
+  box-shadow: var(--xp-blue-outer), var(--xp-blue-inner), var(--xp-blue-bevel);
+  transition: width .6s cubic-bezier(.2,.8,.2,1), filter .25s ease;
+  filter: saturate(1.9) contrast(1.06);
+}
+.xp-bar::before{
+  content:""; position:absolute; inset:-30% -10% -30% auto;
+  width:22%; transform:skewX(-18deg);
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%,
+                                      rgba(255,255,255,.8) 45%,
+                                      rgba(255,255,255,0) 100%);
+  mix-blend-mode:screen; animation: xpSheen var(--xp-sheen-speed) linear infinite;
+  opacity:.9; pointer-events:none;
+}
+.xp-bar::after{
+  content:""; position:absolute; inset:auto 0 0 0; height:45%;
+  border-bottom-left-radius:999px; border-bottom-right-radius:999px;
+  background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.30));
+  pointer-events:none;
+}
+/* Pulse state glow when you add .pulse to the rail in JS */
+.xp-rail.pulse .xp-bar{
+  filter: saturate(1.35) contrast(1.08)
+          drop-shadow(0 0 12px rgba(120, 210, 255, .60))
+          drop-shadow(0 0 26px rgba(40, 160, 255, .35));
+}
+
+
+/* XP bar (deeper gold) 
 .xp-bar{
   position:absolute; inset:0 auto 0 0; width:0; border-radius:999px;
   background:
@@ -190,7 +246,7 @@ img{max-width:100%;display:block}
   filter: saturate(1.28) contrast(1.08)
           drop-shadow(0 0 12px rgba(255, 186, 64, .55))
           drop-shadow(0 0 26px rgba(255, 168, 28, .32));
-}
+}*/
 @keyframes xpSheen{ 0%{ transform:translateX(-120%) skewX(-18deg) } 100%{ transform:translateX(220%) skewX(-18deg) } }
 
 .avatar-area{
