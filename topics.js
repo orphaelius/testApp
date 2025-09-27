@@ -4,13 +4,9 @@ export function setDifficulty(d){ DIFF = d; }
 export function cycleDifficulty(d){ return d==='easy'?'medium': d==='medium'?'hard':'easy'; }
 export function getDifficultyLabel(d){ return d[0].toUpperCase()+d.slice(1); }
 // topics.js (top)
-import { cisspPracticeTopic } from './cissp_topic.js';
+import { cisspPracticeTopic } from './CISSP/cissp_topic.js';
 
-// ...existing exports...
-export const topicsRegistry = [
-  // your existing math topics…
-  cisspPracticeTopic,  // <-- add this
-];
+
 
 
 const rnd = (min,max)=> Math.floor(Math.random()*(max-min+1))+min;
@@ -244,7 +240,7 @@ export const topicsRegistry = [
   arithmetic, trigBasics, rationalLimits, derivativesEval,
   topic_linear, topic_quadratic, topic_exp_log, topic_comp, topic_systems,
   topic_limit_point, topic_diff_quotient, topic_power_rule, topic_product_rule,
-  topic_chain_rule, topic_tangent_line, topic_continuity
+  topic_chain_rule, topic_tangent_line, topic_continuity, cisspPracticeTopic
 ];
 
 
