@@ -178,54 +178,78 @@ function addLootForLevelUp(newLevel, oldLevel){
   for (let L=oldLevel+1; L<=newLevel; L++){ if (L%10===0) loot += 2; } // +2 extra at multiples of 10 (total 3)
   xpState.loot += loot;
 }
-function awardXPAnimated(amountTotal=15){
-  // float chip
-  const tpl = $('#xpFloatTpl'); const node = tpl.content.firstElementChild.cloneNode(true);
-  node.querySelector('span').textContent = amountTotal; const host = $('#feedback'); host.style.position='relative'; host.appendChild(node); setTimeout(()=>node.remove(), 1850);
 
-   // NEW: dock to the avatar window (fallback = feedback)
-  const avatarHost = document.querySelector('.avatar-window');
-  const host = avatarHost || $('#feedback');
 
-  // mark this chip to use the right-side animation
+
+function awardXPAnimated(amountTotal = 15){
+  // Build the floating chip safely
+  const tpl = $('#xpFloatTpl');
+  if (!tpl || !tpl.content) {
+    console.warn('[xp] #xpFloatTpl not found'); 
+    return;
+  }
+  const node = tpl.content.firstElementChild.cloneNode(true);
+  const span = node.querySelector('span');
+  if (span) span.textContent = amountTotal;
+
+  // Prefer docking at the avatar; fall back to the old feedback host
+  const avatarHost  = document.querySelector('.avatar-window');
+  const floatHostEl = avatarHost || $('#feedback');
+
+  // Use the right-side animation/position
   node.classList.add('right-of-avatar');
 
-   // ensure the host can anchor absolute children
+  // Ensure host can anchor absolutely-positioned children
   if (avatarHost) {
-    const cs = getComputedStyle(avatarHost);
-    if (cs.position === 'static') avatarHost.style.position = 'relative';
-  } else {
-    host.style.position = 'relative';
+    if (getComputedStyle(avatarHost).position === 'static') {
+      avatarHost.style.position = 'relative';
+    }
+  } else if (floatHostEl) {
+    // fallback host
+    floatHostEl.style.position = 'relative';
   }
 
-  host.appendChild(node);
-  setTimeout(()=> node.remove(), 1850);
+  // Mount the chip
+  if (floatHostEl) {
+    floatHostEl.appendChild(node);
+    setTimeout(() => node.remove(), 1850);
+  }
 
-
-
-
-
-
-
-
-  
-  
-  // pulse & slow add
+  // ---- XP gain animation (unchanged) ----
   pulseXP();
   let remaining = amountTotal;
-  const tick = ()=>{
-    if (remaining<=0) { saveXP(); syncHUD(); return; }
-    const step = Math.max(1, Math.round(amountTotal/20));
-    const need = xpState.xpNeeded - xpState.xp;
+
+  const tick = () => {
+    if (remaining <= 0) { saveXP(); syncHUD(); return; }
+
+    const step  = Math.max(1, Math.round(amountTotal / 20));
+    const need  = xpState.xpNeeded - xpState.xp;
     const delta = Math.min(step, remaining, need);
+
     const beforeLevel = xpState.level;
-    xpState.xp += delta; remaining -= delta;
-    if (xpState.xp >= xpState.xpNeeded){ xpState.level += 1; xpState.xp = 0; addLootForLevelUp(xpState.level, beforeLevel); }
+    xpState.xp += delta;
+    remaining  -= delta;
+
+    if (xpState.xp >= xpState.xpNeeded) {
+      xpState.level += 1;
+      xpState.xp = 0;
+      addLootForLevelUp(xpState.level, beforeLevel);
+    }
+
     syncHUD();
-    requestAnimationFrame(()=> setTimeout(tick, 40));
+    requestAnimationFrame(() => setTimeout(tick, 40));
   };
+
   tick();
 }
+
+
+
+
+
+
+
+
 
 /* ---------- Robust Subject → Topic Picker (with first-topic auto-select) ---------- */
 
