@@ -343,9 +343,26 @@ mjx-container[jax="CHTML"]{ font-size:120% !important }
 @keyframes press-glow-pop{ 0%{opacity:0; box-shadow: 0 0 0 0 var(--press-glow-color);} 25%{opacity:.75; box-shadow: 0 0 0 var(--press-glow-spread) var(--press-glow-color);} 100%{opacity:0; box-shadow: 0 0 0 0 var(--press-glow-color);} }
 @media (prefers-reduced-motion: reduce){ .press-glow.is-pressing::after{ animation-duration: 1ms; } }
 
-/* XP Float */
+/* XP Float 
 .xp-float{ position:absolute; left:50%; transform:translateX(-50%); bottom: -8px; background:rgba(32,255,163,.12); border:1px solid rgba(32,255,163,.35); color:#2aff9f; padding:8px 12px; border-radius:12px; font-weight:800; animation:rise 1800ms ease forwards; pointer-events:none }
-@keyframes rise{ 0%{opacity:0; transform:translate(-50%, 10px) scale(.9)} 20%{opacity:1; transform:translate(-50%, 0) scale(1)} 100%{opacity:0; transform:translate(-50%, -60px) scale(.95)} }
+@keyframes rise{ 0%{opacity:0; transform:translate(-50%, 10px) scale(.9)} 20%{opacity:1; transform:translate(-50%, 0) scale(1)} 100%{opacity:0; transform:translate(-50%, -60px) scale(.95)} }*/
+
+/* New variant: float from the avatar's right edge and drift up-right */
+.xp-float.right-of-avatar{
+  left: auto;
+  right: -10px;        /* nudges the chip just outside the frame */
+  bottom: 22%;         /* vertical anchor roughly mid-height */
+  transform: none;     /* let the animation control movement */
+  animation: riseRight 1800ms ease forwards;
+  z-index: 5;          /* above avatar/pet */
+}
+
+/* Up-and-right drift */
+@keyframes riseRight{
+  0%   { opacity: 0; transform: translate(6px, 10px) scale(.9); }
+  15%  { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(22px, -60px) scale(.95); }
+}
 
 /* Creator / Settings */
 .creator-wrap{ max-width:min(1160px, 100%); margin:var(--space) auto; padding:0 var(--space) }
