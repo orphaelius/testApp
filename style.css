@@ -8,96 +8,43 @@
   --avatar-glow: 0 0 18px rgba(106,166,255,.28);
   --loot-img: url("./LootAssets/TreasureChestDefault.png");
   --space: clamp(8px, 2vw, 14px);
-  
-  /*additional palette features*/
-  /* core */
+
+  /* additional palette features */
   --text:#eaf0ff; --muted:#a9b2c8;
   --bg: radial-gradient(1200px 800px at 20% -10%, #1a2241 0%, #0b0f19 40%, #070a12 100%);
   --panel:#12182a; --surface:#0f1528;
   --radius:16px; --space: clamp(10px, 2.4vw, 18px); --fz: clamp(15px, 1.9vw, 17px);
   --prompt-fz: clamp(18px, 4vw, 26px);
-  /* accents (fallback defaults; themes override) */
   --accent:#6aa6ff;
   --accent-2:#9bc2ff;
-   /* avatar tint + loot */
   --avatar-tint: color-mix(in srgb, var(--accent) 34%, transparent);
-  --loot-img: url("./LootAssets/TreasureChestDefault.png");  
+  --loot-img: url("./LootAssets/TreasureChestDefault.png");
 
-   /* tweak to match your theme */
-  --press-glow-color: #6aa6ff;
-  --press-glow-spread: 18px;   /* max glow radius */
-  --press-glow-duration: 380ms;
-
-   /* NEW: glow system drives all buttons */
+  /* glow */
   --glow-hue: 220deg;
-  --glow-intensity: 0.6;    /* 0..1; controlled by settings slider */
+  --glow-intensity: 0.6;
   --glow-color: hsl(var(--glow-hue) 100% 65% / calc(0.55 + var(--glow-intensity)*0.45));
   --glow-color-soft: hsl(var(--glow-hue) 90% 70% / calc(0.25 + var(--glow-intensity)*0.3));
   --press-glow-color: var(--accent);
   --press-glow-spread: 18px;
 
-  /* Gold palette */
-  --gold-1:#fdf6d8;
-  --gold-2:#ffe49a;
-  --gold-3:#ffcf59;
-  --gold-4:#d6a63b;
-  --gold-5:#8f6b26;
-
-  /* Glow + specular settings */
+  /* gold xp */
+  --gold-1:#fdf6d8; --gold-2:#ffe49a; --gold-3:#ffcf59; --gold-4:#d6a63b; --gold-5:#8f6b26;
   --xp-gold-outer: 0 0 22px rgba(255, 206, 106, .35), 0 0 44px rgba(255, 220, 140, .20);
   --xp-gold-inner: inset 0 1px 0 rgba(255,255,255,.55), inset 0 -2px 6px rgba(0,0,0,.35);
   --xp-gold-bevel: inset 0 10px 20px rgba(255,255,255,.08), inset 0 -10px 24px rgba(0,0,0,.28);
   --xp-sheen-speed: 3.5s;
+
+  /* ⬅️ explicit sticky height so content never sits under it */
+  --appbar-h: 64px;
 }
 
-
-
-/* Themes */
-/* 1) BLUE → “Neon Borealis” */
-html[data-theme="blue"]{
-  --accent:#79c8ff;
-  --accent-2:#b7e3ff;
-  --bg: radial-gradient(1000px 720px at 15% -10%, #152242 0%, #0e1530 40%, #080c1e 100%),
-        linear-gradient(160deg,#0b1328 0%, #0c1022 60%, #0b0f19 100%);
-  --panel:#111935; --surface:#0e142e;
-  --avatar-tint: rgba(121,200,255,.20);
-}
-
-/* 2) PINK → “Cyber Sakura” */
-html[data-theme="pink"]{
-  --accent:#ff78c4;
-  --accent-2:#ffd0ec;
-  --bg: radial-gradient(900px 640px at 80% -20%, #361730 0%, #1b1023 50%, #0b0f19 100%);
-  --panel:#20132a; --surface:#161022;
-  --avatar-tint: rgba(255,120,196,.18);
-}
-
-/* 3) BURGUNDY → “Crimson Nebula” */
-html[data-theme="burgundy"]{
-  --accent:#d14b5d;
-  --accent-2:#ff9aa8;
-  --bg: radial-gradient(1100px 760px at 10% -15%, #35121b 0%, #1b0f16 50%, #0b0f19 100%);
-  --panel:#1e1218; --surface:#161016;
-  --avatar-tint: rgba(209,75,93,.16);
-}
-
-/* 4) GREEN → “Emerald Circuit” */
-html[data-theme="green"]{
-  --accent:#35f7c2;
-  --accent-2:#97ffe5;
-  --bg: radial-gradient(1000px 700px at 85% -15%, #0f2a24 0%, #0b1d19 45%, #081311 100%);
-  --panel:#0f2020; --surface:#0c1716;
-  --avatar-tint: rgba(53,247,194,.16);
-}
-
-/* 5) YELLOW → “Solarflare” */
-html[data-theme="yellow"]{
-  --accent:#ffd24d;
-  --accent-2:#ffeaa3;
-  --bg: radial-gradient(950px 680px at 50% -20%, #2a1e0f 0%, #1b140b 50%, #0b0f19 100%);
-  --panel:#231a10; --surface:#19130e;
-  --avatar-tint: rgba(255,210,77,.14);
-}
+/* Themes (5 creative variants kept) */
+html[data-theme="blue"]{ --accent:#79c8ff; --accent-2:#b7e3ff; --bg: radial-gradient(1000px 720px at 15% -10%, #152242 0%, #0e1530 40%, #080c1e 100%), linear-gradient(160deg,#0b1328 0%, #0c1022 60%, #0b0f19 100%); --panel:#111935; --surface:#0e142e; --avatar-tint: rgba(121,200,255,.20); }
+html[data-theme="pink"]{ --accent:#ff78c4; --accent-2:#ffd0ec; --bg: radial-gradient(900px 640px at 80% -20%, #361730 0%, #1b1023 50%, #0b0f19 100%); --panel:#20132a; --surface:#161022; --avatar-tint: rgba(255,120,196,.18); }
+html[data-theme="burgundy"]{ --accent:#d14b5d; --accent-2:#ff9aa8; --bg: radial-gradient(1100px 760px at 10% -15%, #35121b 0%, #1b0f16 50%, #0b0f19 100%); --panel:#1e1218; --surface:#161016; --avatar-tint: rgba(209,75,93,.16); }
+html[data-theme="green"]{ --accent:#35f7c2; --accent-2:#97ffe5; --bg: radial-gradient(1000px 700px at 85% -15%, #0f2a24 0%, #0b1d19 45%, #081311 100%); --panel:#0f2020; --surface:#0c1716; --avatar-tint: rgba(53,247,194,.16); }
+html[data-theme="yellow"]{ --accent:#ffd24d; --accent-2:#ffeaa3; --bg: radial-gradient(950px 680px at 50% -20%, #2a1e0f 0%, #1b140b 50%, #0b0f19 100%); --panel:#231a10; --surface:#19130e; --avatar-tint: rgba(255,210,77,.14); }
 
 *{box-sizing:border-box}
 html,body{
@@ -105,26 +52,46 @@ html,body{
   background:linear-gradient(160deg,#0a0e18 0%,#0d1222 60%,#0b0f19 100%);
   color:var(--text); font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif; font-size:var(--fz);
   min-height:100%;
-  overflow-x:hidden; /* prevent horizontal scroll on device window */
+  overflow-x:hidden;
 }
 img{max-width:100%;display:block}
 
 /* App Bar */
 .appbar{ position:sticky; top:0; z-index:100; background:rgba(8,12,22,.78); backdrop-filter:blur(10px); border-bottom:1px solid #1c2540 }
-/* Home page button container — adjust selectors if needed */
-#toolbar,
-.appbar-inner,
-.header {
-  display: flex;
-  flex-wrap: wrap;   /* <- allows buttons to move to a new line instead of overlapping */
-  gap: 8px;          /* consistent spacing between them */
-}
-/* OG APP BAR CODE IN CASE BUTTONS ON HOME PAGE BREAK
+
+/* ⬅️ restore + modernize appbar-inner so height is consistent */
 .appbar-inner{
   max-width:min(1160px, 100vw - 2*var(--space));
-  margin:0 auto; padding:12px var(--space);
-  display:flex; gap:12px; align-items:center; justify-content:space-between;
-}*/
+  margin:0 auto; padding:8px var(--space);
+  min-height: var(--appbar-h);
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  flex-wrap: wrap;
+}
+
+/* ⬅️ evenly spaced 4-button toolbar aligned to keypad */
+#toolbar{
+  display:flex; flex-wrap:wrap;
+  justify-content: space-evenly;
+  align-items:center;
+  gap:12px;
+  padding: 8px 0;
+  max-width: 560px;       /* align with keypad/xp hud */
+  margin: 0 auto;         /* centered */
+  width: 100%;
+}
+#toolbar .btn{
+  min-width:120px;
+  flex: 1 1 0;
+  max-width:160px;        /* tidy on wide screens */
+}
+
+/* ⬅️ align keypad to same width for visual harmony */
+#kbd{
+  max-width:560px;
+  margin:0 auto;
+  width:100%;
+}
+
 .brand{ font-weight:800; letter-spacing:.4px; font-size:18px; text-decoration:none; color:var(--text); white-space:nowrap }
 .nav{ display:flex; gap:10px; align-items:center; overflow-x:auto; -webkit-overflow-scrolling:touch }
 .nav::-webkit-scrollbar{ display:none }
@@ -132,23 +99,25 @@ img{max-width:100%;display:block}
 .nav-link:hover, .nav-link.active{ color:var(--text); border-color:#223055; background:rgba(255,255,255,.03) }
 
 /* Layout */
-.wrap{ max-width:min(1160px, 100%); margin:var(--space) auto; padding:0 var(--space); display:grid; gap:var(--space) }
+.wrap{ max-width:min(1160px, 100%); margin:var(--space) auto; padding:0 var(--space); display:grid; gap:var(--space);
+  /* ⬅️ ensures content starts below sticky bar */
+  padding-top: calc(var(--appbar-h) + 8px);
+}
 .layout-single{ max-width:min(900px, 100%); margin:var(--space) auto; padding:0 var(--space) }
 .card{ background:var(--glass); border:1px solid #1c2540; border-radius:var(--radius); padding:var(--space); box-shadow:0 10px 30px rgba(0,0,0,.25) }
 .muted{ color:var(--muted) }
 
-/* Remove streak/solving badges/rows entirely */
-#solving, #streak, #streakRow, #streakWrap, .solving, .streak {
-  display: none !important;
-}
+/* Remove streak/solving */
+#solving, #streak, #streakRow, #streakWrap, .solving, .streak { display: none !important; }
 
 /* Stage (avatar + HUD) */
-.stage{ display:grid; gap:var(--space); align-items:center; justify-items:center }
-.hud-top{ width:100%; display:grid; place-items:center }
+.stage{ display:grid; gap: calc(var(--space) * 0.7); align-items:center; justify-items:center }  /* ⬅️ tighter gap */
+.hud-top{ width:100%; display:grid; place-items:center; margin-bottom:0 }
+
 .xp-hud{ width:min(560px, 92%); display:grid; gap:8px; }
 .xp-title{ text-align:center; font-weight:800; letter-spacing:.3px }
-/*.xp-rail{ position:relative; height:14px; background:#0d1324; border:1px solid #233056; border-radius:999px; overflow:hidden; }*/
-/* XP rail: darker, subtle metallic frame */
+
+/* XP rail */
 .xp-rail{
   position:relative;
   height:16px;
@@ -161,128 +130,66 @@ img{max-width:100%;display:block}
   overflow:hidden;
 }
 
-/*.xp-bar{ position:absolute; inset:0 auto 0 0; width:0; background:linear-gradient(90deg,var(--accent),var(--accent-2)); box-shadow:var(--glow); transition:width .6s cubic-bezier(.2,.8,.2,1) }*/
-
-/* XP bar: gold “ingot” with depth, glow, and sheen */
+/* XP bar */
 .xp-bar{
-  position:absolute;
-  inset:0 auto 0 0;
-  width:0;
-  border-radius:999px;
-  /* Layered backgrounds build the metallic look */
+  position:absolute; inset:0 auto 0 0; width:0; border-radius:999px;
   background:
-    /* specular rim (top) */
     linear-gradient(180deg, rgba(255,255,255,.35), rgba(255,255,255,0) 45%) top/100% 55% no-repeat,
-    /* warm body gradient */
     linear-gradient(180deg, var(--gold-2), var(--gold-3) 50%, var(--gold-4) 85%),
-    /* subtle banding for metal */
     repeating-linear-gradient(90deg, rgba(255,255,255,.04) 0 8px, rgba(0,0,0,.04) 8px 16px);
   box-shadow: var(--xp-gold-outer), var(--xp-gold-inner), var(--xp-gold-bevel);
   transition:width .6s cubic-bezier(.2,.8,.2,1), filter .25s ease;
 }
-
-/* Add a moving diagonal sheen (3D highlight) */
 .xp-bar::before{
-  content:"";
-  position:absolute; inset:-30% -10% -30% auto;
-  width:28%;
+  content:""; position:absolute; inset:-30% -10% -30% auto; width:28%;
   transform:skewX(-18deg);
-  background:
-    linear-gradient(90deg, rgba(255,255,255,0) 0%,
-                           rgba(255,255,255,.55) 45%,
-                           rgba(255,255,255,0) 100%);
-  mix-blend-mode:screen;
-  animation: xpSheen var(--xp-sheen-speed) linear infinite;
-  opacity:.7;
-  pointer-events:none;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.55) 45%, rgba(255,255,255,0) 100%);
+  mix-blend-mode:screen; animation: xpSheen var(--xp-sheen-speed) linear infinite; opacity:.7; pointer-events:none;
 }
-
-/* Inner shadow at the bottom for curvature */
 .xp-bar::after{
-  content:"";
-  position:absolute; inset:auto 0 0 0; height:45%;
+  content:""; position:absolute; inset:auto 0 0 0; height:45%;
   border-bottom-left-radius:999px; border-bottom-right-radius:999px;
   background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.22));
   pointer-events:none;
 }
 .xp-pulse{ position:absolute; inset:0; pointer-events:none; opacity:0 }
-/*.xp-rail.pulse .xp-pulse{ animation:xpPulse 1200ms ease; } */
-
-/* Gentle “charge” pulse when the rail has .pulse (you already toggle this) */
 .xp-rail.pulse .xp-bar{
-  filter: drop-shadow(0 0 10px rgba(255, 226, 140, .45))
-          drop-shadow(0 0 22px rgba(255, 226, 140, .25));
+  filter: drop-shadow(0 0 10px rgba(255, 226, 140, .45)) drop-shadow(0 0 22px rgba(255, 226, 140, .25));
 }
+@keyframes xpSheen{ 0%{ transform:translateX(-120%) skewX(-18deg) } 100%{ transform:translateX(220%) skewX(-18deg) } }
 @keyframes xpPulse{ 0%{opacity:.0} 15%{opacity:.8; box-shadow:inset 0 0 0 999px rgba(255,255,255,.0)} 100%{opacity:0} }
 
 .avatar-area{
-  display:grid; grid-template-columns: auto minmax(220px, 1fr); gap:18px; align-items:center;
-  width:100%;
+  display:grid; grid-template-columns: auto minmax(220px, 1fr); gap:18px; align-items:center; width:100%;
 }
 @media (max-width: 760px){
   .avatar-area{ grid-template-columns: 1fr; justify-items:center }
 }
+
 .loot-box{ display:grid; place-items:center; text-decoration:none; gap:6px }
-/* Loot art now uses your PNG; gradient glows remain as a subtle background */
 .loot-art, .loot-art.lg{
   background:
     radial-gradient(closest-side, rgba(255,233,141,.18), transparent 70%),
-    var(--loot-img);                                /* your image */
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;                         /* keep aspect ratio */
-  border-radius:12px;
-  border:1px solid #5a3f18;
+    var(--loot-img);
+  background-repeat:no-repeat; background-position:center; background-size:contain;
+  border-radius:12px; border:1px solid #5a3f18;
   box-shadow:0 0 20px rgba(255,210,77,.25);
   width:56px; height:56px;
 }
 .loot-art.lg{ width:80px; height:80px }
-/* Optional alt style used on loot.html for the “science” card */
 .loot-art.science{
   background:
     radial-gradient(closest-side, rgba(141,255,233,.16), transparent 70%),
     var(--loot-img);
-  background-repeat:no-repeat;
-  background-position:center;
-  background-size:contain;
+  background-repeat:no-repeat; background-position:center; background-size:contain;
   border-color:#185a3f;
 }
 .loot-count{ font-weight:800; color:#ffd24d }
 
-/* Avatar container: no window/frame */
-.avatar-window{
-  width: clamp(112px, 33.6vw, 252px);
-  aspect-ratio: 1/1;
-  position:relative;
-  display:grid;
-  place-items:center;
-  border:none;                 /* was: 1px solid */
-  border-radius:0;             /* remove rounded frame */
-  background:transparent;      /* remove any backdrop */
-  box-shadow:none;             /* remove drop shadow */
-  overflow:visible;            /* let the avatar breathe */
-}
-/* Hide the previous tint layer entirely */
+.avatar-window{ width: clamp(112px, 33.6vw, 252px); aspect-ratio: 1/1; position:relative; display:grid; place-items:center; border:none; border-radius:0; background:transparent; box-shadow:none; overflow:visible; }
 .avatar-bg{ display:none !important; }
-/* Keep the stage simple; avatar sized by scale from JS */
-.avatar-stage{
-  position:relative;
-  z-index:1;
-  width:auto;
-  height:auto;
-  display:grid;
-  place-items:center;
-}
-/* Pet still sits to the lower-right of the avatar if chosen */
-.pet-stage{
-  position:absolute;
-  right:-4%;
-  bottom:-2%;
-  width:28%;
-  height:28%;
-  display:none;
-  z-index:2;
-}
+.avatar-stage{ position:relative; z-index:1; width:auto; height:auto; display:grid; place-items:center; }
+.pet-stage{ position:absolute; right:-4%; bottom:-2%; width:28%; height:28%; display:none; z-index:2; }
 .pet-stage.on{ display:block }
 .char-name{ text-align:center; font-weight:800; letter-spacing:.3px; }
 
@@ -293,76 +200,30 @@ img{max-width:100%;display:block}
 }
 
 /* Center the subject/topic picker row */
-.topic-picker{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  justify-content:center; /* centered */
-  flex-wrap:wrap;
-  margin: 8px auto;
-  width: min(760px, 100%);
-}
-
-/* Make selects consistent with your existing .select style */
-.topic-picker select.select{
-  min-width: 200px;
-  text-align: left;
-}
-
-
-/* Buttons — OG*/
-/* Buttons — upgraded 
-.btn{
-  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 16%, #0f1528), #0a0f1f);
-  border:1px solid color-mix(in srgb, var(--accent) 36%, #223055);
-  box-shadow: 0 6px 16px rgba(0,0,0,.25), 0 0 0 0 rgba(0,0,0,0);
-  transition: transform .12s, box-shadow .2s, border-color .2s, filter .2s;
-  min-height:44px;
-}
-.btn:hover{ transform: translateY(-1px); box-shadow: var(--glow); border-color: var(--accent) }
-.btn:active{ transform: translateY(0); filter: brightness(.95) }
-.btn-primary{ background: linear-gradient(180deg, var(--accent), var(--accent-2)); color:#0b1020; border:none }
-.btn-ghost{ background:transparent }
-*/
+.topic-picker{ display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap; margin: 8px auto; width: min(760px, 100%); }
+.topic-picker select.select{ min-width: 200px; text-align: left; }
 
 /* Buttons — neon chip */
 .btn{
   background: linear-gradient(180deg, var(--accent), var(--accent-2));
   color:#07101e;
-  border: none;
-  border-radius:14px;
-  padding:12px 16px;
-  font-weight:800;
-  letter-spacing:.2px;
-  box-shadow:
-    0 6px 18px rgba(0,0,0,.28),
-    0 0 0 0 rgba(0,0,0,0);
+  border: none; border-radius:14px; padding:12px 16px;
+  font-weight:800; letter-spacing:.2px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.28), 0 0 0 0 rgba(0,0,0,0);
   transition: transform .12s, box-shadow .2s, filter .2s, opacity .2s;
   min-height:44px;
 }
-
-.btn:hover{
-  transform: translateY(-1.5px);
-  box-shadow: 0 8px 20px rgba(0,0,0,.35), 0 0 18px color-mix(in srgb, var(--accent) 45%, transparent);
-}
-
-.btn:active{
-  transform: translateY(0) scale(.98);
-  filter: brightness(.97);
-}
-
-.btn-ghost{
-  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 12%, var(--surface)), var(--surface));
-  color: var(--text);
-  border:1px solid color-mix(in srgb, var(--accent) 36%, #223055);
-}
-
+.btn:hover{ transform: translateY(-1.5px); box-shadow: 0 8px 20px rgba(0,0,0,.35), 0 0 18px color-mix(in srgb, var(--accent) 45%, transparent); }
+.btn:active{ transform: translateY(0) scale(.98); filter: brightness(.97); }
+.btn-ghost{ background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 12%, var(--surface)), var(--surface)); color: var(--text); border:1px solid color-mix(in srgb, var(--accent) 36%, #223055); }
 .btn.small{ padding:8px 12px; border-radius:12px; font-size:.92rem }
 
-
-
 .only-mobile{ display:none }
-@media (max-width: 760px){ .only-mobile{ display:inline-block } }
+@media (max-width: 760px){
+  .only-mobile{ display:inline-block }
+  /* ⬅️ on mobile, two buttons per row looks nice */
+  #toolbar .btn{ flex: 1 1 calc(50% - 12px); max-width:none; }
+}
 
 /* Drawer / Problem panel */
 .drawer .prob-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px}
@@ -372,9 +233,7 @@ img{max-width:100%;display:block}
   border:1px dashed #223055; text-align:center; font-family: "JetBrains Mono", ui-monospace, monospace;
 }
 mjx-container[jax="CHTML"]{ font-size:120% !important }
-.answer-row input{
-  width:100%; font-family:"JetBrains Mono", ui-monospace, monospace; font-size:18px; text-align:center
-}
+.answer-row input{ width:100%; font-family:"JetBrains Mono", ui-monospace, monospace; font-size:18px; text-align:center }
 .feedback{ min-height:28px; margin-top:10px; font-weight:800; text-align:center }
 .feedback.ok{ color:var(--ok) } .feedback.bad{ color:var(--bad) }
 
@@ -388,54 +247,18 @@ mjx-container[jax="CHTML"]{ font-size:120% !important }
 .kbd-grid .accent{ color:#0b1020; background:linear-gradient(180deg,#ffd24d,#ffe9a1); border:none }
 .kbd-grid .danger{ border-color:#3b2330; background:#1b0f16; color:#ffb1c1 }
 
-.press-glow{
-  position: relative; /* needed for the pseudo-element */
-  /* optional subtle default shadow */
-  transition: box-shadow 120ms ease;
-}
-
-/* Glow layer */
-.press-glow::after{
-  content: "";
-  position: absolute;
-  inset: -2px;               /* slightly outside the button edge */
-  border-radius: inherit;
-  pointer-events: none;
-  opacity: 0;
-  box-shadow: 0 0 0 var(--press-glow-spread) var(--press-glow-color);
-  filter: blur(8px);
-}
-
-/* Triggered state (JS adds .is-pressing briefly) */
-.press-glow.is-pressing{
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--press-glow-color) 60%, transparent);
-}
-
-.press-glow.is-pressing::after{
-  animation: press-glow-pop var(--press-glow-duration) ease-out;
-}
-
-/* Keyframes: quick bloom then fade */
-@keyframes press-glow-pop{
-  0%   { opacity: 0;   box-shadow: 0 0 0 0 var(--press-glow-color); }
-  25%  { opacity: .75; box-shadow: 0 0 0 var(--press-glow-spread) var(--press-glow-color); }
-  100% { opacity: 0;   box-shadow: 0 0 0 0 var(--press-glow-color); }
-}
-
-/* Respect reduced motion */
-@media (prefers-reduced-motion: reduce){
-  .press-glow.is-pressing::after{ animation-duration: 1ms; }
-}
+.press-glow{ position: relative; transition: box-shadow 120ms ease; }
+.press-glow::after{ content: ""; position: absolute; inset: -2px; border-radius: inherit; pointer-events: none; opacity: 0; box-shadow: 0 0 0 var(--press-glow-spread) var(--press-glow-color); filter: blur(8px); }
+.press-glow.is-pressing{ box-shadow: 0 0 0 2px color-mix(in srgb, var(--press-glow-color) 60%, transparent); }
+.press-glow.is-pressing::after{ animation: press-glow-pop var(--press-glow-duration) ease-out; }
+@keyframes press-glow-pop{ 0%{opacity:0; box-shadow: 0 0 0 0 var(--press-glow-color);} 25%{opacity:.75; box-shadow: 0 0 0 var(--press-glow-spread) var(--press-glow-color);} 100%{opacity:0; box-shadow: 0 0 0 0 var(--press-glow-color);} }
+@media (prefers-reduced-motion: reduce){ .press-glow.is-pressing::after{ animation-duration: 1ms; } }
 
 /* XP Float */
-.xp-float{
-  position:absolute; left:50%; transform:translateX(-50%); bottom: -8px;
-  background:rgba(32,255,163,.12); border:1px solid rgba(32,255,163,.35); color:#2aff9f;
-  padding:8px 12px; border-radius:12px; font-weight:800; animation:rise 1800ms ease forwards; pointer-events:none
-}
+.xp-float{ position:absolute; left:50%; transform:translateX(-50%); bottom: -8px; background:rgba(32,255,163,.12); border:1px solid rgba(32,255,163,.35); color:#2aff9f; padding:8px 12px; border-radius:12px; font-weight:800; animation:rise 1800ms ease forwards; pointer-events:none }
 @keyframes rise{ 0%{opacity:0; transform:translate(-50%, 10px) scale(.9)} 20%{opacity:1; transform:translate(-50%, 0) scale(1)} 100%{opacity:0; transform:translate(-50%, -60px) scale(.95)} }
 
-/* Creator / Settings helpers */
+/* Creator / Settings */
 .creator-wrap{ max-width:min(1160px, 100%); margin:var(--space) auto; padding:0 var(--space) }
 .creator-card .preview{ display:grid; place-items:center; }
 .preview-window{ width:240px; height:240px; border-radius:16px; border:1px solid #223055; background:rgba(255,255,255,.03); display:grid; place-items:center; position:relative }
@@ -470,51 +293,20 @@ mjx-container[jax="CHTML"]{ font-size:120% !important }
   body{ padding-bottom: env(safe-area-inset-bottom, 0px) }
 }
 
-/* Reduce gap between top (avatar/topic/xp) and problem area */
-.stage{ gap: calc(var(--space) * 0.7); }
-.hud-top{ margin-bottom: 0; }
+/* Compaction between top and problem area */
+#drawer, .drawer{ margin-top: -8px; padding-top: 8px; }
+.drawer .prob-head{ margin-bottom: 6px; }
+.prompt.pretty{ margin: 6px 0; padding: 8px 10px; }
+.answer-row{ margin-top: 8px; }
+.feedback{ margin-top: 6px; min-height: 0; }
+.drawer .prob-head{ display: grid; grid-template-columns: 1fr; align-items: center; }
 
-/* Problem panel compaction */
-#drawer, .drawer{ 
-  margin-top: -8px;            /* pull up */
-  padding-top: 8px;            /* lighter top padding */
-}
-.drawer .prob-head{ 
-  margin-bottom: 6px;
-}
-.prompt.pretty{
-  margin: 6px 0;
-  padding: 8px 10px;
-}
-.answer-row{ 
-  margin-top: 8px;
-}
-.feedback{
-  margin-top: 6px;
-  min-height: 0;               /* if you previously reserved a tall space */
-}
-
-/* If the header used to reserve space for streak/solving, collapse layout */
-.drawer .prob-head{
-  display: grid;
-  grid-template-columns: 1fr;  /* single column now */
-  align-items: center;
-}
-
-/* Ensure the on-screen keyboard doesn’t add extra blank space when hidden */
+/* Keyboard visibility/stacking */
 #kbd:not(.open){ margin-top: 0; }
-
-/* --- Keyboard toggle visibility / stacking fixes --- */
 #kbdToggle{ position:relative; z-index:10; display:inline-flex; }
-#avatarBG{ pointer-events:none; }         /* overlays don’t eat clicks */
+#avatarBG{ pointer-events:none; }
 #pixelCharContainer{ position:relative; z-index:1; }
 .header,.toolbar,#toolbar{ overflow:visible; }
-
-
-/* If any parent clipped it on wide layouts */
 .header, .toolbar, #toolbar { overflow:visible; }
-
-/* Make the panel show/hide predictably */
 #kbd[hidden] { display:none !important; }
 #kbd.open { display:block; }
-
