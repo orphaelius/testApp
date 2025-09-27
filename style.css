@@ -55,6 +55,9 @@
   --walk-bg-height: 70%;      /* how tall the ground strip is (relative to window height) */
   --walk-bg-offset-y: 0px;    /* fine-tune vertical alignment to the avatar's feet */
   --walk-bg-speed: 40s;       /* time for one full scroll (slower = bigger number) */
+  /* Base size of one tile of your PNG (set to your image’s native aspect) */
+  --walk-tile-w: 256px;
+  --walk-tile-h: 64px;
 }
 
 /* Themes (5 creative variants kept) */
@@ -453,6 +456,24 @@ mjx-container[jax="CHTML"]{ font-size:120% !important }
 .header, .toolbar, #toolbar { overflow:visible; }
 #kbd[hidden] { display:none !important; }
 #kbd.open { display:block; }
+
+
+
+
+
+@media (max-width: 900px){
+  :root{
+    --walk-tile-w: 224px;
+    --walk-tile-h: 56px;
+  }
+}
+@media (max-width: 640px){
+  :root{
+    --walk-tile-w: 192px;
+    --walk-tile-h: 48px;
+  }
+}
+
 
 /* Mobile header alignment fix */
 @media (max-width: 760px){
