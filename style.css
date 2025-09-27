@@ -44,7 +44,7 @@
 
   /* walking background (you can tweak per page) */
   --walk-bg-url: url("./Tiles/Big_tree.png");
-  --walk-bg-height: 90%;
+  --walk-bg-height: 110%;
   --walk-bg-offset-y: 0px;
   --walk-bg-speed: 20s;
 }
