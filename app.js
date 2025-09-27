@@ -213,6 +213,7 @@ function getSubject(t){
       trig:'Trigonometry',
       geometry:'Geometry',
       general:'General'
+      cissp:'CISSP'
     };
     const key = t.subject.trim().toLowerCase();
     return map[key] || t.subject.trim();
