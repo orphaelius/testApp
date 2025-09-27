@@ -212,7 +212,7 @@ function getSubject(t){
       trigonometry:'Trigonometry',
       trig:'Trigonometry',
       geometry:'Geometry',
-      general:'General'
+      general:'General',
       cissp:'CISSP'
     };
     const key = t.subject.trim().toLowerCase();
